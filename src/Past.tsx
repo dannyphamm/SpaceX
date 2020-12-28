@@ -58,11 +58,9 @@ function Past({ value, valueLP }) {
         if (value <= 1) {
             setMinValue(0)
             setMaxValue(pageSize)
-            console.log(pageSize)
         } else {
             setMinValue((value-1) * pageSize)
             setMaxValue(value * pageSize)
-            console.log(value)
         }
     }
     function landingSuccess(item) {

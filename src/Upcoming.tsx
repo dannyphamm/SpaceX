@@ -45,11 +45,9 @@ function Upcoming({ value, valueLP }) {
         if (value <= 1) {
             setMinValue(0)
             setMaxValue(pageSize)
-            console.log(pageSize)
         } else {
             setMinValue((value - 1) * pageSize)
             setMaxValue(value * pageSize)
-            console.log(value)
         }
     }
     function getLaunchpad(launchpadID: any) {
@@ -80,7 +78,7 @@ function Upcoming({ value, valueLP }) {
                     pageSizeOptions={["25", "50", "75", "100"]}
                 />
                 <Row gutter={[{ xs: 8, sm: 16, md: 24, lg: 32 }, { xs: 8, sm: 16, md: 24, lg: 32 }]}>
-                    {items.map((item: { [x: string]: number; }) => (
+                    {items.slice(minValue, maxValue).map((item: { [x: string]: number; }) => (
                         <Col className="gutter-row" xs="8" sm="16" md="24" lg="32">
                             <Card
                                 key={item['id']}

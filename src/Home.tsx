@@ -1,4 +1,3 @@
-import { ReadFilled, YoutubeFilled } from '@ant-design/icons';
 import { Col, Row, Image } from 'antd'
 import React from 'react'
 import moment from 'moment';
@@ -8,17 +7,15 @@ import PropTypes from 'prop-types'
 function Home({ value, valueLP }) {
     const styleDescription = { justifyContent: "center", textAlign: "center" as const }
     const center = { textAlign: "center" as const }
-    const styleName = { textAlign: "center" as const, fontSize: "2rem", fontWeight: "bold" as const}
+    const styleName = { textAlign: "center" as const, fontSize: "2rem", fontWeight: "bold" as const }
     const styleCountdown = { fontSize: "3rem" }
     const styleLaunchpad = { fontSize: "2rem", textAlign: "center" as const }
     const background = { backgroundColor: "#A9A9A9" }
     const image = { margin: "15px" }
+
+
     const [items, setItems] = useState<any>([]);
     const [launchpads, setLaunchPads] = useState<any>([]);
-
-    function comp(a: { date_unix: string | number | Date; }, b: { date_unix: string | number | Date; }) {
-        return new Date(a.date_unix).getTime() - new Date(b.date_unix).getTime();
-    }
 
     Promise.resolve(value).then((result) => {
         setItems(result.sort(comp))
@@ -27,6 +24,11 @@ function Home({ value, valueLP }) {
     Promise.resolve(valueLP).then((result) => {
         setLaunchPads(result)
     })
+
+    function comp(a: { date_unix: string | number | Date; }, b: { date_unix: string | number | Date; }) {
+        return new Date(a.date_unix).getTime() - new Date(b.date_unix).getTime();
+    }
+
     function getLaunchpad(launchpadID: any) {
         const launchpad = launchpads.find(launchpad => launchpad['id'] === launchpadID);
         return (launchpad['name']);
@@ -43,7 +45,7 @@ function Home({ value, valueLP }) {
         )
     } else {
         return (
-            <>
+            <div>
                 <Row style={center}>
                     <Col span={24}>
                         <Image
@@ -79,8 +81,7 @@ function Home({ value, valueLP }) {
                         </Row>
                     </Col>
                 </Row>
-            </>
-
+            </div>
         )
     }
 }
@@ -89,17 +90,3 @@ Home.propTypes = {
     valueLP: PropTypes.object,
 }
 export default Home
-
-
-{/* <Card
-                        key={items[0]['id']}
-                        style={style}
-                        bodyStyle={styleBody}
-                        cover={<img alt="example" src={(items[0]['links']['patch']['large'] === null) ? "https://www.spacex.com/static/images/share.jpg" : items[0]['links']['patch']['large']} style={styleCover} />}
-                    >
-                        <Meta title={items[0]['name']} style={{fontSize:"75px"}} />
-                        <Meta title={"Launchpad: " + getLaunchpad(items[0]['launchpad'])} description={getLocalTime(items[0]['date_unix'])} style={{fontSize:"50px"}} />
-                        <Meta description={(items[0]['details'] === null ? "No Information Provided" : items[0]['details'])} style={{fontSize:"30px"}}/>
-                        <br />
-                        <Meta description={<Countdown time={items[0]['date_unix']}></Countdown>} style={{fontSize:"75px"}}/>
-                        </Card> */}
