@@ -6,9 +6,9 @@ import { Descriptions, Badge } from 'antd';
 function Launch() {
     let params = useParams();
     const [item, setItem] = useState<any>([]);
+    const url = "https://api.spacexdata.com/v4/launches/" + params['id'];
     useEffect(() => {
-
-        fetch("https://api.spacexdata.com/v4/launches/" + params['id'])
+        fetch(url)
             .then(res => res.json())
             .then(
                 (result) => {
@@ -18,8 +18,7 @@ function Launch() {
 
                 }
             )
-        console.log(item)
-    }, [])
+    }, [url])
 
 
     if (item.length === 0) {
