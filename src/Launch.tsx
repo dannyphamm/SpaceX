@@ -1,13 +1,6 @@
 import React, { useState } from 'react'
 import { useEffect } from 'react'
-import {
-    BrowserRouter as Router,
-    Switch,
-    Route,
-    Link,
-    useRouteMatch,
-    useParams
-} from "react-router-dom";
+import {useParams} from "react-router-dom";
 import 'antd/dist/antd.css';
 import { Descriptions, Badge } from 'antd';
 function Launch() {

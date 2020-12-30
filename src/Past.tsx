@@ -5,7 +5,7 @@ import moment from 'moment';
 import 'antd/dist/antd.css';
 import { YoutubeFilled, ReadFilled, RedditCircleFilled, CheckCircleFilled, MinusSquareFilled } from '@ant-design/icons';
 import PropTypes from 'prop-types'
-import { BrowserRouter as Router, Switch, Route, Link } from "react-router-dom";
+import { Link } from "react-router-dom";
 function Past({ value, valueLP }) {
     const style = { height: "100%", margin: "0 auto", display: "flex", flexFlow: "column" };
     const styleBody = { flex: "1 1 auto" };

@@ -9,7 +9,6 @@ import { applyMiddleware, createStore } from 'redux';
 import React, { useState } from 'react';
 import Home from './Home';
 import Launch from './Launch';
-import Navbar from './Navbar';
 import thunk from 'redux-thunk';
 
 function App() {

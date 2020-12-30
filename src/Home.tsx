@@ -1,4 +1,4 @@
-import { Col, Row, Image, Card } from 'antd'
+import { Col, Row, Card } from 'antd'
 import React from 'react'
 import moment from 'moment';
 import { useState } from 'react'
