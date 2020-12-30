@@ -7,7 +7,7 @@ import Countdown from './Countdown';
 import { YoutubeFilled, ReadFilled } from '@ant-design/icons';
 import PropTypes from 'prop-types'
 function Upcoming({ value, valueLP }) {
-    const style = { width: 350, margin: "0 auto", height: "100%", display: "flex", flexFlow: "column" };
+    const style = { height: "100%", margin: "0 auto", display: "flex", flexFlow: "column" };
     const styleBody = { flex: "1 1 auto" };
     const styleCover = { padding: "10px 10px" }
     const paginationStyle = { paddingBottom: "24px", textAlign: "center" as const }
@@ -79,7 +79,7 @@ function Upcoming({ value, valueLP }) {
                 />
                 <Row gutter={[{ xs: 8, sm: 16, md: 24, lg: 32 }, { xs: 8, sm: 16, md: 24, lg: 32 }]}>
                     {items.slice(minValue, maxValue).map((item: { [x: string]: number; }) => (
-                        <Col className="gutter-row" xs="8" sm="16" md="24" lg="32">
+                        <Col className="gutter-row" xs={{ span: 24}} lg={{ span: 12}} xl={{ span: 8}} xxl={{ span: 6}}>
                             <Card
                                 key={item['id']}
                                 hoverable

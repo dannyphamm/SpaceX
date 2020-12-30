@@ -14,6 +14,6 @@
   float: right;
   margin: 16px 0 16px 24px;
 }
-  [data-theme="dark"] .site-layout-content {
+[data-theme="dark"] .site-layout-content {
     background: #141414;
-  }
+}

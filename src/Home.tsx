@@ -1,17 +1,16 @@
-import { Col, Row, Image } from 'antd'
+import { Col, Row, Image, Card } from 'antd'
 import React from 'react'
 import moment from 'moment';
 import { useState } from 'react'
 import Countdown from './Countdown';
 import PropTypes from 'prop-types'
+import Meta from 'antd/lib/card/Meta';
 function Home({ value, valueLP }) {
-    const styleDescription = { justifyContent: "center", textAlign: "center" as const }
-    const center = { textAlign: "center" as const }
-    const styleName = { textAlign: "center" as const, fontSize: "2rem", fontWeight: "bold" as const }
-    const styleCountdown = { fontSize: "3rem" }
-    const styleLaunchpad = { fontSize: "2rem", textAlign: "center" as const }
-    const background = { backgroundColor: "#A9A9A9" }
-    const image = { margin: "15px" }
+    const style = { height: "100%", margin: "0 auto", display: "flex", flexFlow: "column"};
+    const center = { justifyContent: "center" }
+
+    const styleBody = { flex: "1 1 auto" };
+    const styleCover = { padding: "10px 10px" }
 
 
     const [items, setItems] = useState<any>([]);
@@ -19,7 +18,6 @@ function Home({ value, valueLP }) {
 
     Promise.resolve(value).then((result) => {
         setItems(result.sort(comp))
-        console.log(items)
     })
     Promise.resolve(valueLP).then((result) => {
         setLaunchPads(result)
@@ -46,41 +44,24 @@ function Home({ value, valueLP }) {
     } else {
         return (
             <div>
-                <Row style={center}>
-                    <Col span={24}>
-                        <Image
-                            width={400}
-                            style={image}
-                            src={(items[0]['links']['patch']['large'] === null) ? "https://www.spacex.com/static/images/share.jpg" : items[0]['links']['patch']['large']}
-                        />
+                <Row style={center} gutter={[{ xs: 8, sm: 16, md: 24, lg: 32 }, { xs: 8, sm: 16, md: 24, lg: 32 }]}>
+                    <Col className="gutter-row" xs={{ span: 24 }} lg={{ span: 12 }} xl={{ span: 12 }} xxl={{ span: 8 }}>
+                        <Card
+                            key={items[0]['id']}
+                            hoverable
+                            style={style}
+                            bodyStyle={styleBody}
+                            cover={<img alt="example" src={(items[0]['links']['patch']['large'] === null) ? "https://www.spacex.com/static/images/share.jpg" : items[0]['links']['patch']['large']} style={styleCover} />}
+                        >
+                            <Meta title={items[0]['name']} />
+                            <Meta title={"Launchpad: " + getLaunchpad(items[0]['launchpad'])} description={getLocalTime(items[0]['date_unix'])} style={{ fontWeight: 'bold' }} />
+                            <Meta description={(items[0]['details'] === null ? "No Information Provided" : items[0]['details'])} />
+                            <br />
+                            <Meta description={<Countdown time={items[0]['date_unix']}></Countdown>} />
+                        </Card>
                     </Col>
-                </Row>
-                <Row>
-                    <Col style={background}>
-                        <Row >
-                            <Col span={24} style={styleName}>
-                                {items[0]['name']}
-                            </Col>
-                        </Row>
-                        <Row style={styleLaunchpad}>
-                            <Col span={24}>
-                                {"Launchpad: " + getLaunchpad(items[0]['launchpad'])}
-                                <br></br>
-                                {getLocalTime(items[0]['date_unix'])}
-                            </Col>
-                        </Row>
-                        <Row style={styleDescription}>
-                            <Col span={8}>
-                                {(items[0]['details'] === null ? "No Information Provided" : items[0]['details'])}
-                            </Col>
-                        </Row>
-                        <Row style={styleDescription}>
-                            <Col span={24} style={styleCountdown}>
-                                <Countdown time={items[0]['date_unix']} ></Countdown>
-                            </Col>
-                        </Row>
-                    </Col>
-                </Row>
+                </Row >
+
             </div>
         )
     }
