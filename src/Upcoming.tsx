@@ -86,7 +86,7 @@ function Upcoming({ value, valueLP }) {
                                 bodyStyle={styleBody}
                                 cover={<img alt="example" src={(item['links']['patch']['large'] === null) ? "https://www.spacex.com/static/images/share.jpg" : item['links']['patch']['large']} style={styleCover} />}
                             >
-                                <Meta title={item['id'] + " " + item['name']} />
+                                <Meta title={item['name']} />
                                 <Meta title={"Launchpad: " + getLaunchpad(item['launchpad'])} description={getLocalTime(item['date_unix'])} style={{ fontWeight: 'bold' }} />
                                 <Meta description={(item['details'] === null ? "No Information Provided" : item['details'])} />
                                 <br />
