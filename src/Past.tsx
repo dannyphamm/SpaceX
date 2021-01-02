@@ -21,8 +21,8 @@ function Past({ value, valueLP }) {
     const [launchpads, setLaunchPads] = useState<any>([]);
     const skeleton = [] as any;
     for (var i = 0; i < 25; i++) {
-        skeleton.push(<Col className="gutter-row" xs="8" sm="16" md="24" lg="32"><Card
-            style={{ width: 500 }}
+        skeleton.push(<Col className="gutter-row" xs={{ span: 24}} lg={{ span: 12}} xl={{ span: 8}} xxl={{ span: 6}}><Card
+            style={style}
             actions={[
                 <YoutubeFilled key="youtube" />,
                 <ReadFilled key="article" />
@@ -40,7 +40,6 @@ function Past({ value, valueLP }) {
     })
     Promise.resolve(valueLP).then((result) => {
         setLaunchPads(result)
-
     })
 
     function getLaunchpad(launchpadID: any) {
@@ -67,7 +66,6 @@ function Past({ value, valueLP }) {
         const landing = item['cores'][0]['landing_sucess'];
         return (landing === null ? <span><MinusSquareFilled /> No attempted Landing</span> : (landing === false ? <span><CheckCircleFilled /> Unsuccessful Landing</span> : <span><CheckCircleFilled /> Sucessful Landing</span>))
     }
-
     if (items.length === 0 || launchpads.length === 0) {
         return (
             <Row gutter={[{ xs: 8, sm: 16, md: 24, lg: 32 }, { xs: 8, sm: 16, md: 24, lg: 32 }]}>
@@ -89,16 +87,15 @@ function Past({ value, valueLP }) {
 
                 <Row gutter={[{ xs: 8, sm: 16, md: 24, lg: 32 }, { xs: 8, sm: 16, md: 24, lg: 32 }]}>
                     {items.slice(minValue, maxValue).map((item) => (
-                        <Col className="gutter-row" xs={{ span: 24}} lg={{ span: 12}} xl={{ span: 8}} xxl={{ span: 6}}>
+                        <Col className="gutter-row" xs={{ span: 24}} lg={{ span: 12}} xl={{ span: 8}} xxl={{ span: 6}} key={item['id']}>
                             <Link to={"launch/" + item['id']}>
                                 <Card
-                                    key={item['id']}
                                     hoverable
                                     style={style}
                                     bodyStyle={styleBody}
                                     cover={<img alt={item['name']} src={item['links']['patch']['large']} style={styleCover} />}
                                     actions={[
-                                        <a href={item['links']['webcast']} target="_blank" rel="noreferrer"><YoutubeFilled key="youtube" /></a>,
+                                        <YoutubeFilled key="youtube" href={item['links']['webcast']} target="_blank" rel="noreferrer" />,
                                         <a href={item['links']['article'] === null ? item['links']['wikipedia'] : item['links']['article']} target="_blank" rel="noreferrer"><ReadFilled key="article" /></a>,
                                         <a href={item['links']['reddit']['campaign']} target="_blank" rel="noreferrer"><RedditCircleFilled key="reddit" /></a>
                                     ]}

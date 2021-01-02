@@ -45,9 +45,8 @@ function Home({ value, valueLP }) {
         return (
             <div>
                 <Row style={center} gutter={[{ xs: 8, sm: 16, md: 24, lg: 32 }, { xs: 8, sm: 16, md: 24, lg: 32 }]}>
-                    <Col className="gutter-row" xs={{ span: 24 }} lg={{ span: 12 }} xl={{ span: 12 }} xxl={{ span: 8 }}>
+                    <Col className="gutter-row" xs={{ span: 24 }} lg={{ span: 12 }} xl={{ span: 12 }} xxl={{ span: 8 }} key={items[0]['id']}>
                         <Card
-                            key={items[0]['id']}
                             hoverable
                             style={style}
                             bodyStyle={styleBody}

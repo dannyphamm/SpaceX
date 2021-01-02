@@ -17,3 +17,12 @@
 [data-theme="dark"] .site-layout-content {
     background: #141414;
 }
+
+
+
+@media (max-width: 648px) {
+
+  .ant-layout-header .mobile{
+    background-color: violet;
+  }
+}

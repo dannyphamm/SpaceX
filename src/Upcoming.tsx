@@ -20,8 +20,8 @@ function Upcoming({ value, valueLP }) {
     const [launchpads, setLaunchPads] = useState<any>([]);
     const skeleton = [] as any;
     for (var i = 0; i < 25; i++) {
-        skeleton.push(<Col className="gutter-row" xs="8" sm="16" md="24" lg="32"><Card
-            style={{ width: 500 }}
+        skeleton.push(<Col className="gutter-row" xs={{ span: 24}} lg={{ span: 12}} xl={{ span: 8}} xxl={{ span: 6}}><Card
+            style={style}
             actions={[
                 <YoutubeFilled key="youtube" />,
                 <ReadFilled key="article" />
@@ -79,15 +79,14 @@ function Upcoming({ value, valueLP }) {
                 />
                 <Row gutter={[{ xs: 8, sm: 16, md: 24, lg: 32 }, { xs: 8, sm: 16, md: 24, lg: 32 }]}>
                     {items.slice(minValue, maxValue).map((item: { [x: string]: number; }) => (
-                        <Col className="gutter-row" xs={{ span: 24}} lg={{ span: 12}} xl={{ span: 8}} xxl={{ span: 6}}>
+                        <Col className="gutter-row" xs={{ span: 24}} lg={{ span: 12}} xl={{ span: 8}} xxl={{ span: 6}} key={item['id']}>
                             <Card
-                                key={item['id']}
                                 hoverable
                                 style={style}
                                 bodyStyle={styleBody}
                                 cover={<img alt="example" src={(item['links']['patch']['large'] === null) ? "https://www.spacex.com/static/images/share.jpg" : item['links']['patch']['large']} style={styleCover} />}
                             >
-                                <Meta title={item['name']} />
+                                <Meta title={item['id'] + " " + item['name']} />
                                 <Meta title={"Launchpad: " + getLaunchpad(item['launchpad'])} description={getLocalTime(item['date_unix'])} style={{ fontWeight: 'bold' }} />
                                 <Meta description={(item['details'] === null ? "No Information Provided" : item['details'])} />
                                 <br />
