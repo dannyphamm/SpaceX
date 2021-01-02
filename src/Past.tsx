@@ -95,7 +95,7 @@ function Past({ value, valueLP }) {
                                     bodyStyle={styleBody}
                                     cover={<img alt={item['name']} src={item['links']['patch']['large']} style={styleCover} />}
                                     actions={[
-                                        <YoutubeFilled key="youtube" href={item['links']['webcast']} target="_blank" rel="noreferrer" />,
+                                        <a href={item['links']['webcast']} target="_blank" rel="noreferrer"><YoutubeFilled key="youtube"/></a>,
                                         <a href={item['links']['article'] === null ? item['links']['wikipedia'] : item['links']['article']} target="_blank" rel="noreferrer"><ReadFilled key="article" /></a>,
                                         <a href={item['links']['reddit']['campaign']} target="_blank" rel="noreferrer"><RedditCircleFilled key="reddit" /></a>
                                     ]}
