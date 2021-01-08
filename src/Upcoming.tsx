@@ -21,7 +21,6 @@ function Upcoming({ value, valueLP }) {
     const [launchpads, setLaunchPads] = useState<any>([]);
     const skeleton = [] as any;
     let array = [] as any;
-    let tbdArray = [] as any;
     for (var i = 0; i < 25; i++) {
         skeleton.push(<Col className="gutter-row" xs={{ span: 24}} lg={{ span: 12}} xl={{ span: 8}} xxl={{ span: 6}}><Card
             style={style}
