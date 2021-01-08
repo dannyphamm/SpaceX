@@ -20,7 +20,7 @@ function Upcoming({ value, valueLP }) {
     const [items1, setItems1] = useState<any>([]);
     const [launchpads, setLaunchPads] = useState<any>([]);
     const skeleton = [] as any;
-    let array = [] as any;
+ 
     for (var i = 0; i < 25; i++) {
         skeleton.push(<Col className="gutter-row" xs={{ span: 24}} lg={{ span: 12}} xl={{ span: 8}} xxl={{ span: 6}}><Card
             style={style}
@@ -46,7 +46,7 @@ function Upcoming({ value, valueLP }) {
                 items1[i] = {...items1[i], tbd: true}
             }
         }
-        array = Object.keys(items1).map((key)=> items1[key]).sort(comp);
+        let array = Object.keys(items1).map((key)=> items1[key]).sort(comp);
         setItems(array)
     }, [items1])
     
