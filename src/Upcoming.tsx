@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { useState } from 'react'
 import { Skeleton, Row, Col, Card, Pagination } from 'antd';
 import moment from 'moment';
@@ -17,8 +17,11 @@ function Upcoming({ value, valueLP }) {
     const [maxValue, setMaxValue] = useState<number>(25);
     const [pageSize, setPageSize] = useState<number>(25)
     const [items, setItems] = useState<any>([]);
+    const [items1, setItems1] = useState<any>([]);
     const [launchpads, setLaunchPads] = useState<any>([]);
     const skeleton = [] as any;
+    let array = [] as any;
+    let tbdArray = [] as any;
     for (var i = 0; i < 25; i++) {
         skeleton.push(<Col className="gutter-row" xs={{ span: 24}} lg={{ span: 12}} xl={{ span: 8}} xxl={{ span: 6}}><Card
             style={style}
@@ -30,13 +33,24 @@ function Upcoming({ value, valueLP }) {
             <Skeleton loading={true} active></Skeleton>
         </Card></Col>)
     }
-    function comp(a: { date_unix: string | number | Date; }, b: { date_unix: string | number | Date; }) {
+    function comp(a, b) {
         return new Date(a.date_unix).getTime() - new Date(b.date_unix).getTime();
     }
 
     Promise.resolve(value).then((result) => {
-        setItems(result.sort(comp))
+        setItems1(result.sort(comp));
+
     })
+    useEffect(() => {
+        for(let i in items1) {
+            if(items1[i]["date_percision"] !== "hourly"){
+                items1[i] = {...items1[i], tbd: true}
+            }
+        }
+        array = Object.keys(items1).map((key)=> items1[key]).sort(comp);
+        setItems(array)
+    }, [items1])
+    
     Promise.resolve(valueLP).then((result) => {
         setLaunchPads(result)
     })
@@ -59,6 +73,12 @@ function Upcoming({ value, valueLP }) {
         const d = moment.unix(epoc).format("hh:mmA DD/MM/YYYY");
         return d.toString();
     }
+    function getLocalTimeString(epoc: number) {
+        const d = moment.unix(epoc).format("MMMM YYYY");
+        return "NET " + d.toString();
+    }
+
+    
     if (items.length === 0 || launchpads.length === 0) {
         return (
             <Row gutter={[{ xs: 8, sm: 16, md: 24, lg: 32 }, { xs: 8, sm: 16, md: 24, lg: 32 }]}>
@@ -77,6 +97,7 @@ function Upcoming({ value, valueLP }) {
                     responsive={true}
                     pageSizeOptions={["25", "50", "75", "100"]}
                 />
+
                 <Row gutter={[{ xs: 8, sm: 16, md: 24, lg: 32 }, { xs: 8, sm: 16, md: 24, lg: 32 }]}>
                     {items.slice(minValue, maxValue).map((item: { [x: string]: number; }) => (
                         <Col className="gutter-row" xs={{ span: 24}} lg={{ span: 12}} xl={{ span: 8}} xxl={{ span: 6}} key={item['id']}>
@@ -87,10 +108,13 @@ function Upcoming({ value, valueLP }) {
                                 cover={<img alt="example" src={(item['links']['patch']['large'] === null) ? "https://www.spacex.com/static/images/share.jpg" : item['links']['patch']['large']} style={styleCover} />}
                             >
                                 <Meta title={item['name']} />
-                                <Meta title={"Launchpad: " + getLaunchpad(item['launchpad'])} description={getLocalTime(item['date_unix'])} style={{ fontWeight: 'bold' }} />
+                                <Meta title={"Launchpad: " + getLaunchpad(item['launchpad'])}  />
+                                <Meta description={(item['tbd']) ? getLocalTimeString(item['date_unix']) : getLocalTime(item['date_unix'])} style={{ fontWeight: 'bold' }}/>
                                 <Meta description={(item['details'] === null ? "No Information Provided" : item['details'])} />
+                                
                                 <br />
-                                <Meta description={<Countdown time={item['date_unix']}></Countdown>} />
+                                {(item['tbd']) ? null : <Meta description={<Countdown time={item['date_unix']}></Countdown>} />}
+                                
                             </Card>
                         </Col>
                     )

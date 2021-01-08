@@ -84,7 +84,7 @@ function Past({ value, valueLP }) {
                     responsive={true}
                     pageSizeOptions={["25", "50", "75", "100"]}
                 />
-
+                
                 <Row gutter={[{ xs: 8, sm: 16, md: 24, lg: 32 }, { xs: 8, sm: 16, md: 24, lg: 32 }]}>
                     {items.slice(minValue, maxValue).map((item) => (
                         <Col className="gutter-row" xs={{ span: 24}} lg={{ span: 12}} xl={{ span: 8}} xxl={{ span: 6}} key={item['id']}>
@@ -93,7 +93,7 @@ function Past({ value, valueLP }) {
                                     hoverable
                                     style={style}
                                     bodyStyle={styleBody}
-                                    cover={<img alt={item['name']} src={item['links']['patch']['large']} style={styleCover} />}
+                                    cover={<img alt={item['name']} src={(item['links']['patch']['large'] === null) ? "https://www.spacex.com/static/images/share.jpg" : item['links']['patch']['large']} style={styleCover} />}
                                     actions={[
                                         <a href={item['links']['webcast']} target="_blank" rel="noreferrer"><YoutubeFilled key="youtube"/></a>,
                                         <a href={item['links']['article'] === null ? item['links']['wikipedia'] : item['links']['article']} target="_blank" rel="noreferrer"><ReadFilled key="article" /></a>,

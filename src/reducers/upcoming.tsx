@@ -7,6 +7,7 @@ const upcoming = (state = [] as Array<any>, action) => {
             .then(
                 (result) => {
                     state = result
+
                     return state
                 },
                 (error) => {
