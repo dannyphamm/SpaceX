@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 import { useEffect } from 'react'
 import { useParams } from "react-router-dom";
 import 'antd/dist/antd.css';
-import { Descriptions, Badge, Col, Row, Image, Card } from 'antd';
+import { Descriptions, Badge, Col, Row, Image} from 'antd';
 import Title from 'antd/lib/typography/Title';
 import Masonry from 'react-masonry-css';
 import './Launch.css'
