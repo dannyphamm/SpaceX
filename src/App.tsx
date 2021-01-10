@@ -19,13 +19,14 @@ function App() {
   store.dispatch({ type: 'ADDLAUNCHPADS' })
   store.dispatch({ type: 'ADDUPCOMING' })
   store.dispatch({ type: 'ADDPAST' })
+  store.dispatch({ type: 'ADDROCKETS' })
+  store.dispatch({ type: 'ADDCORES' })
   const [selected, setSelected] = useState<any>([]);
   const [mobileMenuOpen, setMobileMenuOpen] = useState<boolean>(false);
 
   return (
     <Router>
       <Header>
-
         <MediaQuery maxDeviceWidth={576}>
           <div style={{ display: "flex", justifyContent: "space-between" }}>
             <img src="https://logos-world.net/wp-content/uploads/2020/09/SpaceX-Logo.png" alt="asd" className="logo" style={{ objectFit: "cover", background: "none" }} />
@@ -83,7 +84,8 @@ function App() {
         </MediaQuery>
       </Header>
       <Layout className="layout">
-        <Content style={{ padding: '50px 50px' }}>
+      <MediaQuery maxDeviceWidth={576}>
+      <Content>
           <div className="site-layout-content">
             <Switch>
 
@@ -94,7 +96,7 @@ function App() {
                 <Past value={store.getState().past} valueLP={store.getState().launchpads} />
               </Route>
               <Route path="/launch/:id">
-                <Launch />
+                <Launch valueLP={store.getState().launchpads}/>
               </Route>
               <Route path="/">
                 <Home value={store.getState().upcoming} valueLP={store.getState().launchpads} />
@@ -102,7 +104,28 @@ function App() {
             </Switch>
           </div>
         </Content>
-        <Footer style={{ textAlign: 'center' }}>A SpaceX launch previewer created by Danny</Footer>
+      </MediaQuery>
+      <MediaQuery minDeviceWidth={577}>
+        <Content style={{ padding: '50px 50px' }}>
+          <div className="site-layout-content">
+            <Switch>
+              <Route path="/upcoming">
+                <Upcoming value={store.getState().upcoming} valueLP={store.getState().launchpads} />
+              </Route>
+              <Route path="/past">
+                <Past value={store.getState().past} valueLP={store.getState().launchpads} />
+              </Route>
+              <Route path="/launch/:id">
+                <Launch valueLP={store.getState().launchpads} valueR={store.getState().rockets} valueC={store.getState().cores}/>
+              </Route>
+              <Route path="/">
+                <Home value={store.getState().upcoming} valueLP={store.getState().launchpads} />
+              </Route>
+            </Switch>
+          </div>
+        </Content>
+      </MediaQuery>
+      <Footer style={{ textAlign: 'center' }}>A SpaceX launch previewer created by Danny</Footer>
       </Layout>
     </Router >
   );
