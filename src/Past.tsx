@@ -48,7 +48,7 @@ function Past({ value, valueLP }) {
     }
 
     function getLocalTime(epoc: number) {
-        const d = moment.unix(epoc).format("hh:mmA DD/MM/YYYY");
+        const d = moment.unix(epoc).local().format("hh:mmA DD/MM/YYYY");
         return d.toString();
     }
 

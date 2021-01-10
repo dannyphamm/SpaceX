@@ -6,6 +6,7 @@ import { Descriptions, Badge, Col, Row, Image} from 'antd';
 import Title from 'antd/lib/typography/Title';
 import Masonry from 'react-masonry-css';
 import PropTypes from 'prop-types'
+import moment from 'moment';
 import './Launch.css'
 function Launch({valueLP, valueR, valueC}) {
     let params = useParams();
@@ -56,6 +57,10 @@ function Launch({valueLP, valueR, valueC}) {
         
         return (rocket['name']);
     }
+    function getLocalTime(epoc: number) {
+        const d = moment.unix(epoc).format("hh:mmA DD/MM/YYYY");
+        return d.toString();
+    }
     if (item.length === 0) {
         return (
             <h1>Loading</h1>
@@ -73,7 +78,7 @@ function Launch({valueLP, valueR, valueC}) {
                                 <Descriptions.Item label="Flight Number" span={1}>{"#" + item['flight_number']}</Descriptions.Item>
                                 <Descriptions.Item label="Name" span={1}>{item['name']}</Descriptions.Item>
                                 <Descriptions.Item label="Launchpad" span={1}>{getLaunchpad(item['launchpad'])}</Descriptions.Item>
-                                <Descriptions.Item label="Date" span={3}>{item['date_local']}</Descriptions.Item>
+                                <Descriptions.Item label="Date" span={3}>{getLocalTime(item['date_unix'])}</Descriptions.Item>
                                 <Descriptions.Item label="Booster Type">{getRocket(item['rocket']) + " " +getCore(item['cores'][0]['core'])}</Descriptions.Item>
                                 <Descriptions.Item label="Booster Flight Number">{item['cores'][0]['flight']}</Descriptions.Item>
                                 <Descriptions.Item label="Booster Landing">

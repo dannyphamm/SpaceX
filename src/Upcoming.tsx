@@ -67,7 +67,7 @@ function Upcoming({ value, valueLP }) {
         return d.toString();
     }
     function getLocalTimeString(epoc: number) {
-        const d = moment.unix(epoc).format("MMMM YYYY");
+        const d = moment.unix(epoc).local().format("MMMM YYYY");
         return "NET " + d.toString();
     }
 
