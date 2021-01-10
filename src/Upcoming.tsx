@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react'
 import { useState } from 'react'
-import { Skeleton, Row, Col, Card, Pagination } from 'antd';
+import { Skeleton, Row, Col, Card } from 'antd';
 import moment from 'moment';
 import 'antd/dist/antd.css';
 import Countdown from './Countdown';
@@ -11,15 +11,8 @@ function Upcoming({ value, valueLP }) {
     const style = { height: "100%", margin: "0 auto", display: "flex", flexFlow: "column" };
     const styleBody = { flex: "1 1 auto" };
     const styleCover = { padding: "10px 10px" }
-    const paginationStyle = { paddingBottom: "24px", textAlign: "center" as const }
 
     const { Meta } = Card;
-    const [minValue, setMinValue] = useState<number>(0);
-    const [maxValue, setMaxValue] = useState<number>(25);
-    const [pageSize, setPageSize] = useState<number>(25)
-    const [minValue1, setMinValue1] = useState<number>(0);
-    const [maxValue1, setMaxValue1] = useState<number>(25);
-    const [pageSize1, setPageSize1] = useState<number>(25)
     const [launch, setLaunch] = useState<any>([]);
     const [tbd, setTBD] = useState<any>([]);
     const [items1, setItems1] = useState<any>([]);
@@ -42,7 +35,6 @@ function Upcoming({ value, valueLP }) {
     }
 
     Promise.resolve(value).then((result) => {
-        //console.log(result)
         setItems1(result.sort(comp));
 
     })
@@ -64,29 +56,10 @@ function Upcoming({ value, valueLP }) {
     Promise.resolve(valueLP).then((result) => {
         setLaunchPads(result)
     })
-    function handleChange(value, pageSize) {
-        setPageSize(pageSize)
-        if (value <= 1) {
-            setMinValue(0)
-            setMaxValue(pageSize)
-        } else {
-            setMinValue((value - 1) * pageSize)
-            setMaxValue(value * pageSize)
-        }
-    }
-    function handleChange1(value, pageSize1) {
-        setPageSize1(pageSize1)
-        if (value <= 1) {
-            setMinValue1(0)
-            setMaxValue1(pageSize1)
-        } else {
-            setMinValue1((value - 1) * pageSize1)
-            setMaxValue1(value * pageSize1)
-        }
-    }
+
     function getLaunchpad(launchpadID: any) {
         const launchpad = launchpads.find(launchpad => launchpad['id'] === launchpadID);
-        return (launchpad['name']);
+        return (launchpad['full_name']);
     }
 
     function getLocalTime(epoc: number) {
@@ -111,17 +84,8 @@ function Upcoming({ value, valueLP }) {
                 <Row>
                     <Col>
                         <Title level={2}>Upcoming Launches</Title>
-                        <Pagination
-                            style={paginationStyle}
-                            defaultCurrent={1}
-                            onChange={handleChange}
-                            pageSize={pageSize}
-                            total={launch.length}
-                            responsive={true}
-                            pageSizeOptions={["25", "50", "75", "100"]}
-                        />
                         <Row gutter={[{ xs: 8, sm: 16, md: 24, lg: 32 }, { xs: 8, sm: 16, md: 24, lg: 32 }]}>
-                            {launch.slice(minValue, maxValue).map((item: { [x: string]: number; }) => (
+                            {launch.map((item: { [x: string]: number; }) => (
                                 <Col className="gutter-row" xs={{ span: 24 }} lg={{ span: 12 }} xl={{ span: 8 }} xxl={{ span: 6 }} key={item['id']}>
                                     <Card
                                         hoverable
@@ -129,13 +93,13 @@ function Upcoming({ value, valueLP }) {
                                         bodyStyle={styleBody}
                                         cover={<img alt="example" src={(item['links']['patch']['large'] === null) ? "https://www.spacex.com/static/images/share.jpg" : item['links']['patch']['large']} style={styleCover} />}
                                     >
-                                        <Meta title={item['name']} />
-                                        <Meta title={"Launchpad: " + getLaunchpad(item['launchpad'])} />
+                                        <Meta title={"#" +item['flight_number'] + " " + item['name']} />
+                                        <Meta description={getLaunchpad(item['launchpad'])} style={{ fontWeight: 'bold', lineHeight: "1rem", marginBottom: "0.5rem"}} />
                                         <Meta description={getLocalTime(item['date_unix'])} style={{ fontWeight: 'bold' }} />
                                         <Meta description={(item['details'] === null ? "No Information Provided" : item['details'])} />
 
                                         <br />
-                                        <Meta description={<Countdown time={item['date_unix']}/>}/>
+                                        <Meta description={<Countdown time={item['date_unix']} />} />
 
                                     </Card>
                                 </Col>
@@ -145,18 +109,9 @@ function Upcoming({ value, valueLP }) {
                         </Row >
                         <Row>
                             <Col>
-                                <Title level={2}>Unverified Launches</Title>
-                                <Pagination
-                                    style={paginationStyle}
-                                    defaultCurrent={1}
-                                    onChange={handleChange1}
-                                    pageSize={pageSize1}
-                                    total={tbd.length}
-                                    responsive={true}
-                                    pageSizeOptions={["25", "50", "75", "100"]}
-                                />
+                                <Title level={3}>Unverified Launches</Title>
                                 <Row gutter={[{ xs: 8, sm: 16, md: 24, lg: 32 }, { xs: 8, sm: 16, md: 24, lg: 32 }]}>
-                                    {tbd.slice(minValue1, maxValue1).map((item: { [x: string]: number; }) => (
+                                    {tbd.map((item: { [x: string]: number; }) => (
                                         <Col className="gutter-row" xs={{ span: 24 }} lg={{ span: 12 }} xl={{ span: 8 }} xxl={{ span: 6 }} key={item['id']}>
                                             <Card
                                                 hoverable
@@ -164,15 +119,14 @@ function Upcoming({ value, valueLP }) {
                                                 bodyStyle={styleBody}
                                                 cover={<img alt="example" src={(item['links']['patch']['large'] === null) ? "https://www.spacex.com/static/images/share.jpg" : item['links']['patch']['large']} style={styleCover} />}
                                             >
-                                                <Meta title={item['name']} />
-                                                <Meta title={"Launchpad: " + getLaunchpad(item['launchpad'])} />
-                                                <Meta description={getLocalTimeString(item['date_unix'])} style={{ fontWeight: 'bold' }} />
+                                                <Meta title={"#" +item['flight_number'] + " " + item['name']} />
+                                                <Meta description={getLaunchpad(item['launchpad'])} style={{ fontWeight: 'bold', lineHeight: "1rem", marginBottom: "0.5rem"}}/>
+                                                
                                                 <Meta description={(item['details'] === null ? "No Information Provided" : item['details'])} />
+                                                <Meta description={getLocalTimeString(item['date_unix'])} style={{ fontWeight: 'bold' }} />
                                             </Card>
                                         </Col>
-                                    )
-                                    )
-                                    }
+                                    ))}
                                 </Row >
                             </Col>
                         </Row>

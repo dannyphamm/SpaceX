@@ -63,7 +63,7 @@ function Past({ value, valueLP }) {
         }
     }
     function landingSuccess(item) {
-        const landing = item['cores'][0]['landing_sucess'];
+        const landing = item['cores'][0]['landing_success'];
         return (landing === null ? <span><MinusSquareFilled /> No attempted Landing</span> : (landing === false ? <span><CheckCircleFilled /> Unsuccessful Landing</span> : <span><CheckCircleFilled /> Sucessful Landing</span>))
     }
     if (items.length === 0 || launchpads.length === 0) {
@@ -94,22 +94,23 @@ function Past({ value, valueLP }) {
                                 style={style}
                                 bodyStyle={styleBody}
 
-                                cover={<Link to={"launch/" + item['id']}><img alt={item['name']} src={(item['links']['patch']['large'] === null) ? "https://www.spacex.com/static/images/share.jpg" : item['links']['patch']['large']} style={styleCover}/></Link>}
+                                cover={<Link to={"launch/" + item['id']}><img alt={item['name']} src={(item['links']['patch']['large'] === null) ? "https://www.spacex.com/static/images/share.jpg" : item['links']['patch']['large']} style={styleCover} /></Link>}
                                 actions={[
                                     <a href={item['links']['webcast']} target="_blank" rel="noreferrer" style={{ zIndex: 100 }}><YoutubeFilled key="youtube" /></a>,
                                     <a href={item['links']['article'] === null ? item['links']['wikipedia'] : item['links']['article']} target="_blank" rel="noreferrer"><ReadFilled key="article" /></a>,
                                     <a href={item['links']['reddit']['campaign']} target="_blank" rel="noreferrer"><RedditCircleFilled key="reddit" /></a>
                                 ]}
-                            ><Link to={"launch/" + item['id']}>
-                                    <div>
+                            >
+                                <div>
+                                    <Link to={"launch/" + item['id']}>
                                         <Meta title={item['name']} />
                                         <Meta title={"Launchpad: " + getLaunchpad(item['launchpad'])} description={getLocalTime(item['date_unix'])} style={{ fontWeight: 'bold' }} />
                                         <Meta description={landingSuccess(item)} />
                                         <br />
-                                    </div>
+                                        <Meta description={(item['details'] === null ? "No Information Provided" : item['details'])} />
+                                    </Link>
+                                </div>
 
-                                </Link>
-                                <Meta description={(item['details'] === null ? "No Information Provided" : item['details'])} />
                             </Card>
 
                         </Col>
