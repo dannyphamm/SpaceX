@@ -56,7 +56,6 @@ function Home({ value, valueLP }) {
             <h1>Loading</h1>
         )
     } else {
-        {console.log(launch)}
         return (
             <div>
                 <Row style={center} gutter={[{ xs: 8, sm: 16, md: 24, lg: 32 }, { xs: 8, sm: 16, md: 24, lg: 32 }]}>
