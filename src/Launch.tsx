@@ -49,16 +49,19 @@ function Launch({ valueLP, valueR, valueC, valueZ }) {
 
     function getLandpad(item1: any) {
         let value;
-        if(item1['core'][0]['landpad'] !== null){
             for (let i in landpads) {
-                if (landpads[i]['launches'].indexOf(item1['id'][0]['landpad']) > -1) {
+                if (landpads[i]['launches'].indexOf(item1) > -1) {
                     value = i
                 }
+                
+            } 
+            if(value > -1) {
+                return ([landpads[value]['region'], landpads[value]['full_name'], landpads[value]['type']])
+            } else {
+                return(["Unknown","Unknown","Unknown"])
             }
-            return ([landpads[value]['region'], landpads[value]['full_name'], landpads[value]['type']])
-        } else {
-            return (["Unknown","Unknown", "Unknown"])
-        }
+            
+           
 
     }
     function getCore(coreID: any) {
@@ -104,18 +107,20 @@ function Launch({ valueLP, valueR, valueC, valueZ }) {
                                 <Descriptions.Item label="Launchpad" span={1}>{getLaunchpad(item['launchpad'])}</Descriptions.Item>
                                 <Descriptions.Item label="Date" span={3}>{item['date_precision'] !== "hour"? getLocalTimeString(item['date_unix']): getLocalTime(item['date_unix'])}</Descriptions.Item>
                                 {item['date_precision'] === "hour"?  <Descriptions.Item label="Countdown" span={3}><Countdown time={item['date_unix']} /></Descriptions.Item>: null}
+                               
+                                {/* Booster Information */}
                                 {item['cores'][0]['landing_attempt']? <>
-
-
                                 <Descriptions.Item label="Booster Landing Status" span={1}>
                                     {item['cores'][0]['landing_attempt'] === null? <Badge status="default" text="Unknown" /> : item['cores'][0]['landing_attempt']? item['cores'][0]['landing_success'] === null? <Badge status="default" text="Unknown" />: item['cores'][0]['landing_success'] ? <Badge status="success" text="Success" /> : <Badge status="error" text="Failure" />: <Badge status="default" text="No attempt" />}
-                                </Descriptions.Item>
-                                <Descriptions.Item label="Landing Region" span={1}>{item['cores'][0]['landing_success']?getLandpad(item['id'])[0]: "Unknown"}</Descriptions.Item>
-                                <Descriptions.Item label="Landing Location" span={1}>{item['cores'][0]['landing_success']?getLandpad(item['id'])[1]: "Unknown"}</Descriptions.Item>
-                                <Descriptions.Item label="Landing Type" span={1}>{item['cores'][0]['landing_success']?getLandpad(item['id'])[2]: "Unknown"}</Descriptions.Item></> : null}
-
+                                </Descriptions.Item></> : null}
                                 <Descriptions.Item label="Booster Type" span={1}>{getRocket(item['rocket']) + " " + getCore(item['cores'][0]['core'])}</Descriptions.Item>
                                 <Descriptions.Item label="Booster Flight Number" span={1}>{item['cores'][0]['flight'] === null? "Unknown":item['cores'][0]['flight']}</Descriptions.Item>
+                                {/* Landing Information */}
+                                {item['cores'][0]['landing_attempt']?<>
+                                <Descriptions.Item label="Landing Region" span={1}>{item['cores'][0]['landing_success']?getLandpad(item['id'])[0]: "Pending"}</Descriptions.Item>
+                                <Descriptions.Item label="Landing Location" span={1}>{item['cores'][0]['landing_success']?getLandpad(item['id'])[1]: "Pending"}</Descriptions.Item>
+                                <Descriptions.Item label="Landing Type" span={1}>{item['cores'][0]['landing_success']?getLandpad(item['id'])[2]: "Pending"}</Descriptions.Item></> : null}
+
                                 <Descriptions.Item label="Details" span={3}>{item['details'] === null? "No information Provided":item['details']}</Descriptions.Item>
                             </Descriptions>
                         </Col>

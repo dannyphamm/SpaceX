@@ -9,7 +9,7 @@ import { useEffect } from 'react';
 import YouTube from 'react-youtube';
 import './Home.css'
 function Home({ value, valueLP }) {
-    const style = { height: "100%", margin: "0 auto", display: "flex", flexFlow: "column"};
+    const style = { height: "100%", margin: "0 auto", display: "flex", flexFlow: "column" };
     const center = { justifyContent: "center" }
 
     const styleBody = { flex: "1 1 auto" };
@@ -30,7 +30,7 @@ function Home({ value, valueLP }) {
         for (let i in items1) {
             if (items1[i]["date_precision"] === "hour") {
                 launchArray[i] = { ...launchArray[i], ...items1[i] }
-            } 
+            }
         }
         setLaunch(Object.keys(launchArray).map((key) => launchArray[key]).sort(comp))
     }, [items1])
@@ -55,28 +55,46 @@ function Home({ value, valueLP }) {
     } else {
         return (
             <div>
-                <Row style={center} gutter={[{ xs: 8, sm: 16, md: 24, lg: 32 }, { xs: 8, sm: 16, md: 24, lg: 32 }]}>
-                    <Col className="gutter-row" xs={{ span: 24 }} lg={{ span: 12 }} xl={{ span: 12 }} xxl={{ span: 4 }} key={launch[0]['id']}>
-                        <Card
-                            hoverable
-                            style={style}
-                            bodyStyle={styleBody}
-                            cover={<img alt="example" src={(launch[0]['links']['patch']['large'] === null) ? "https://www.spacex.com/static/images/share.jpg" : launch[0]['links']['patch']['large']} style={styleCover} />}
-                        >
-                            <Meta title={launch[0]['name']} />
-                            <Meta title={"Launchpad: " + getLaunchpad(launch[0]['launchpad'])} description={getLocalTime(launch[0]['date_unix'])} style={{ fontWeight: 'bold' }} />
-                            <Meta description={(launch[0]['details'] === null ? "No Information Provided" : launch[0]['details'])} />
-                            <br />
-                            <Meta description={<Countdown time={launch[0]['date_unix']}></Countdown>} />
-                        </Card>
-                    </Col>
-                    {launch[0]['links']['youtube_id'] === null? null : 
-                    
-                    <Col className="gutter-row" xs={{ span: 24 }} lg={{ span: 12 }} xl={{ span: 12 }} xxl={{ span: 20 }}>
-                        <YouTube videoId={launch[0]['links']['youtube_id']} containerClassName="livestream"/>
-                    </Col> }
+                {launch[0]['links']['youtube_id'] === null ?
+                    <>
+                        <Row style={center} gutter={[{ xs: 8, sm: 16, md: 24, lg: 32 }, { xs: 8, sm: 16, md: 24, lg: 32 }]}>
+                            <Col className="gutter-row" xs={{ span: 24 }} lg={{ span: 12 }} xl={{ span: 12 }} xxl={{ span: 10 }} key={launch[0]['id']}>
+                                <Card
+                                    hoverable
+                                    style={style}
+                                    bodyStyle={styleBody}
+                                    cover={<img alt="example" src={(launch[0]['links']['patch']['large'] === null) ? "https://www.spacex.com/static/images/share.jpg" : launch[0]['links']['patch']['large']} style={styleCover} />}
+                                >
+                                    <Meta title={launch[0]['name']} />
+                                    <Meta title={"Launchpad: " + getLaunchpad(launch[0]['launchpad'])} description={getLocalTime(launch[0]['date_unix'])} style={{ fontWeight: 'bold' }} />
+                                    <Meta description={(launch[0]['details'] === null ? "No Information Provided" : launch[0]['details'])} />
+                                    <br />
+                                    <Meta description={<Countdown time={launch[0]['date_unix']}></Countdown>} />
+                                </Card>
+                            </Col>
+                        </Row >
+                    </>: <>                        <Row style={center} gutter={[{ xs: 8, sm: 16, md: 24, lg: 32 }, { xs: 8, sm: 16, md: 24, lg: 32 }]}>
+                            <Col className="gutter-row" xs={{ span: 24 }} lg={{ span: 12 }} xl={{ span: 12 }} xxl={{ span: 4 }} key={launch[0]['id']}>
+                                <Card
+                                    hoverable
+                                    style={style}
+                                    bodyStyle={styleBody}
+                                    cover={<img alt="example" src={(launch[0]['links']['patch']['large'] === null) ? "https://www.spacex.com/static/images/share.jpg" : launch[0]['links']['patch']['large']} style={styleCover} />}
+                                >
+                                    <Meta title={launch[0]['name']} />
+                                    <Meta title={"Launchpad: " + getLaunchpad(launch[0]['launchpad'])} description={getLocalTime(launch[0]['date_unix'])} style={{ fontWeight: 'bold' }} />
+                                    <Meta description={(launch[0]['details'] === null ? "No Information Provided" : launch[0]['details'])} />
+                                    <br />
+                                    <Meta description={<Countdown time={launch[0]['date_unix']}></Countdown>} />
+                                </Card>
+                            </Col>
+                            <Col className="gutter-row" xs={{ span: 24 }} lg={{ span: 12 }} xl={{ span: 12 }} xxl={{ span: 20 }}>
+                                <YouTube videoId={launch[0]['links']['youtube_id']} containerClassName="livestream" />
+                            </Col>
+                        </Row ></>}
 
-                </Row >
+
+
 
             </div>
         )
