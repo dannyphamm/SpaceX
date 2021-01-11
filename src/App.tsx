@@ -13,6 +13,7 @@ import thunk from 'redux-thunk';
 import MediaQuery from 'react-responsive'
 import {CloseOutlined, MenuOutlined} from '@ant-design/icons';
 import Sider from 'antd/lib/layout/Sider';
+import Gallery from './Gallery';
 function App() {
   const { Header, Content, Footer } = Layout;
   const store = createStore(rootReducer, applyMiddleware(thunk))
@@ -21,6 +22,7 @@ function App() {
   store.dispatch({ type: 'ADDPAST' })
   store.dispatch({ type: 'ADDROCKETS' })
   store.dispatch({ type: 'ADDCORES' })
+  store.dispatch({ type: 'ADDLANDPADS' })
   const [selected, setSelected] = useState<any>([]);
   const [mobileMenuOpen, setMobileMenuOpen] = useState<boolean>(false);
 
@@ -69,6 +71,7 @@ function App() {
                   <Menu.Item key="1" onClick={() => { setSelected(["1"]); setMobileMenuOpen(false) }}><Link to="/" />Home</Menu.Item>
                   <Menu.Item key="2" onClick={() => { setSelected(["2"]); setMobileMenuOpen(false) }}><Link to="/upcoming" />Upcoming</Menu.Item>
                   <Menu.Item key="3" onClick={() => { setSelected(["3"]); setMobileMenuOpen(false) }}><Link to="/past" /> Past</Menu.Item>
+                  <Menu.Item key="4" onClick={() => { setSelected(["4"]); setMobileMenuOpen(false) }}><Link to="/gallery" /> Gallery</Menu.Item>
                 </Menu>
               </Sider>
             }
@@ -77,9 +80,10 @@ function App() {
         <MediaQuery minDeviceWidth={577}>
           <img src="https://logos-world.net/wp-content/uploads/2020/09/SpaceX-Logo.png" alt="asd" className="logo" style={{ objectFit: "cover", background: "none" }} />
           <Menu theme="dark" mode="horizontal" defaultSelectedKeys={selected} >
-            <Menu.Item key="4" onClick={() => setSelected(["4"])}><Link to="/" />Home</Menu.Item>
-            <Menu.Item key="5" onClick={() => setSelected(["5"])}><Link to="/upcoming" />Upcoming</Menu.Item>
-            <Menu.Item key="6" onClick={() => setSelected(["6"])}><Link to="/past" /> Past</Menu.Item>
+            <Menu.Item key="a" onClick={() => setSelected(["a"])}><Link to="/" />Home</Menu.Item>
+            <Menu.Item key="b" onClick={() => setSelected(["b"])}><Link to="/upcoming" />Upcoming</Menu.Item>
+            <Menu.Item key="c" onClick={() => setSelected(["c"])}><Link to="/past" /> Past</Menu.Item>
+            <Menu.Item key="d" onClick={() => { setSelected(["d"]); setMobileMenuOpen(false) }}><Link to="/gallery" /> Gallery</Menu.Item>
           </Menu>
         </MediaQuery>
       </Header>
@@ -88,7 +92,9 @@ function App() {
       <Content>
           <div className="site-layout-content">
             <Switch>
-
+            <Route path="/gallery">
+                <Gallery value={store.getState().past}/>
+              </Route>
               <Route path="/upcoming">
                 <Upcoming value={store.getState().upcoming} valueLP={store.getState().launchpads} />
               </Route>
@@ -96,7 +102,7 @@ function App() {
                 <Past value={store.getState().past} valueLP={store.getState().launchpads} />
               </Route>
               <Route path="/launch/:id">
-                <Launch valueLP={store.getState().launchpads}/>
+                <Launch valueLP={store.getState().launchpads} valueR={store.getState().rockets} valueC={store.getState().cores} valueZ={store.getState().landpads}/>
               </Route>
               <Route path="/">
                 <Home value={store.getState().upcoming} valueLP={store.getState().launchpads} />
@@ -109,6 +115,9 @@ function App() {
         <Content style={{ padding: '50px 50px' }}>
           <div className="site-layout-content">
             <Switch>
+            <Route path="/gallery">
+                <Gallery value={store.getState().past}/>
+              </Route>
               <Route path="/upcoming">
                 <Upcoming value={store.getState().upcoming} valueLP={store.getState().launchpads} />
               </Route>
@@ -116,7 +125,7 @@ function App() {
                 <Past value={store.getState().past} valueLP={store.getState().launchpads} />
               </Route>
               <Route path="/launch/:id">
-                <Launch valueLP={store.getState().launchpads} valueR={store.getState().rockets} valueC={store.getState().cores}/>
+                <Launch valueLP={store.getState().launchpads} valueR={store.getState().rockets} valueC={store.getState().cores} valueZ={store.getState().landpads}/>
               </Route>
               <Route path="/">
                 <Home value={store.getState().upcoming} valueLP={store.getState().launchpads} />

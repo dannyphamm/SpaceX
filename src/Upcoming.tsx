@@ -4,13 +4,14 @@ import { Skeleton, Row, Col, Card } from 'antd';
 import moment from 'moment';
 import 'antd/dist/antd.css';
 import Countdown from './Countdown';
-import { YoutubeFilled, ReadFilled } from '@ant-design/icons';
+import { YoutubeFilled, ReadFilled, RedditCircleFilled } from '@ant-design/icons';
 import PropTypes from 'prop-types'
 import Title from 'antd/lib/typography/Title';
+import { Link } from "react-router-dom";
 function Upcoming({ value, valueLP }) {
     const style = { height: "100%", margin: "0 auto", display: "flex", flexFlow: "column" };
     const styleBody = { flex: "1 1 auto" };
-    const styleCover = { padding: "10px 10px" }
+    const styleCover = { padding: "10px 10px", width: "100%"}
 
     const { Meta } = Card;
     const [launch, setLaunch] = useState<any>([]);
@@ -19,12 +20,13 @@ function Upcoming({ value, valueLP }) {
     const [launchpads, setLaunchPads] = useState<any>([]);
     const skeleton = [] as any;
 
-    for (var i = 0; i < 25; i++) {
+    for (var i = 0; i < 24; i++) {
         skeleton.push(<Col className="gutter-row" xs={{ span: 24 }} lg={{ span: 12 }} xl={{ span: 8 }} xxl={{ span: 6 }}><Card
             style={style}
             actions={[
-                <YoutubeFilled key="youtube" />,
-                <ReadFilled key="article" />
+                <YoutubeFilled key={"youtube" + i} />,
+                <ReadFilled key={"article" + i} />,
+                <RedditCircleFilled key={"reddit" + i} />
             ]}
         >
             <Skeleton loading={true} active></Skeleton>
@@ -38,6 +40,21 @@ function Upcoming({ value, valueLP }) {
         setItems1(result.sort(comp));
 
     })
+
+    function action(item) {
+        let array = [] as any;
+        if(item['webcast'] !== null) {
+            array.push(<a href={item['webcast']} target="_blank" rel="noreferrer" style={{ zIndex: 100 }}><YoutubeFilled key="youtube" /></a>)
+        }
+        if(item['article'] !== null) {
+            array.push(<a href={item['article'] === null ? item['wikipedia'] : item['article']} target="_blank" rel="noreferrer"><ReadFilled key="article" /></a>)
+        }
+        if(item['reddit']['campaign'] !== null) {
+            array.push(<a href={item['reddit']['campaign']} target="_blank" rel="noreferrer"><RedditCircleFilled key="reddit" /></a>)
+        }
+        return (array)
+    }
+
     useEffect(() => {
         let tbdArray = [] as any;
         let launchArray = [] as any;
@@ -91,8 +108,11 @@ function Upcoming({ value, valueLP }) {
                                         hoverable
                                         style={style}
                                         bodyStyle={styleBody}
-                                        cover={<img alt="example" src={(item['links']['patch']['large'] === null) ? "https://www.spacex.com/static/images/share.jpg" : item['links']['patch']['large']} style={styleCover} />}
+                                        cover={<Link to={"launch/" + item['id']}><img alt="example" src={(item['links']['patch']['large'] === null) ? "https://www.spacex.com/static/images/share.jpg" : item['links']['patch']['large']} style={styleCover} /></Link>}
+                                        actions={action(item['links'])}
                                     >
+                                                                                        <div>
+                                                <Link to={"launch/" + item['id']}>
                                         <Meta title={"#" +item['flight_number'] + " " + item['name']} />
                                         <Meta description={getLaunchpad(item['launchpad'])} style={{ fontWeight: 'bold', lineHeight: "1rem", marginBottom: "0.5rem"}} />
                                         <Meta description={getLocalTime(item['date_unix'])} style={{ fontWeight: 'bold' }} />
@@ -100,7 +120,8 @@ function Upcoming({ value, valueLP }) {
 
                                         <br />
                                         <Meta description={<Countdown time={item['date_unix']} />} />
-
+                                        </Link>
+                                                </div>
                                     </Card>
                                 </Col>
                             )
@@ -117,13 +138,19 @@ function Upcoming({ value, valueLP }) {
                                                 hoverable
                                                 style={style}
                                                 bodyStyle={styleBody}
-                                                cover={<img alt="example" src={(item['links']['patch']['large'] === null) ? "https://www.spacex.com/static/images/share.jpg" : item['links']['patch']['large']} style={styleCover} />}
+                                                cover={<Link to={"launch/" + item['id']}><img alt="example" src={(item['links']['patch']['large'] === null) ? "https://www.spacex.com/static/images/share.jpg" : item['links']['patch']['large']} style={styleCover} /></Link>}
+                                                actions={action(item['links'])}
                                             >
+                                                <div>
+                                                <Link to={"launch/" + item['id']}>
                                                 <Meta title={"#" +item['flight_number'] + " " + item['name']} />
                                                 <Meta description={getLaunchpad(item['launchpad'])} style={{ fontWeight: 'bold', lineHeight: "1rem", marginBottom: "0.5rem"}}/>
                                                 
                                                 <Meta description={(item['details'] === null ? "No Information Provided" : item['details'])} />
                                                 <Meta description={getLocalTimeString(item['date_unix'])} style={{ fontWeight: 'bold' }} />
+                                                </Link>
+                                                </div>
+                                                
                                             </Card>
                                         </Col>
                                     ))}

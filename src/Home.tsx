@@ -14,10 +14,7 @@ function Home({ value, valueLP }) {
 
     const styleBody = { flex: "1 1 auto" };
     const styleCover = { padding: "10px 10px" }
-    const opts = {
-        height: '100%',
-        width: '100%'
-      };
+
     const [launch, setLaunch] = useState<any>([]);
     const [items1, setItems1] = useState<any>([]);
     const [launchpads, setLaunchPads] = useState<any>([]);
@@ -73,11 +70,12 @@ function Home({ value, valueLP }) {
                             <Meta description={<Countdown time={launch[0]['date_unix']}></Countdown>} />
                         </Card>
                     </Col>
+                    {launch[0]['links']['youtube_id'] === null? null : 
+                    
                     <Col className="gutter-row" xs={{ span: 24 }} lg={{ span: 12 }} xl={{ span: 12 }} xxl={{ span: 20 }}>
-                    
-                    <YouTube videoId={launch[0]['links']['youtube_id']} opts={opts} containerClassName="livestream"/>
-                    
-                    </Col>
+                        <YouTube videoId={launch[0]['links']['youtube_id']} containerClassName="livestream"/>
+                    </Col> }
+
                 </Row >
 
             </div>

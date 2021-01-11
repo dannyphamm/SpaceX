@@ -1,9 +1,9 @@
 import React from 'react'
 import { useState } from 'react'
-import { Skeleton, Row, Col, Card, Pagination } from 'antd';
+import { Skeleton, Row, Col, Card, Pagination, Badge } from 'antd';
 import moment from 'moment';
 import 'antd/dist/antd.css';
-import { YoutubeFilled, ReadFilled, RedditCircleFilled, CheckCircleFilled, MinusSquareFilled } from '@ant-design/icons';
+import { YoutubeFilled, ReadFilled, RedditCircleFilled} from '@ant-design/icons';
 import PropTypes from 'prop-types'
 import { Link } from "react-router-dom";
 function Past({ value, valueLP }) {
@@ -15,17 +15,18 @@ function Past({ value, valueLP }) {
     const { Meta } = Card;
 
     const [minValue, setMinValue] = useState<number>(0);
-    const [maxValue, setMaxValue] = useState<number>(25);
-    const [pageSize, setPageSize] = useState<number>(25)
+    const [maxValue, setMaxValue] = useState<number>(24);
+    const [pageSize, setPageSize] = useState<number>(24)
     const [items, setItems] = useState<any>([]);
     const [launchpads, setLaunchPads] = useState<any>([]);
     const skeleton = [] as any;
-    for (var i = 0; i < 25; i++) {
+    for (var i = 0; i < 24; i++) {
         skeleton.push(<Col className="gutter-row" xs={{ span: 24 }} lg={{ span: 12 }} xl={{ span: 8 }} xxl={{ span: 6 }}><Card
             style={style}
             actions={[
                 <YoutubeFilled key="youtube" />,
-                <ReadFilled key="article" />
+                <ReadFilled key="article" />,
+                <RedditCircleFilled key="reddit" />
             ]}
         >
             <Skeleton loading={true} active></Skeleton>
@@ -44,7 +45,7 @@ function Past({ value, valueLP }) {
 
     function getLaunchpad(launchpadID: any) {
         const launchpad = launchpads.find(launchpad => launchpad['id'] === launchpadID);
-        return (launchpad['name']);
+        return (launchpad['full_name']);
     }
 
     function getLocalTime(epoc: number) {
@@ -62,10 +63,32 @@ function Past({ value, valueLP }) {
             setMaxValue(value * pageSize)
         }
     }
-    function landingSuccess(item) {
-        const landing = item['cores'][0]['landing_success'];
-        return (landing === null ? <span><MinusSquareFilled /> No attempted Landing</span> : (landing === false ? <span><CheckCircleFilled /> Unsuccessful Landing</span> : <span><CheckCircleFilled /> Sucessful Landing</span>))
+
+    function action(item) {
+        let array = [] as any;
+        if(item['webcast'] !== null) {
+            array.push(<a href={item['webcast']} target="_blank" rel="noreferrer" style={{ zIndex: 100 }}><YoutubeFilled key="youtube" /></a>)
+        }
+        if(item['article'] !== null) {
+            array.push(<a href={item['article'] === null ? item['wikipedia'] : item['article']} target="_blank" rel="noreferrer"><ReadFilled key="article" /></a>)
+        }
+        if(item['reddit']['campaign'] !== null) {
+            array.push(<a href={item['reddit']['campaign']} target="_blank" rel="noreferrer"><RedditCircleFilled key="reddit" /></a>)
+        }
+        return (array)
     }
+    function missionStatus(item) {
+        const mission = item['success'];
+        const landing = item['cores'][0];
+        return (<>
+            {mission ? <Badge status="success" text="Mission Success" />: <Badge status="error" text="Mission Failure" />}
+            
+            {(!landing['landing_attempt'] ? <Badge status="default" text="No Landing Attempt" style={{margin: "0 1rem"}}/> : landing['landing_success'] ? <Badge status="success" text="Successful Landing" style={{margin: "0 1rem"}}/> : <Badge status="error" text="Landing Failure" style={{margin: "0 1rem"}}/>)}
+        </>
+ )
+    }
+
+    
     if (items.length === 0 || launchpads.length === 0) {
         return (
             <Row gutter={[{ xs: 8, sm: 16, md: 24, lg: 32 }, { xs: 8, sm: 16, md: 24, lg: 32 }]}>
@@ -82,7 +105,7 @@ function Past({ value, valueLP }) {
                     pageSize={pageSize}
                     total={items.length}
                     responsive={true}
-                    pageSizeOptions={["25", "50", "75", "100"]}
+                    pageSizeOptions={["24", "48", "72", "96"]}
                 />
 
                 <Row gutter={[{ xs: 8, sm: 16, md: 24, lg: 32 }, { xs: 8, sm: 16, md: 24, lg: 32 }]}>
@@ -95,17 +118,13 @@ function Past({ value, valueLP }) {
                                 bodyStyle={styleBody}
 
                                 cover={<Link to={"launch/" + item['id']}><img alt={item['name']} src={(item['links']['patch']['large'] === null) ? "https://www.spacex.com/static/images/share.jpg" : item['links']['patch']['large']} style={styleCover} /></Link>}
-                                actions={[
-                                    <a href={item['links']['webcast']} target="_blank" rel="noreferrer" style={{ zIndex: 100 }}><YoutubeFilled key="youtube" /></a>,
-                                    <a href={item['links']['article'] === null ? item['links']['wikipedia'] : item['links']['article']} target="_blank" rel="noreferrer"><ReadFilled key="article" /></a>,
-                                    <a href={item['links']['reddit']['campaign']} target="_blank" rel="noreferrer"><RedditCircleFilled key="reddit" /></a>
-                                ]}
+                                actions={action(item['links'])}
                             >
                                 <div>
                                     <Link to={"launch/" + item['id']}>
                                         <Meta title={item['name']} />
-                                        <Meta title={"Launchpad: " + getLaunchpad(item['launchpad'])} description={getLocalTime(item['date_unix'])} style={{ fontWeight: 'bold' }} />
-                                        <Meta description={landingSuccess(item)} />
+                                        <Meta title={getLaunchpad(item['launchpad'])} description={getLocalTime(item['date_unix'])} style={{ fontWeight: 'bold' }} />
+                                        <Meta description={missionStatus(item)} />
                                         <br />
                                         <Meta description={(item['details'] === null ? "No Information Provided" : item['details'])} />
                                     </Link>
