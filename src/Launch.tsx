@@ -102,9 +102,9 @@ function Launch({ valueLP, valueR, valueC, valueZ }) {
     } else {
         return (
             <Row>
-                <Col>
+                <Col style={{width: "100%"}}>
                     <Row>
-                        <Col>
+                        <Col style={{width: "100%"}}>
                             <Descriptions title="Launch Info" bordered column={{ xxl: 3, xl: 3, lg: 3, md: 3, sm: 2, xs: 1 }}>
                                 <Descriptions.Item label="Mission Status" span={3}>
                                     {item['upcoming']? <Badge status="default" text="Upcoming" /> : item['success'] === null? <Badge status="default" text="Unknown" /> : item['success'] ? <Badge status="success" text="Success" /> : <Badge status="error" text="Failure" />}
@@ -124,9 +124,9 @@ function Launch({ valueLP, valueR, valueC, valueZ }) {
                                 <Descriptions.Item label="Booster Flight Number" span={1}>{item['cores'][0]['flight'] === null? "Unknown":item['cores'][0]['flight']}</Descriptions.Item>
                                 {/* Landing Information */}
                                 {item['cores'][0]['landing_attempt']?<>
-                                <Descriptions.Item label="Landing Region" span={1}>{item['cores'][0]['landing_success']?getLandpad(item['id'])[0]: "Pending"}</Descriptions.Item>
-                                <Descriptions.Item label="Landing Location" span={1}>{item['cores'][0]['landing_success']?getLandpad(item['id'])[1]: "Pending"}</Descriptions.Item>
-                                <Descriptions.Item label="Landing Type" span={1}>{item['cores'][0]['landing_success']?getLandpad(item['id'])[2]: "Pending"}</Descriptions.Item></> : null}
+                                <Descriptions.Item label="Landing Region" span={1}>{item['cores'][0]['landing_success'] === null? "Pending" : getLandpad(item['id'])[0]}</Descriptions.Item>
+                                <Descriptions.Item label="Landing Location" span={1}>{item['cores'][0]['landing_success'] === null? "Pending" : getLandpad(item['id'])[1]}</Descriptions.Item>
+                                <Descriptions.Item label="Landing Type" span={1}>{item['cores'][0]['landing_success'] === null? "Pending" : getLandpad(item['id'])[2]}</Descriptions.Item></> : null}
 
                                 <Descriptions.Item label="Details" span={3}>{item['details'] === null? "No information Provided":item['details']}</Descriptions.Item>
                             </Descriptions>
