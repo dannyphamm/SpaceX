@@ -69,8 +69,15 @@ function Launch({ valueLP, valueR, valueC, valueZ }) {
             return ""
         } else {
             const core = cores.find(core => core['id'] === coreID);
-            const block = "B" + core["block"];
-            return (block + " " + core['serial']);
+            let block;
+            
+            if(core['block'] !== null) {
+                block = "B" + core["block"];
+                return (block + " " + core['serial']);
+            } else {
+                return (core['serial']);
+            }
+            
         }
 
     }
