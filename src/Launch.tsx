@@ -122,10 +122,8 @@ function Launch({ valueLP, valueR, valueC, valueZ }) {
 
                     }
 
-                    <Row>
-                        <Col>
                         <ResponsiveMasonry
-                columnsCountBreakPoints={{350: 1, 700: 2, 1100: 5}}
+                columnsCountBreakPoints={{350: 1, 700: 2, 1100: 3}}
                  >
                 <Masonry gutter={15}>
                 {item['links']['flickr']['original'].map((data) => (
@@ -134,9 +132,7 @@ function Launch({ valueLP, valueR, valueC, valueZ }) {
                                 ))} 
                                     </Masonry>
             </ResponsiveMasonry>
-                                
-                        </Col>
-                    </Row>
+
                 </Col>
             </Row>
 
