@@ -47,11 +47,11 @@ function Launch({ valueLP, valueR, valueC, valueZ }) {
         return (launchpad['full_name']);
     }
 
-    function getLandpad(landpadID: any) {
+    function getLandpad(item1: any) {
         let value;
-        if(landpadID !== null){
+        if(item1['core'][0]['landpad'] !== null){
             for (let i in landpads) {
-                if (landpads[i]['launches'].indexOf(landpadID) > -1) {
+                if (landpads[i]['launches'].indexOf(item1['id'][0]['landpad']) > -1) {
                     value = i
                 }
             }
