@@ -17,12 +17,6 @@ function Launch({ valueLP, valueR, valueC, valueZ }) {
     const [landpads, setLandpads] = useState<any>([]);
     const [cores, setCores] = useState<any>([]);
     const url = "https://api.spacexdata.com/v4/launches/" + params['id'];
-    const breakpointColumnsObj = {
-        default: 3,
-        1100: 3,
-        700: 2,
-        500: 1
-    };
     Promise.resolve(valueLP).then((result) => {
         setLaunchPads(result)
     })
