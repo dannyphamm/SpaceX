@@ -109,10 +109,10 @@ function Launch({ valueLP, valueR, valueC, valueZ }) {
                                 {item['date_precision'] === "hour"?  <Descriptions.Item label="Countdown" span={3}><Countdown time={item['date_unix']} /></Descriptions.Item>: null}
                                
                                 {/* Booster Information */}
-                                {item['cores'][0]['landing_attempt']? <>
+ 
                                 <Descriptions.Item label="Booster Landing Status" span={1}>
                                     {item['cores'][0]['landing_attempt'] === null? <Badge status="default" text="Unknown" /> : item['cores'][0]['landing_attempt']? item['cores'][0]['landing_success'] === null? <Badge status="default" text="Unknown" />: item['cores'][0]['landing_success'] ? <Badge status="success" text="Success" /> : <Badge status="error" text="Failure" />: <Badge status="default" text="No attempt" />}
-                                </Descriptions.Item></> : null}
+                                </Descriptions.Item>
                                 <Descriptions.Item label="Booster Type" span={1}>{getRocket(item['rocket']) + " " + getCore(item['cores'][0]['core'])}</Descriptions.Item>
                                 <Descriptions.Item label="Booster Flight Number" span={1}>{item['cores'][0]['flight'] === null? "Unknown":item['cores'][0]['flight']}</Descriptions.Item>
                                 {/* Landing Information */}
