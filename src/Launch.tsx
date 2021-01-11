@@ -3,7 +3,7 @@ import { useEffect } from 'react'
 import { useParams } from "react-router-dom";
 import 'antd/dist/antd.css';
 import { Descriptions, Badge, Col, Row, Image } from 'antd';
-import Masonry from 'react-masonry-css';
+import Masonry, {ResponsiveMasonry} from "react-responsive-masonry"
 import PropTypes from 'prop-types'
 import moment from 'moment';
 import './Launch.css'
@@ -130,15 +130,17 @@ function Launch({ valueLP, valueR, valueC, valueZ }) {
 
                     <Row>
                         <Col>
-                            <Masonry
-                                breakpointCols={breakpointColumnsObj}
-                                className="my-masonry-grid"
-                                columnClassName="my-masonry-grid_column">
-                                {item['links']['flickr']['original'].map((data) => (
+                        <ResponsiveMasonry
+                columnsCountBreakPoints={{350: 1, 700: 2, 1100: 5}}
+                 >
+                <Masonry gutter={15}>
+                {item['links']['flickr']['original'].map((data) => (
                                     <Image src={data} style={{ objectFit: "contain" }} />
 
-                                ))}
-                            </Masonry >
+                                ))} 
+                                    </Masonry>
+            </ResponsiveMasonry>
+                                
                         </Col>
                     </Row>
                 </Col>
