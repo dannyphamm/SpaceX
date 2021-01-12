@@ -100,7 +100,7 @@ function Upcoming({ value, valueLP }) {
             <div>
                 <Row>
                     <Col>
-                        <Title level={2}>Upcoming Launches</Title>
+                        <Title level={2}>Upcoming Missions</Title>
                         <Row gutter={[{ xs: 8, sm: 16, md: 24, lg: 32 }, { xs: 8, sm: 16, md: 24, lg: 32 }]}>
                             {launch.map((item: { [x: string]: number; }) => (
                                 <Col className="gutter-row" xs={{ span: 24 }} lg={{ span: 12 }} xl={{ span: 8 }} xxl={{ span: 6 }} key={item['id']}>
@@ -130,7 +130,7 @@ function Upcoming({ value, valueLP }) {
                         </Row >
                         <Row>
                             <Col>
-                                <Title level={3}>Unverified Launches</Title>
+                                <Title level={3}>Unverified Missions</Title>
                                 <Row gutter={[{ xs: 8, sm: 16, md: 24, lg: 32 }, { xs: 8, sm: 16, md: 24, lg: 32 }]}>
                                     {tbd.map((item: { [x: string]: number; }) => (
                                         <Col className="gutter-row" xs={{ span: 24 }} lg={{ span: 12 }} xl={{ span: 8 }} xxl={{ span: 6 }} key={item['id']}>

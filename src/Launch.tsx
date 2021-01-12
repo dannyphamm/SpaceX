@@ -48,21 +48,12 @@ function Launch({ valueLP, valueR, valueC, valueZ }) {
     }
 
     function getLandpad(item1: any) {
-        let value;
-            for (let i in landpads) {
-                if (landpads[i]['launches'].indexOf(item1) > -1) {
-                    value = i
-                }
-                
-            } 
-            if(value > -1) {
-                return ([landpads[value]['region'], landpads[value]['full_name'], landpads[value]['type']])
-            } else {
-                return(["Unknown","Unknown","Unknown"])
-            }
-            
-           
-
+        if(item1 === null) {
+            return ["Unknown","Unknown","Unknown"]
+        } else {
+            const landpad = landpads.find(landpad => landpad['id'] === item1);
+            return ([landpad['region'], landpad['full_name'], landpad['type']])
+        }
     }
     function getCore(coreID: any) {
         if(coreID === null) {
@@ -105,7 +96,7 @@ function Launch({ valueLP, valueR, valueC, valueZ }) {
                 <Col style={{width: "100%"}}>
                     <Row>
                         <Col style={{width: "100%"}}>
-                            <Descriptions title="Launch Info" bordered column={{ xxl: 3, xl: 3, lg: 3, md: 3, sm: 2, xs: 1 }}>
+                            <Descriptions title="Mission Information" bordered column={{ xxl: 3, xl: 3, lg: 3, md: 3, sm: 2, xs: 1 }}>
                                 <Descriptions.Item label="Mission Status" span={3}>
                                     {item['upcoming']? <Badge status="default" text="Upcoming" /> : item['success'] === null? <Badge status="default" text="Unknown" /> : item['success'] ? <Badge status="success" text="Success" /> : <Badge status="error" text="Failure" />}
                                 </Descriptions.Item>
@@ -114,27 +105,32 @@ function Launch({ valueLP, valueR, valueC, valueZ }) {
                                 <Descriptions.Item label="Launchpad" span={1}>{getLaunchpad(item['launchpad'])}</Descriptions.Item>
                                 <Descriptions.Item label="Date" span={3}>{item['date_precision'] !== "hour"? getLocalTimeString(item['date_unix']): getLocalTime(item['date_unix'])}</Descriptions.Item>
                                 {item['date_precision'] === "hour"?  <Descriptions.Item label="Countdown" span={3}><Countdown time={item['date_unix']} /></Descriptions.Item>: null}
-                               
-                                {/* Booster Information */}
- 
-                                <Descriptions.Item label="Booster Landing Status" span={1}>
-                                    {item['upcoming'] ? item['cores'][0]['landing_attempt'] === null? <Badge status="default" text="Unknown" />:
-                                                            item['cores'][0]['landing_attempt'] ? <Badge status="default" text="Pending" />: <Badge status="default" text="No Attempt Made"/> : 
-                                                        item['cores'][0]['landing_attempt'] ? 
-                                                            item['cores'][0]['landing_success'] === null ? <Badge status="default" text="Unknown" /> : 
-                                                                item['cores'][0]['landing_success'] ? <Badge status="success" text="Success" /> : <Badge status="error" text="Failure" /> 
+                                <Descriptions.Item label="Details" span={3}>{item['details'] === null? "No information Provided":item['details']}</Descriptions.Item>
+                                </Descriptions>
+                                
+                                {item['cores'].map((data, interval)=> (
+                                    
+                                    <Descriptions title={"Core #"+(interval + 1) + " Information"} bordered column={{ xxl: 3, xl: 3, lg: 3, md: 3, sm: 2, xs: 1 }}>
+                                                                    <Descriptions.Item label="Booster Landing Status" span={1}>
+                                    {item['upcoming'] ? data['landing_attempt'] === null? <Badge status="default" text="Unknown" />:
+                                                            data['landing_attempt'] ? <Badge status="default" text="Pending" />: <Badge status="default" text="No Attempt Made"/> : 
+                                                        data['landing_attempt'] ? 
+                                                            data['landing_success'] === null ? <Badge status="default" text="Unknown" /> : 
+                                                                data['landing_success'] ? <Badge status="success" text="Success" /> : <Badge status="error" text="Failure" /> 
                                                         : <Badge status="default" text="No Attempt Made"/>}
                                 </Descriptions.Item>
-                                <Descriptions.Item label="Booster Type" span={1}>{getRocket(item['rocket']) + " " + getCore(item['cores'][0]['core'])}</Descriptions.Item>
-                                <Descriptions.Item label="Booster Flight Number" span={1}>{item['cores'][0]['flight'] === null? "Unknown":item['cores'][0]['flight']}</Descriptions.Item>
-                                {/* Landing Information */}
-                                {item['cores'][0]['landing_attempt']?<>
-                                <Descriptions.Item label="Landing Region" span={1}>{item['cores'][0]['landing_success'] === null? "Pending" : getLandpad(item['id'])[0]}</Descriptions.Item>
-                                <Descriptions.Item label="Landing Location" span={1}>{item['cores'][0]['landing_success'] === null? "Pending" : getLandpad(item['id'])[1]}</Descriptions.Item>
-                                <Descriptions.Item label="Landing Type" span={1}>{item['cores'][0]['landing_success'] === null? "Pending" : getLandpad(item['id'])[2]}</Descriptions.Item></> : null}
+                                <Descriptions.Item label="Booster Type" span={1}>{getRocket(item['rocket']) + " " + getCore(data['core'])}</Descriptions.Item>
+                                <Descriptions.Item label="Booster Flight Number" span={1}>{data['flight'] === null? "Unknown":data['flight']}</Descriptions.Item>
+                                     {data['landing_attempt']?<>
+                                     <Descriptions.Item label="Landing Region" span={1}>{!item['upcoming'] ? getLandpad(data['landpad'])[0]: "Pending"}</Descriptions.Item>
+                                     <Descriptions.Item label="Landing Location" span={1}>{!item['upcoming'] ? getLandpad(data['landpad'])[1]: "Pending"}</Descriptions.Item>
+                                     <Descriptions.Item label="Landing Type" span={1}>{!item['upcoming'] ? getLandpad(data['landpad'])[2]: "Pending"}</Descriptions.Item></> : null}
+                                     </Descriptions>
+                                ))}
+                               
 
-                                <Descriptions.Item label="Details" span={3}>{item['details'] === null? "No information Provided":item['details']}</Descriptions.Item>
-                            </Descriptions>
+                                
+                            
                         </Col>
                     </Row>
                     {item['links']['webcast'] !== null ?                    <Row>

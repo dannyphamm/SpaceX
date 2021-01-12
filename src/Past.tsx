@@ -79,13 +79,37 @@ function Past({ value, valueLP }) {
     }
     function missionStatus(item) {
         const mission = item['success'];
-        const landing = item['cores'][0];
-        return (<>
+        //const landing = item['cores'][0];
+        let landed = 0
+        for(let i in item['cores']) {
+            if(!item['cores'][i]['landing_attempt']) {
+                return (<>
+                {mission ? <Badge status="success" text="Mission Success" />: <Badge status="error" text="Mission Failure" />}
+                <Badge status="default" text="No Landing Attempt" style={{margin: "0 1rem"}}/>
+                </>)
+            } else {
+                if(item['cores'][i]['landing_success']) {
+                    landed+=1;
+                }
+            }
+        } 
+
+        if(landed === item['cores'].length) {
+            return(<>
             {mission ? <Badge status="success" text="Mission Success" />: <Badge status="error" text="Mission Failure" />}
-            
-            {(!landing['landing_attempt'] ? <Badge status="default" text="No Landing Attempt" style={{margin: "0 1rem"}}/> : landing['landing_success'] ? <Badge status="success" text="Successful Landing" style={{margin: "0 1rem"}}/> : <Badge status="error" text="Landing Failure" style={{margin: "0 1rem"}}/>)}
-        </>
- )
+            {<Badge status="success" text="Successful Landing" style={{margin: "0 1rem"}}/>}
+            </>)
+        } else if (landed === 0) {
+            return(<>
+                {mission ? <Badge status="success" text="Mission Success" />: <Badge status="error" text="Mission Failure" />}
+                {<Badge status="error" text="Landing Failure" style={{margin: "0 1rem"}}/>}
+                </>)
+        } else {
+            return(<>
+                {mission ? <Badge status="success" text="Mission Success" />: <Badge status="error" text="Mission Failure" />}
+                {<Badge status="warning" text="Partial Landing" style={{margin: "0 1rem"}}/>}
+                </>) 
+        }
     }
 
     
