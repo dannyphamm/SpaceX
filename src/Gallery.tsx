@@ -6,8 +6,8 @@ function Gallery({value}) {
     const paginationStyle = { paddingBottom: "24px", textAlign: "center" as const }
     const [items, setItems] = useState<any>([]);
     const [minValue, setMinValue] = useState<number>(0);
-    const [maxValue, setMaxValue] = useState<number>(25);
-    const [pageSize, setPageSize] = useState<number>(25)
+    const [maxValue, setMaxValue] = useState<number>(50);
+    const [pageSize, setPageSize] = useState<number>(50)
     const [imageSize, setImageSize] = useState<number>(0);
     const [images, setImages] = useState<any>([]);
     Promise.resolve(value).then((result) => {
@@ -49,7 +49,7 @@ function Gallery({value}) {
                     pageSize={pageSize}
                     total={imageSize}
                     responsive={true}
-                    pageSizeOptions={["25", "50", "100", "150"]}
+                    pageSizeOptions={["50", "100", "150", "200"]}
                 />
 <ResponsiveMasonry
                 columnsCountBreakPoints={{350: 1, 700: 2, 1100: 5}}
