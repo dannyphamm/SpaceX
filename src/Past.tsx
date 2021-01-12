@@ -3,7 +3,7 @@ import { useState } from 'react'
 import { Skeleton, Row, Col, Card, Pagination, Badge } from 'antd';
 import moment from 'moment';
 import 'antd/dist/antd.css';
-import { YoutubeFilled, ReadFilled, RedditCircleFilled} from '@ant-design/icons';
+import { YoutubeFilled, ReadFilled, RedditCircleFilled } from '@ant-design/icons';
 import PropTypes from 'prop-types'
 import { Link } from "react-router-dom";
 function Past({ value, valueLP }) {
@@ -21,7 +21,7 @@ function Past({ value, valueLP }) {
     const [launchpads, setLaunchPads] = useState<any>([]);
     const skeleton = [] as any;
     for (var i = 0; i < 24; i++) {
-        skeleton.push(<Col className="gutter-row" xs={{ span: 24 }} lg={{ span: 12 }} xl={{ span: 8 }} xxl={{ span: 6 }}><Card
+        skeleton.push(<Col className="gutter-row" xs={{ span: 24 }} lg={{ span: 12 }} xl={{ span: 8 }} xxl={{ span: 6 }} key={i}><Card
             style={style}
             actions={[
                 <YoutubeFilled key="youtube" />,
@@ -53,66 +53,65 @@ function Past({ value, valueLP }) {
         return d.toString();
     }
 
-    function handleChange(value, pageSize) {
+    function handleChange(value1, pageSize) {
         setPageSize(pageSize)
-        if (value <= 1) {
+        if (value1 <= 1) {
             setMinValue(0)
             setMaxValue(pageSize)
         } else {
-            setMinValue((value - 1) * pageSize)
-            setMaxValue(value * pageSize)
+            setMinValue((value1 - 1) * pageSize)
+            setMaxValue(value1 * pageSize)
         }
     }
 
     function action(item) {
         let array = [] as any;
-        if(item['webcast'] !== null) {
+        if (item['webcast'] !== null) {
             array.push(<a href={item['webcast']} target="_blank" rel="noreferrer" style={{ zIndex: 100 }}><YoutubeFilled key="youtube" /></a>)
         }
-        if(item['article'] !== null) {
+        if (item['article'] !== null) {
             array.push(<a href={item['article'] === null ? item['wikipedia'] : item['article']} target="_blank" rel="noreferrer"><ReadFilled key="article" /></a>)
         }
-        if(item['reddit']['campaign'] !== null) {
+        if (item['reddit']['campaign'] !== null) {
             array.push(<a href={item['reddit']['campaign']} target="_blank" rel="noreferrer"><RedditCircleFilled key="reddit" /></a>)
         }
         return (array)
     }
     function missionStatus(item) {
         const mission = item['success'];
-        //const landing = item['cores'][0];
         let landed = 0
-        for(let i in item['cores']) {
-            if(!item['cores'][i]['landing_attempt']) {
+        for (let i in item['cores']) {
+            if (!item['cores'][i]['landing_attempt']) {
                 return (<>
-                {mission ? <Badge status="success" text="Mission Success" />: <Badge status="error" text="Mission Failure" />}
-                <Badge status="default" text="No Landing Attempt" style={{margin: "0 1rem"}}/>
+                    {mission ? <Badge status="success" text="Mission Success" /> : <Badge status="error" text="Mission Failure" />}
+                    <Badge status="default" text="No Landing Attempt" style={{ margin: "0 1rem" }} />
                 </>)
             } else {
-                if(item['cores'][i]['landing_success']) {
-                    landed+=1;
+                if (item['cores'][i]['landing_success']) {
+                    landed += 1;
                 }
             }
-        } 
+        }
 
-        if(landed === item['cores'].length) {
-            return(<>
-            {mission ? <Badge status="success" text="Mission Success" />: <Badge status="error" text="Mission Failure" />}
-            {<Badge status="success" text="Successful Landing" style={{margin: "0 1rem"}}/>}
+        if (landed === item['cores'].length) {
+            return (<>
+                {mission ? <Badge status="success" text="Mission Success" /> : <Badge status="error" text="Mission Failure" />}
+                {<Badge status="success" text="Successful Landing" style={{ margin: "0 1rem" }} />}
             </>)
         } else if (landed === 0) {
-            return(<>
-                {mission ? <Badge status="success" text="Mission Success" />: <Badge status="error" text="Mission Failure" />}
-                {<Badge status="error" text="Landing Failure" style={{margin: "0 1rem"}}/>}
-                </>)
+            return (<>
+                {mission ? <Badge status="success" text="Mission Success" /> : <Badge status="error" text="Mission Failure" />}
+                {<Badge status="error" text="Landing Failure" style={{ margin: "0 1rem" }} />}
+            </>)
         } else {
-            return(<>
-                {mission ? <Badge status="success" text="Mission Success" />: <Badge status="error" text="Mission Failure" />}
-                {<Badge status="warning" text="Partial Landing" style={{margin: "0 1rem"}}/>}
-                </>) 
+            return (<>
+                {mission ? <Badge status="success" text="Mission Success" /> : <Badge status="error" text="Mission Failure" />}
+                {<Badge status="warning" text="Partial Landing" style={{ margin: "0 1rem" }} />}
+            </>)
         }
     }
 
-    
+
     if (items.length === 0 || launchpads.length === 0) {
         return (
             <Row gutter={[{ xs: 8, sm: 16, md: 24, lg: 32 }, { xs: 8, sm: 16, md: 24, lg: 32 }]}>
@@ -133,10 +132,11 @@ function Past({ value, valueLP }) {
                 />
 
                 <Row gutter={[{ xs: 8, sm: 16, md: 24, lg: 32 }, { xs: 8, sm: 16, md: 24, lg: 32 }]}>
-                    {items.slice(minValue, maxValue).map((item) => (
-                        <Col className="gutter-row" xs={{ span: 24 }} lg={{ span: 12 }} xl={{ span: 8 }} xxl={{ span: 6 }} key={item['id']}>
+                    {items.slice(minValue, maxValue).map((item, index) => (
+                        <Col className="gutter-row" xs={{ span: 24 }} lg={{ span: 12 }} xl={{ span: 8 }} xxl={{ span: 6 }} key={item['id'] + index}>
 
                             <Card
+
                                 hoverable
                                 style={style}
                                 bodyStyle={styleBody}

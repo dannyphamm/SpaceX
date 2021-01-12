@@ -1,4 +1,4 @@
-import { Col, Row, Card } from 'antd'
+import { Col, Row, Card, Divider } from 'antd'
 import React from 'react'
 import moment from 'moment';
 import { useState } from 'react'
@@ -67,37 +67,38 @@ function Home({ value, valueLP }) {
                                     cover={<Link to={"launch/" + launch[0]['id']}><img alt="example" src={(launch[0]['links']['patch']['large'] === null) ? "https://www.spacex.com/static/images/share.jpg" : launch[0]['links']['patch']['large']} style={styleCover} /></Link>}
                                 >
                                     <Link to={"launch/" + launch[0]['id']}>
-                                    <div>
-                                    <Meta title={launch[0]['name']} />
-                                    <Meta title={"Launchpad: " + getLaunchpad(launch[0]['launchpad'])} description={getLocalTime(launch[0]['date_unix'])} style={{ fontWeight: 'bold' }} />
-                                    <Meta description={(launch[0]['details'] === null ? "No Information Provided" : launch[0]['details'])} />
-                                    <br />
-                                    <Meta description={<Countdown time={launch[0]['date_unix']}></Countdown>} />
-                                    </div>
+                                        <div>
+                                            <Meta title={launch[0]['name']} />
+                                            <Meta title={"Launchpad: " + getLaunchpad(launch[0]['launchpad'])} description={getLocalTime(launch[0]['date_unix'])} style={{ fontWeight: 'bold' }} />
+                                            <Meta description={(launch[0]['details'] === null ? "No Information Provided" : launch[0]['details'])} />
+                                            <br />
+                                            <Meta description={<Countdown time={launch[0]['date_unix']}></Countdown>} />
+                                        </div>
                                     </Link>
                                 </Card>
                             </Col>
                         </Row >
-                    </>: <>                        
-                    <Row style={center} gutter={[{ xs: 8, sm: 16, md: 24, lg: 32 }, { xs: 8, sm: 16, md: 24, lg: 32 }]}>
+                    </> : <>
+                        <Row style={center} gutter={[{ xs: 8, sm: 16, md: 24, lg: 32 }, { xs: 8, sm: 16, md: 24, lg: 32 }]}>
                             <Col className="gutter-row" xs={{ span: 24 }} lg={{ span: 12 }} xl={{ span: 12 }} xxl={{ span: 4 }} key={launch[0]['id']}>
                                 <Card
                                     hoverable
                                     style={style}
                                     bodyStyle={styleBody}
-                                    cover={ <Link to={"launch/" + launch[0]['id']}><img alt="example" src={(launch[0]['links']['patch']['large'] === null) ? "https://www.spacex.com/static/images/share.jpg" : launch[0]['links']['patch']['large']} style={styleCover} /></Link>}
-                                > 
-                                <Link to={"launch/" + launch[0]['id']}>
-                                    <div>
-                                    <Meta title={launch[0]['name']} />
-                                    <Meta title={"Launchpad: " + getLaunchpad(launch[0]['launchpad'])} description={getLocalTime(launch[0]['date_unix'])} style={{ fontWeight: 'bold' }} />
-                                    <Meta description={(launch[0]['details'] === null ? "No Information Provided" : launch[0]['details'])} />
-                                    <br />
-                                    <Meta description={<Countdown time={launch[0]['date_unix']}></Countdown>} />
-                                    </div>
+                                    cover={<Link to={"launch/" + launch[0]['id']}><img alt="example" src={(launch[0]['links']['patch']['large'] === null) ? "https://www.spacex.com/static/images/share.jpg" : launch[0]['links']['patch']['large']} style={styleCover} /></Link>}
+                                >
+                                    <Link to={"launch/" + launch[0]['id']}>
+                                        <div>
+                                            <Meta title={launch[0]['name']} />
+                                            <Meta title={"Launchpad: " + getLaunchpad(launch[0]['launchpad'])} description={getLocalTime(launch[0]['date_unix'])} style={{ fontWeight: 'bold' }} />
+                                            <Meta description={(launch[0]['details'] === null ? "No Information Provided" : launch[0]['details'])} />
+                                            <br />
+                                            <Meta description={<Countdown time={launch[0]['date_unix']}></Countdown>} />
+                                        </div>
                                     </Link>
                                 </Card>
                             </Col>
+                            <Divider type="vertical" />
                             <Col className="gutter-row" xs={{ span: 24 }} lg={{ span: 12 }} xl={{ span: 12 }} xxl={{ span: 20 }}>
                                 <YouTube videoId={launch[0]['links']['youtube_id']} containerClassName="livestream" />
                             </Col>
