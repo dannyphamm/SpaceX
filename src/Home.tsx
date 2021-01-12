@@ -14,7 +14,7 @@ function Home({ value, valueLP }) {
     const center = { justifyContent: "center" }
 
     const styleBody = { flex: "1 1 auto" };
-    const styleCover = { padding: "10px 10px" }
+    const styleCover = { padding: "10px 10px", width: "100%" }
 
     const [launch, setLaunch] = useState<any>([]);
     const [items1, setItems1] = useState<any>([]);
