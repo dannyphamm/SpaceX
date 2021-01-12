@@ -9,8 +9,13 @@ import moment from 'moment';
 import './Launch.css'
 import YouTube from 'react-youtube';
 import Countdown from './Countdown';
+import { Tabs } from 'antd';
+import Title from 'antd/lib/typography/Title';
+
 function Launch({ valueLP, valueR, valueC, valueZ, valueP }) {
     let params = useParams();
+
+    const { TabPane } = Tabs;
     const [item, setItem] = useState<any>([]);
     const [launchpads, setLaunchPads] = useState<any>([]);
     const [rockets, setRockets] = useState<any>([]);
@@ -116,9 +121,10 @@ function Launch({ valueLP, valueR, valueC, valueZ, valueP }) {
         return (
             <Row>
                 <Col style={{ width: "100%" }}>
-                    <Row>
-                        <Col style={{ width: "100%" }}>
-                            <Descriptions title="Mission Information" bordered column={{ xxl: 3, xl: 3, lg: 3, md: 3, sm: 2, xs: 1 }}>
+                    <Title level={3}>{item['name']}</Title>
+                    <Tabs defaultActiveKey="1">
+                        <TabPane tab="Mission Information" key="1">
+                            <Descriptions bordered column={{ xxl: 3, xl: 3, lg: 3, md: 3, sm: 2, xs: 1 }}>
                                 <Descriptions.Item label="Mission Status" span={3}>
                                     {item['upcoming'] ? <Badge status="default" text="Upcoming" /> : item['success'] === null ? <Badge status="default" text="Unknown" /> : item['success'] ? <Badge status="success" text="Success" /> : <Badge status="error" text="Failure" />}
                                 </Descriptions.Item>
@@ -161,33 +167,33 @@ function Launch({ valueLP, valueR, valueC, valueZ, valueP }) {
                                     <Descriptions.Item label="Payload Customers" span={1}>{getPayload(data)[5]}</Descriptions.Item>
                                 </Descriptions>
                             ))}
+                        </TabPane>
+                        {item['links']['webcast'] !== null ?
+                            <TabPane tab="Webcast" key="2">
+                                <Row>
+                                    <Col className="gutter-row" span={24}>
+                                        <YouTube videoId={item['links']['youtube_id']} containerClassName="livestream" />
+                                    </Col>
+                                </Row>
 
 
+                            </TabPane> : null
+                        }
 
-                        </Col>
-                    </Row>
-                    {item['links']['webcast'] !== null ?
-
-                        <Row>
-                            <Col className="gutter-row" span={24}>
-                                <Divider />
-                                <YouTube videoId={item['links']['youtube_id']} containerClassName="livestream" />
-                            </Col>
-                        </Row> : null
-
-                    }
-                    <Divider />
-                    <ResponsiveMasonry
-                        columnsCountBreakPoints={{ 350: 1, 700: 2, 1100: 3 }}
-                    >
-                        <Masonry gutter={15}>
-                            {item['links']['flickr']['original'].map((data) => (
-                                <Image src={data} style={{ objectFit: "contain" }} />
-
-                            ))}
-                        </Masonry>
-                    </ResponsiveMasonry>
-
+                        {item['links']['flickr']['original'].length !== 0 ?
+                            <TabPane tab="Gallery" key="3">
+                                <ResponsiveMasonry
+                                    columnsCountBreakPoints={{ 350: 1, 700: 2, 1100: 3 }}
+                                >
+                                    <Masonry gutter={15}>
+                                        {item['links']['flickr']['original'].map((data) => (
+                                            <Image src={data} style={{ objectFit: "contain" }} />
+                                        ))}
+                                    </Masonry>
+                                </ResponsiveMasonry>
+                            </TabPane> : null
+                        }
+                    </Tabs>
                 </Col>
             </Row>
 
