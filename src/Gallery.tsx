@@ -56,7 +56,7 @@ function Gallery({ value }) {
             >
                 <Masonry gutter={15}>
                     {images.slice(minValue, maxValue).map((data) => (
-                        <Image src={data} style={{ objectFit: "contain" }} />
+                        <Image src={data} style={{ objectFit: "contain" }} key={data} />
 
                     ))}
                 </Masonry>
