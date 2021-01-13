@@ -52,7 +52,7 @@ function Home({ value, valueLP }) {
     if (launch.length === 0 || launchpads.length === 0) {
         return (
             <Row style={center} gutter={[{ xs: 8, sm: 16, md: 24, lg: 32 }, { xs: 8, sm: 16, md: 24, lg: 32 }]}>
-                <Col className="gutter-row" xs={{ span: 24 }} lg={{ span: 12 }} xl={{ span: 12 }} xxl={{ span: 10 }} key={launch[0]['id']}>
+                <Col className="gutter-row" xs={{ span: 24 }} lg={{ span: 12 }} xl={{ span: 12 }} xxl={{ span: 10 }}>
                     <Card
                         style={style}
                     >
