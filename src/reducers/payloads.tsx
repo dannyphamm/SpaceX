@@ -1,13 +1,12 @@
-const upcoming = (state = [] as Array<any>, action) => {
+const payloads = (state = [] as Array<any>, action) => {
   switch (action.type) {
-    case 'ADDUPCOMING':
+    case 'ADDPAYLOADS':
       return (
-        fetch("https://api.spacexdata.com/v4/launches/upcoming")
+        fetch("https://api.spacexdata.com/v4/payloads")
           .then(res => res.json())
           .then(
             (result) => {
               state = result
-
               return state
             },
             (error) => {
@@ -20,4 +19,4 @@ const upcoming = (state = [] as Array<any>, action) => {
   }
 }
 
-export default upcoming
+export default payloads

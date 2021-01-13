@@ -11,7 +11,7 @@ import Home from './Home';
 import Launch from './Launch';
 import thunk from 'redux-thunk';
 import MediaQuery from 'react-responsive'
-import {CloseOutlined, MenuOutlined} from '@ant-design/icons';
+import { CloseOutlined, MenuOutlined } from '@ant-design/icons';
 import Sider from 'antd/lib/layout/Sider';
 import Gallery from './Gallery';
 function App() {
@@ -23,6 +23,7 @@ function App() {
   store.dispatch({ type: 'ADDROCKETS' })
   store.dispatch({ type: 'ADDCORES' })
   store.dispatch({ type: 'ADDLANDPADS' })
+  store.dispatch({ type: 'ADDPAYLOADS' })
   const [selected, setSelected] = useState<any>([]);
   const [mobileMenuOpen, setMobileMenuOpen] = useState<boolean>(false);
 
@@ -36,11 +37,11 @@ function App() {
             {mobileMenuOpen &&
               <CloseOutlined onClick={() => {
                 setMobileMenuOpen(false)
-              }}                
-              style={{
-                color: "white",
-                alignSelf: "center",
-              }}  />
+              }}
+                style={{
+                  color: "white",
+                  alignSelf: "center",
+                }} />
             }
             {!mobileMenuOpen &&
               <MenuOutlined onClick={() => {
@@ -88,53 +89,53 @@ function App() {
         </MediaQuery>
       </Header>
       <Layout className="layout">
-      <MediaQuery maxDeviceWidth={576}>
-      <Content>
-          <div className="site-layout-content">
-            <Switch>
-            <Route path="/gallery">
-                <Gallery value={store.getState().past}/>
-              </Route>
-              <Route path="/upcoming">
-                <Upcoming value={store.getState().upcoming} valueLP={store.getState().launchpads} />
-              </Route>
-              <Route path="/past">
-                <Past value={store.getState().past} valueLP={store.getState().launchpads} />
-              </Route>
-              <Route path="/launch/:id">
-                <Launch valueLP={store.getState().launchpads} valueR={store.getState().rockets} valueC={store.getState().cores} valueZ={store.getState().landpads}/>
-              </Route>
-              <Route path="/">
-                <Home value={store.getState().upcoming} valueLP={store.getState().launchpads} />
-              </Route>
-            </Switch>
-          </div>
-        </Content>
-      </MediaQuery>
-      <MediaQuery minDeviceWidth={577}>
-        <Content style={{ padding: '50px 50px' }}>
-          <div className="site-layout-content">
-            <Switch>
-            <Route path="/gallery">
-                <Gallery value={store.getState().past}/>
-              </Route>
-              <Route path="/upcoming">
-                <Upcoming value={store.getState().upcoming} valueLP={store.getState().launchpads} />
-              </Route>
-              <Route path="/past">
-                <Past value={store.getState().past} valueLP={store.getState().launchpads} />
-              </Route>
-              <Route path="/launch/:id">
-                <Launch valueLP={store.getState().launchpads} valueR={store.getState().rockets} valueC={store.getState().cores} valueZ={store.getState().landpads}/>
-              </Route>
-              <Route path="/">
-                <Home value={store.getState().upcoming} valueLP={store.getState().launchpads} />
-              </Route>
-            </Switch>
-          </div>
-        </Content>
-      </MediaQuery>
-      <Footer style={{ textAlign: 'center' }}>A SpaceX launch previewer created by Danny</Footer>
+        <MediaQuery maxDeviceWidth={576}>
+          <Content>
+            <div className="site-layout-content">
+              <Switch>
+                <Route path="/gallery">
+                  <Gallery value={store.getState().past} />
+                </Route>
+                <Route path="/upcoming">
+                  <Upcoming value={store.getState().upcoming} valueLP={store.getState().launchpads} />
+                </Route>
+                <Route path="/past">
+                  <Past value={store.getState().past} valueLP={store.getState().launchpads} />
+                </Route>
+                <Route path="/launch/:id">
+                  <Launch valueLP={store.getState().launchpads} valueR={store.getState().rockets} valueC={store.getState().cores} valueZ={store.getState().landpads} />
+                </Route>
+                <Route path="/">
+                  <Home value={store.getState().upcoming} valueLP={store.getState().launchpads} />
+                </Route>
+              </Switch>
+            </div>
+          </Content>
+        </MediaQuery>
+        <MediaQuery minDeviceWidth={577}>
+          <Content style={{ padding: '50px 50px' }}>
+            <div className="site-layout-content">
+              <Switch>
+                <Route path="/gallery">
+                  <Gallery value={store.getState().past} />
+                </Route>
+                <Route path="/upcoming">
+                  <Upcoming value={store.getState().upcoming} valueLP={store.getState().launchpads} />
+                </Route>
+                <Route path="/past">
+                  <Past value={store.getState().past} valueLP={store.getState().launchpads} />
+                </Route>
+                <Route path="/launch/:id">
+                  <Launch valueLP={store.getState().launchpads} valueR={store.getState().rockets} valueC={store.getState().cores} valueZ={store.getState().landpads} valueP={store.getState().payloads} />
+                </Route>
+                <Route path="/">
+                  <Home value={store.getState().upcoming} valueLP={store.getState().launchpads} />
+                </Route>
+              </Switch>
+            </div>
+          </Content>
+        </MediaQuery>
+        <Footer style={{ textAlign: 'center' }}>A SpaceX launch previewer created by Danny</Footer>
       </Layout>
     </Router >
   );

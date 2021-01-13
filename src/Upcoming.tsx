@@ -11,7 +11,7 @@ import { Link } from "react-router-dom";
 function Upcoming({ value, valueLP }) {
     const style = { height: "100%", margin: "0 auto", display: "flex", flexFlow: "column" };
     const styleBody = { flex: "1 1 auto" };
-    const styleCover = { padding: "10px 10px", width: "100%"}
+    const styleCover = { padding: "10px 10px", width: "100%" }
 
     const { Meta } = Card;
     const [launch, setLaunch] = useState<any>([]);
@@ -21,7 +21,7 @@ function Upcoming({ value, valueLP }) {
     const skeleton = [] as any;
 
     for (var i = 0; i < 24; i++) {
-        skeleton.push(<Col className="gutter-row" xs={{ span: 24 }} lg={{ span: 12 }} xl={{ span: 8 }} xxl={{ span: 6 }}><Card
+        skeleton.push(<Col className="gutter-row" xs={{ span: 24 }} lg={{ span: 12 }} xl={{ span: 8 }} xxl={{ span: 6 }} key={i}><Card
             style={style}
             actions={[
                 <YoutubeFilled key={"youtube" + i} />,
@@ -43,13 +43,13 @@ function Upcoming({ value, valueLP }) {
 
     function action(item) {
         let array = [] as any;
-        if(item['webcast'] !== null) {
+        if (item['webcast'] !== null) {
             array.push(<a href={item['webcast']} target="_blank" rel="noreferrer" style={{ zIndex: 100 }}><YoutubeFilled key="youtube" /></a>)
         }
-        if(item['article'] !== null) {
+        if (item['article'] !== null) {
             array.push(<a href={item['article'] === null ? item['wikipedia'] : item['article']} target="_blank" rel="noreferrer"><ReadFilled key="article" /></a>)
         }
-        if(item['reddit']['campaign'] !== null) {
+        if (item['reddit']['campaign'] !== null) {
             array.push(<a href={item['reddit']['campaign']} target="_blank" rel="noreferrer"><RedditCircleFilled key="reddit" /></a>)
         }
         return (array)
@@ -100,7 +100,7 @@ function Upcoming({ value, valueLP }) {
             <div>
                 <Row>
                     <Col>
-                        <Title level={2}>Upcoming Launches</Title>
+                        <Title level={2}>Upcoming Missions</Title>
                         <Row gutter={[{ xs: 8, sm: 16, md: 24, lg: 32 }, { xs: 8, sm: 16, md: 24, lg: 32 }]}>
                             {launch.map((item: { [x: string]: number; }) => (
                                 <Col className="gutter-row" xs={{ span: 24 }} lg={{ span: 12 }} xl={{ span: 8 }} xxl={{ span: 6 }} key={item['id']}>
@@ -111,17 +111,17 @@ function Upcoming({ value, valueLP }) {
                                         cover={<Link to={"launch/" + item['id']}><img alt="example" src={(item['links']['patch']['large'] === null) ? "https://www.spacex.com/static/images/share.jpg" : item['links']['patch']['large']} style={styleCover} /></Link>}
                                         actions={action(item['links'])}
                                     >
-                                                                                        <div>
-                                                <Link to={"launch/" + item['id']}>
-                                        <Meta title={"#" +item['flight_number'] + " " + item['name']} />
-                                        <Meta description={getLaunchpad(item['launchpad'])} style={{ fontWeight: 'bold', lineHeight: "1rem", marginBottom: "0.5rem"}} />
-                                        <Meta description={getLocalTime(item['date_unix'])} style={{ fontWeight: 'bold' }} />
-                                        <Meta description={(item['details'] === null ? "No Information Provided" : item['details'])} />
+                                        <div>
+                                            <Link to={"launch/" + item['id']}>
+                                                <Meta title={"#" + item['flight_number'] + " " + item['name']} />
+                                                <Meta description={getLaunchpad(item['launchpad'])} style={{ fontWeight: 'bold', lineHeight: "1rem", marginBottom: "0.5rem" }} />
+                                                <Meta description={getLocalTime(item['date_unix'])} style={{ fontWeight: 'bold' }} />
+                                                <Meta description={(item['details'] === null ? "No Information Provided" : item['details'])} />
 
-                                        <br />
-                                        <Meta description={<Countdown time={item['date_unix']} />} />
-                                        </Link>
-                                                </div>
+                                                <br />
+                                                <Meta description={<Countdown time={item['date_unix']} />} />
+                                            </Link>
+                                        </div>
                                     </Card>
                                 </Col>
                             )
@@ -130,11 +130,12 @@ function Upcoming({ value, valueLP }) {
                         </Row >
                         <Row>
                             <Col>
-                                <Title level={3}>Unverified Launches</Title>
+                                <Title level={3}>Unverified Missions</Title>
                                 <Row gutter={[{ xs: 8, sm: 16, md: 24, lg: 32 }, { xs: 8, sm: 16, md: 24, lg: 32 }]}>
-                                    {tbd.map((item: { [x: string]: number; }) => (
+                                    {tbd.map((item: { [x: string]: number; }, value) => (
                                         <Col className="gutter-row" xs={{ span: 24 }} lg={{ span: 12 }} xl={{ span: 8 }} xxl={{ span: 6 }} key={item['id']}>
                                             <Card
+                                                key={item['id'] + value}
                                                 hoverable
                                                 style={style}
                                                 bodyStyle={styleBody}
@@ -142,15 +143,15 @@ function Upcoming({ value, valueLP }) {
                                                 actions={action(item['links'])}
                                             >
                                                 <div>
-                                                <Link to={"launch/" + item['id']}>
-                                                <Meta title={"#" +item['flight_number'] + " " + item['name']} />
-                                                <Meta description={getLaunchpad(item['launchpad'])} style={{ fontWeight: 'bold', lineHeight: "1rem", marginBottom: "0.5rem"}}/>
-                                                
-                                                <Meta description={(item['details'] === null ? "No Information Provided" : item['details'])} />
-                                                <Meta description={getLocalTimeString(item['date_unix'])} style={{ fontWeight: 'bold' }} />
-                                                </Link>
+                                                    <Link to={"launch/" + item['id']}>
+                                                        <Meta title={"#" + item['flight_number'] + " " + item['name']} />
+                                                        <Meta description={getLaunchpad(item['launchpad'])} style={{ fontWeight: 'bold', lineHeight: "1rem", marginBottom: "0.5rem" }} />
+
+                                                        <Meta description={(item['details'] === null ? "No Information Provided" : item['details'])} />
+                                                        <Meta description={getLocalTimeString(item['date_unix'])} style={{ fontWeight: 'bold' }} />
+                                                    </Link>
                                                 </div>
-                                                
+
                                             </Card>
                                         </Col>
                                     ))}

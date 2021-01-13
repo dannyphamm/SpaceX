@@ -4,7 +4,7 @@ import countdown from 'countdown'
 
 function Countdown(props) {
   const [timeLeft, setTimeLeft] = useState([]);
-  useEffect(() => { 
+  useEffect(() => {
     const intervalId = setInterval(() => {
       setTimeLeft(countdown(moment.unix(props.time)).toString());
     }, 1000);
