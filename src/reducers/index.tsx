@@ -3,6 +3,7 @@ import launchpads from './launchpads'
 import upcoming from './upcoming'
 import rockets from './rockets'
 import landpads from './landpads'
+import payloads from './payloads'
 import cores from './cores'
 import past from './past'
 export default combineReducers({
@@ -11,5 +12,6 @@ export default combineReducers({
     past,
     rockets,
     cores,
-    landpads
+    landpads,
+    payloads
 })
