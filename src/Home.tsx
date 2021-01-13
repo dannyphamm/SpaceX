@@ -1,4 +1,4 @@
-import { Col, Row, Card, Divider } from 'antd'
+import { Col, Row, Card, Divider, Skeleton } from 'antd'
 import React from 'react'
 import moment from 'moment';
 import { useState } from 'react'
@@ -51,7 +51,15 @@ function Home({ value, valueLP }) {
 
     if (launch.length === 0 || launchpads.length === 0) {
         return (
-            <h1>Loading</h1>
+            <Row style={center} gutter={[{ xs: 8, sm: 16, md: 24, lg: 32 }, { xs: 8, sm: 16, md: 24, lg: 32 }]}>
+                <Col className="gutter-row" xs={{ span: 24 }} lg={{ span: 12 }} xl={{ span: 12 }} xxl={{ span: 10 }} key={launch[0]['id']}>
+                    <Card
+                        style={style}
+                    >
+                        <Skeleton loading={true} active></Skeleton>
+                    </Card>
+                </Col>
+            </Row >
         )
     } else {
         return (
