@@ -1,8 +1,7 @@
 import React, { useState } from 'react'
 import { useEffect } from 'react'
 import { useParams } from "react-router-dom";
-import 'antd/dist/antd.css';
-import { Descriptions, Badge, Col, Row, Image, Divider } from 'antd';
+import { Descriptions, Badge, Col, Row, Image, Divider, Skeleton } from 'antd';
 import Masonry, { ResponsiveMasonry } from "react-responsive-masonry"
 import PropTypes from 'prop-types'
 import moment from 'moment';
@@ -95,7 +94,6 @@ function Launch({ valueLP, valueR, valueC, valueZ, valueP }) {
 
     function getPayload(data) {
         const payload = payloads.find(payload => payload['id'] === data);
-        console.log(payload)
         let customers = "";
         let nationalities = "";
         let manufacturers = "";
@@ -113,10 +111,8 @@ function Launch({ valueLP, valueR, valueC, valueZ, valueP }) {
         }
         return ([payload['name'], payload['type'], payload['orbit'], manufacturers, nationalities, customers])
     }
-    if (item.length === 0) {
-        return (
-            <h1>Loading</h1>
-        )
+    if (item.length === 0 || payloads.length === 0 || cores.length === 0 || rockets.length === 0 || launchpads.length === 0 || landpads.length === 0) {
+        return (<Skeleton />)
     } else {
         return (
             <Row>
@@ -138,7 +134,7 @@ function Launch({ valueLP, valueR, valueC, valueZ, valueP }) {
                             <Divider />
                             {item['cores'].map((data, interval) => (
 
-                                <Descriptions title={"Core #" + (interval + 1) + " Information"} bordered column={{ xxl: 3, xl: 3, lg: 3, md: 3, sm: 2, xs: 1 }}>
+                                <Descriptions title={"Core #" + (interval + 1) + " Information"} bordered column={{ xxl: 3, xl: 3, lg: 3, md: 3, sm: 2, xs: 1 }} key={data['id']}>
                                     <Descriptions.Item label="Booster Landing Status" span={1}>
                                         {item['upcoming'] ? data['landing_attempt'] === null ? <Badge status="default" text="Unknown" /> :
                                             data['landing_attempt'] ? <Badge status="default" text="Pending" /> : <Badge status="default" text="No Attempt Made" /> :
@@ -158,7 +154,7 @@ function Launch({ valueLP, valueR, valueC, valueZ, valueP }) {
 
                             <Divider />
                             {item['payloads'].map((data, interval) => (
-                                <Descriptions title={"Payload #" + (interval + 1) + " Information"} bordered column={{ xxl: 3, xl: 3, lg: 3, md: 3, sm: 2, xs: 1 }}>
+                                <Descriptions title={"Payload #" + (interval + 1) + " Information"} bordered column={{ xxl: 3, xl: 3, lg: 3, md: 3, sm: 2, xs: 1 }} key={data['id']}>
                                     <Descriptions.Item label="Payload Name" span={1}>{getPayload(data)[0]}</Descriptions.Item>
                                     <Descriptions.Item label="Payload Type" span={1}>{getPayload(data)[1]}</Descriptions.Item>
                                     <Descriptions.Item label="Payload Orbit" span={1}>{getPayload(data)[2]}</Descriptions.Item>

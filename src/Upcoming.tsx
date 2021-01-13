@@ -2,7 +2,6 @@ import React, { useEffect } from 'react'
 import { useState } from 'react'
 import { Skeleton, Row, Col, Card } from 'antd';
 import moment from 'moment';
-import 'antd/dist/antd.css';
 import Countdown from './Countdown';
 import { YoutubeFilled, ReadFilled, RedditCircleFilled } from '@ant-design/icons';
 import PropTypes from 'prop-types'
