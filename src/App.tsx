@@ -26,7 +26,25 @@ function App() {
   store.dispatch({ type: 'ADDPAYLOADS' })
   const [selected, setSelected] = useState<any>([]);
   const [mobileMenuOpen, setMobileMenuOpen] = useState<boolean>(false);
-
+function routes() {
+  return(              <Switch>
+    <Route path="/gallery">
+      <Gallery value={store.getState().past} />
+    </Route>
+    <Route path="/upcoming">
+      <Upcoming value={store.getState().upcoming} valueLP={store.getState().launchpads} />
+    </Route>
+    <Route path="/past">
+      <Past value={store.getState().past} valueLP={store.getState().launchpads} />
+    </Route>
+    <Route path="/launch/:id">
+      <Launch valueLP={store.getState().launchpads} valueR={store.getState().rockets} valueC={store.getState().cores} valueZ={store.getState().landpads} valueP={store.getState().payloads} />
+    </Route>
+    <Route path="/">
+      <Home value={store.getState().upcoming} valueLP={store.getState().launchpads} />
+    </Route>
+  </Switch>)
+}
   return (
     <Router>
       <Header>
@@ -92,46 +110,14 @@ function App() {
         <MediaQuery maxDeviceWidth={576}>
           <Content>
             <div className="site-layout-content">
-              <Switch>
-                <Route path="/gallery">
-                  <Gallery value={store.getState().past} />
-                </Route>
-                <Route path="/upcoming">
-                  <Upcoming value={store.getState().upcoming} valueLP={store.getState().launchpads} />
-                </Route>
-                <Route path="/past">
-                  <Past value={store.getState().past} valueLP={store.getState().launchpads} />
-                </Route>
-                <Route path="/launch/:id">
-                  <Launch valueLP={store.getState().launchpads} valueR={store.getState().rockets} valueC={store.getState().cores} valueZ={store.getState().landpads} />
-                </Route>
-                <Route path="/">
-                  <Home value={store.getState().upcoming} valueLP={store.getState().launchpads} />
-                </Route>
-              </Switch>
+              {routes()}
             </div>
           </Content>
         </MediaQuery>
         <MediaQuery minDeviceWidth={577}>
           <Content style={{ padding: '50px 50px' }}>
             <div className="site-layout-content">
-              <Switch>
-                <Route path="/gallery">
-                  <Gallery value={store.getState().past} />
-                </Route>
-                <Route path="/upcoming">
-                  <Upcoming value={store.getState().upcoming} valueLP={store.getState().launchpads} />
-                </Route>
-                <Route path="/past">
-                  <Past value={store.getState().past} valueLP={store.getState().launchpads} />
-                </Route>
-                <Route path="/launch/:id">
-                  <Launch valueLP={store.getState().launchpads} valueR={store.getState().rockets} valueC={store.getState().cores} valueZ={store.getState().landpads} valueP={store.getState().payloads} />
-                </Route>
-                <Route path="/">
-                  <Home value={store.getState().upcoming} valueLP={store.getState().launchpads} />
-                </Route>
-              </Switch>
+              {routes()}
             </div>
           </Content>
         </MediaQuery>
