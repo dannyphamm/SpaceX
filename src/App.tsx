@@ -29,7 +29,7 @@ function App() {
   const [selected, setSelected] = useState<any>([]);
   const [mobileMenuOpen, setMobileMenuOpen] = useState<boolean>(false);
   const [isDarkMode, setIsDarkMode] = useState();
-  const { switcher, currentTheme, status, themes } = useThemeSwitcher();
+  const { switcher, status, themes } = useThemeSwitcher();
 
   const toggleTheme = (isChecked) => {
     setIsDarkMode(isChecked);
@@ -117,8 +117,8 @@ function App() {
               <Menu.Item key="a" onClick={() => setSelected(["a"])}><Link to="/" />Home</Menu.Item>
               <Menu.Item key="b" onClick={() => setSelected(["b"])}><Link to="/upcoming" />Upcoming</Menu.Item>
               <Menu.Item key="c" onClick={() => setSelected(["c"])}><Link to="/past" /> Past</Menu.Item>
-              <Menu.Item key="d" onClick={() => { setSelected(["d"]); setMobileMenuOpen(false) }}><Link to="/gallery" /> Gallery</Menu.Item>
-              <Switch1 checkedChildren="Dark" unCheckedChildren="Light" checked={isDarkMode} onChange={toggleTheme} />
+              <Menu.Item key="d" onClick={() => { setSelected(["d"]); setMobileMenuOpen(false) }}><Link to="/gallery" /> Gallery</Menu.Item>           
+              <Switch1 checkedChildren="Dark" unCheckedChildren="Light" checked={isDarkMode} onChange={toggleTheme} style={{marginLeft:"1rem"}}/>
             </Menu>
   
           </MediaQuery>
