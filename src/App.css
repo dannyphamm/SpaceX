@@ -70,3 +70,7 @@ margin-top: 1rem;
 .homecountdown {
   font-size: 2rem;
 }
+
+.newline {
+  white-space: pre-line;
+}

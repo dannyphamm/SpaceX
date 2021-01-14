@@ -8,7 +8,6 @@ import Meta from 'antd/lib/card/Meta';
 import { useEffect } from 'react';
 import YouTube from 'react-youtube';
 import { Link } from "react-router-dom";
-import './Home.css'
 import { TwitterTimelineEmbed } from 'react-twitter-embed';
 function Home({ value, valueLP, theme }) {
     const style = { height: "100%", margin: "0 auto", display: "flex", flexFlow: "column" };

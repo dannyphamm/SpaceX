@@ -5,7 +5,6 @@ import { Descriptions, Badge, Col, Row, Image, Divider, Skeleton } from 'antd';
 import Masonry, { ResponsiveMasonry } from "react-responsive-masonry"
 import PropTypes from 'prop-types'
 import moment from 'moment';
-import './Launch.css'
 import YouTube from 'react-youtube';
 import Countdown from './Countdown';
 import { Tabs } from 'antd';
@@ -98,16 +97,22 @@ function Launch({ valueLP, valueR, valueC, valueZ, valueP }) {
         let nationalities = "";
         let manufacturers = "";
         for (let i in payload['customers']) {
-            customers += (payload["customers"][i] + "\n")
+            customers += (payload["customers"][i] + "\n ")
         }
         for (let i in payload['nationalities']) {
-            nationalities += (payload["nationalities"][i] + "\n")
+            nationalities += (payload["nationalities"][i] + "\n ")
         }
         for (let i in payload['manufacturers']) {
-            manufacturers += (payload["manufacturers"][i] + "\n")
+            manufacturers += (payload["manufacturers"][i] + "\n ")
         }
         if (manufacturers === "") {
             manufacturers = "Unknown"
+        }
+        if (nationalities === "") {
+            nationalities = "Unknown"
+        }
+        if (customers === "") {
+            customers = "Unknown"
         }
         return ([payload['name'], payload['type'], payload['orbit'], manufacturers, nationalities, customers])
     }
@@ -158,9 +163,9 @@ function Launch({ valueLP, valueR, valueC, valueZ, valueP }) {
                                     <Descriptions.Item label="Payload Name" span={1}>{getPayload(data)[0]}</Descriptions.Item>
                                     <Descriptions.Item label="Payload Type" span={1}>{getPayload(data)[1]}</Descriptions.Item>
                                     <Descriptions.Item label="Payload Orbit" span={1}>{getPayload(data)[2]}</Descriptions.Item>
-                                    <Descriptions.Item label="Payload Manufacturers" span={1}>{getPayload(data)[3]}</Descriptions.Item>
-                                    <Descriptions.Item label="Payload Nationalities" span={1}>{getPayload(data)[4]}</Descriptions.Item>
-                                    <Descriptions.Item label="Payload Customers" span={1}>{getPayload(data)[5]}</Descriptions.Item>
+                                    <Descriptions.Item label="Payload Manufacturers" span={1} className="newline">{getPayload(data)[3]}</Descriptions.Item>
+                                    <Descriptions.Item label="Payload Nationalities" span={1} className="newline">{getPayload(data)[4]}</Descriptions.Item>
+                                    <Descriptions.Item label="Payload Customers" span={1} className="newline">{getPayload(data)[5]}</Descriptions.Item>
                                 </Descriptions>
                             ))}
                         </TabPane>

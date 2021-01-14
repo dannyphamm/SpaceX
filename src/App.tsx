@@ -1,7 +1,6 @@
 import './App.css';
 import { Layout, Menu } from 'antd';
 import { BrowserRouter as Router, Switch, Route, Link } from "react-router-dom";
-
 import Upcoming from './Upcoming';
 import Past from './Past';
 import rootReducer from './reducers'
