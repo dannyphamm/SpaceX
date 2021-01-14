@@ -1,4 +1,4 @@
-import { Col, Row, Card, Divider, Skeleton } from 'antd'
+import { Col, Row, Card, Skeleton } from 'antd'
 import React from 'react'
 import moment from 'moment';
 import { useState } from 'react'
@@ -9,7 +9,8 @@ import { useEffect } from 'react';
 import YouTube from 'react-youtube';
 import { Link } from "react-router-dom";
 import './Home.css'
-function Home({ value, valueLP }) {
+import { TwitterTimelineEmbed } from 'react-twitter-embed';
+function Home({ value, valueLP, theme }) {
     const style = { height: "100%", margin: "0 auto", display: "flex", flexFlow: "column" };
     const center = { justifyContent: "center" }
 
@@ -66,8 +67,18 @@ function Home({ value, valueLP }) {
             <div>
                 {launch[0]['links']['youtube_id'] === null ?
                     <>
-                        <Row style={center} gutter={[{ xs: 8, sm: 16, md: 24, lg: 32 }, { xs: 8, sm: 16, md: 24, lg: 32 }]}>
-                            <Col className="gutter-row" xs={{ span: 24 }} lg={{ span: 12 }} xl={{ span: 12 }} xxl={{ span: 10 }} key={launch[0]['id']}>
+                        <Row style={center} gutter={[{ xs: 8, sm: 16, md: 24, lg: 24 }, { xs: 8, sm: 16, md: 24, lg: 24 }]}>
+                            <Col className="gutter-row" xs={{ span: 24 }} lg={{ span: 12 }} xl={{ span: 12 }} xxl={{ span: 12 }} style={{ textAlign: "center" }}>
+                                <Card
+                                    style={style}
+                                >
+                                    <Meta description={<Countdown time={launch[0]['date_unix']} containerClassName="homecountdown" />} />
+                                </Card>
+
+                            </Col>
+                        </Row>
+                        <Row style={center} gutter={[{ xs: 8, sm: 16, md: 24, lg: 24 }, { xs: 8, sm: 16, md: 24, lg: 24 }]}>
+                            <Col className="gutter-row" xs={{ span: 24 }} lg={{ span: 12 }} xl={{ span: 12 }} xxl={{ span: 8 }} key={launch[0]['id']}>
                                 <Card
                                     hoverable
                                     style={style}
@@ -79,38 +90,64 @@ function Home({ value, valueLP }) {
                                             <Meta title={launch[0]['name']} />
                                             <Meta title={"Launchpad: " + getLaunchpad(launch[0]['launchpad'])} description={getLocalTime(launch[0]['date_unix'])} style={{ fontWeight: 'bold' }} />
                                             <Meta description={(launch[0]['details'] === null ? "No Information Provided" : launch[0]['details'])} />
-                                            <br />
-                                            <Meta description={<Countdown time={launch[0]['date_unix']}></Countdown>} />
                                         </div>
                                     </Link>
                                 </Card>
                             </Col>
+                            <Col className="gutter-row tweets" xs={{ span: 24 }} lg={{ span: 8 }} xl={{ span: 8 }} xxl={{ span: 4 }}>
+                                    <TwitterTimelineEmbed
+                                        sourceType="profile"
+                                        screenName="spacex"
+                                        theme={theme}
+                                        options={{ height: '100%' }}
+                                    />
+                                </Col>
                         </Row >
-                    </> : <>
-                        <Row style={center} gutter={[{ xs: 8, sm: 16, md: 24, lg: 32 }, { xs: 8, sm: 16, md: 24, lg: 32 }]}>
-                            <Col className="gutter-row" xs={{ span: 24 }} lg={{ span: 12 }} xl={{ span: 12 }} xxl={{ span: 4 }} key={launch[0]['id']}>
-                                <Card
-                                    hoverable
-                                    style={style}
-                                    bodyStyle={styleBody}
-                                    cover={<Link to={"launch/" + launch[0]['id']}><img alt="example" src={(launch[0]['links']['patch']['large'] === null) ? "https://www.spacex.com/static/images/share.jpg" : launch[0]['links']['patch']['large']} style={styleCover} /></Link>}
-                                >
-                                    <Link to={"launch/" + launch[0]['id']}>
-                                        <div>
-                                            <Meta title={launch[0]['name']} />
-                                            <Meta title={"Launchpad: " + getLaunchpad(launch[0]['launchpad'])} description={getLocalTime(launch[0]['date_unix'])} style={{ fontWeight: 'bold' }} />
-                                            <Meta description={(launch[0]['details'] === null ? "No Information Provided" : launch[0]['details'])} />
-                                            <br />
-                                            <Meta description={<Countdown time={launch[0]['date_unix']}></Countdown>} />
-                                        </div>
-                                    </Link>
-                                </Card>
-                            </Col>
-                            <Divider type="vertical" />
-                            <Col className="gutter-row" xs={{ span: 24 }} lg={{ span: 12 }} xl={{ span: 12 }} xxl={{ span: 20 }}>
-                                <YouTube videoId={launch[0]['links']['youtube_id']} containerClassName="livestream" />
-                            </Col>
-                        </Row ></>}
+                    </> : <Row style={center} gutter={[{ xs: 8, sm: 16, md: 24, lg: 24 }, { xs: 8, sm: 16, md: 24, lg: 24 }]}>
+                        <Col className="gutter-row" xs={{ span: 24 }} lg={{ span: 24 }} xl={{ span: 24 }} xxl={{ span: 24 }}>
+                            <Row style={center} gutter={[{ xs: 8, sm: 16, md: 24, lg: 24 }, { xs: 8, sm: 16, md: 24, lg: 24 }]}>
+                                <Col className="gutter-row" xs={{ span: 24 }} lg={{ span: 24 }} xl={{ span: 24 }} xxl={{ span: 24 }} style={{ textAlign: "center" }}>
+                                    <Card
+                                        style={style}
+                                    >
+                                        <Meta description={<Countdown time={launch[0]['date_unix']} containerClassName="homecountdown" />} />
+                                    </Card>
+
+                                </Col>
+                            </Row>
+                            <Row style={center} gutter={[{ xs: 8, sm: 16, md: 24, lg: 24 }, { xs: 8, sm: 16, md: 24, lg: 24 }]}>
+                                <Col className="gutter-row" xs={{ span: 24 }} lg={{ span: 8 }} xl={{ span: 8 }} xxl={{ span: 3 }} key={launch[0]['id']}>
+                                    <Card
+                                        hoverable
+                                        style={style}
+                                        bodyStyle={styleBody}
+                                        cover={<Link to={"launch/" + launch[0]['id']}><img alt="example" src={(launch[0]['links']['patch']['large'] === null) ? "https://www.spacex.com/static/images/share.jpg" : launch[0]['links']['patch']['large']} style={styleCover} /></Link>}
+                                    >
+                                        <Link to={"launch/" + launch[0]['id']}>
+                                            <div>
+                                                <Meta title={launch[0]['name']} />
+                                                <Meta title={"Launchpad: " + getLaunchpad(launch[0]['launchpad'])} description={getLocalTime(launch[0]['date_unix'])} style={{ fontWeight: 'bold' }} />
+                                                <Meta description={(launch[0]['details'] === null ? "No Information Provided" : launch[0]['details'])} />
+                                            </div>
+                                        </Link>
+                                    </Card>
+
+                                </Col>
+                                <Col className="gutter-row" xs={{ span: 24 }} lg={{ span: 8 }} xl={{ span: 8 }} xxl={{ span: 18 }}>
+                                    <YouTube videoId={launch[0]['links']['youtube_id']} containerClassName="livestream1" />
+                                </Col>
+                                <Col className="gutter-row tweets" xs={{ span: 24 }} lg={{ span: 8 }} xl={{ span: 8 }} xxl={{ span: 3 }}>
+                                    <TwitterTimelineEmbed
+                                        sourceType="profile"
+                                        screenName="spacex"
+                                        theme={theme}
+                                        options={{ height: '100%' }}
+                                    />
+                                </Col>
+                            </Row >
+                        </Col>
+                    </Row>
+                }
 
 
 
@@ -122,5 +159,6 @@ function Home({ value, valueLP }) {
 Home.propTypes = {
     value: PropTypes.object,
     valueLP: PropTypes.object,
+    theme: PropTypes.string,
 }
 export default Home

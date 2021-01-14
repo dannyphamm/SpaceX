@@ -12,7 +12,7 @@ function Countdown(props) {
   }, [props.time]);
 
   return (
-    <span>{timeLeft}</span>
+    <span className={props.containerClassName}>{timeLeft}</span>
   )
 }
 

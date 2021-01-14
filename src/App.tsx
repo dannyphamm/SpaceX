@@ -29,7 +29,7 @@ function App() {
   const [selected, setSelected] = useState<any>([]);
   const [mobileMenuOpen, setMobileMenuOpen] = useState<boolean>(false);
   const [isDarkMode, setIsDarkMode] = useState();
-  const { switcher, status, themes } = useThemeSwitcher();
+  const { switcher, currentTheme, status, themes } = useThemeSwitcher();
 
   const toggleTheme = (isChecked) => {
     setIsDarkMode(isChecked);
@@ -52,7 +52,7 @@ function App() {
           <Launch valueLP={store.getState().launchpads} valueR={store.getState().rockets} valueC={store.getState().cores} valueZ={store.getState().landpads} valueP={store.getState().payloads} />
         </Route>
         <Route path="/">
-          <Home value={store.getState().upcoming} valueLP={store.getState().launchpads} />
+          <Home value={store.getState().upcoming} valueLP={store.getState().launchpads} theme={currentTheme}/>
         </Route>
       </Switch>)
   }
