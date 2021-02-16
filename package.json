@@ -14,7 +14,6 @@
     "antd": "^4.10.2",
     "axios": "^0.21.1",
     "countdown": "^2.6.0",
-    "mobx": "^6.0.4",
     "moment": "^2.29.1",
     "moment-countdown": "0.0.3",
     "react": "^17.0.1",
