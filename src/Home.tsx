@@ -71,6 +71,10 @@ function Home({ upcomingData, launchpadsData, fetchUpcoming, fetchLaunchpads, th
                                         <Card
                                             style={style}
                                         >
+                                            <FlipCountdown
+                                                theme={theme} // Options (Default: dark): dark, light.
+                                                endAt={launch[0]['date_local']} // Date/Time
+                                            />
                                         </Card>
                                     </Col>
                                     <Col className="gutter-row" xs={{ span: 24 }} lg={{ span: 12 }} xl={{ span: 12 }} xxl={{ span: 8 }} key={launch[0]['id']}>
