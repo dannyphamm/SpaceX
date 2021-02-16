@@ -106,7 +106,7 @@ function Past({ pastData, launchpadsData, fetchPast, fetchLaunchpads }) {
     }
 
 
-    if (pastData.loading && launchpadsData.loading) {
+    if (pastData.loading || launchpadsData.loading) {
         return (
             <Row gutter={[{ xs: 8, sm: 16, md: 24, lg: 32 }, { xs: 8, sm: 16, md: 24, lg: 32 }]}>
                 {skeleton}

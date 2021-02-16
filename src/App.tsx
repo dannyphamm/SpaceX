@@ -5,7 +5,6 @@ import Upcoming from './Upcoming';
 import Past from './Past';
 import React, { useState } from 'react';
 import Home from './Home';
-import Test from './Test';
 import Launch from './Launch';
 import MediaQuery from 'react-responsive'
 import { CloseOutlined, MenuOutlined } from '@ant-design/icons';
@@ -30,9 +29,6 @@ function App() {
   function routes() {
     return (
       <Switch>
-        <Route path="/test">
-          <Test/>
-        </Route>
         <Route path="/gallery">
           <Gallery/>
         </Route>
@@ -46,7 +42,7 @@ function App() {
           <Launch/>
         </Route>
         <Route path="/">
-          <Home/>
+          <Home theme={currentTheme}/>
         </Route>
       </Switch>
 

@@ -103,18 +103,14 @@ function Upcoming({ upcomingData, launchpadsData, fetchUpcoming, fetchLaunchpads
             </Card>
         )
     }
-    if (upcomingData.loading && launchpadsData.loading) {
+    if (upcomingData.loading || launchpadsData.loading) {
         return (
             <Row gutter={[{ xs: 8, sm: 16, md: 24, lg: 32 }, { xs: 8, sm: 16, md: 24, lg: 32 }]}>
                 {skeleton}
             </Row>
         )
     } else {
-
-
-
         return (
-
             <div>
                 <Row>
                     <Col>
@@ -143,9 +139,6 @@ function Upcoming({ upcomingData, launchpadsData, fetchUpcoming, fetchLaunchpads
                         </Row>
                     </Col>
                 </Row>
-
-
-
             </div>
         )
     }

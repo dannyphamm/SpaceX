@@ -9,35 +9,22 @@ import YouTube from 'react-youtube';
 import Countdown from './Countdown';
 import { Tabs } from 'antd';
 import Title from 'antd/lib/typography/Title';
+import { connect } from 'react-redux'
+import { fetchLandpads, fetchLaunchpads, fetchPayloads, fetchRockets, fetchCores } from './redux';
 
-function Launch({ valueLP, valueR, valueC, valueZ, valueP }) {
+function Launch({ fetchLandpads, fetchLaunchpads, fetchPayloads, fetchRockets, fetchCores, landpadsData, launchpadsData, payloadsData, rocketsData, coresData }) {
     let params = useParams();
 
     const { TabPane } = Tabs;
     const [item, setItem] = useState<any>([]);
-    const [launchpads, setLaunchPads] = useState<any>([]);
-    const [rockets, setRockets] = useState<any>([]);
-    const [landpads, setLandpads] = useState<any>([]);
-    const [cores, setCores] = useState<any>([]);
-    const [payloads, setPayloads] = useState<any>([]);
     const url = "https://api.spacexdata.com/v4/launches/" + params['id'];
     
-    Promise.resolve(valueLP).then((result) => {
-        setLaunchPads(result)
-    })
-    Promise.resolve(valueR).then((result) => {
-        setRockets(result)
-    })
-    Promise.resolve(valueC).then((result) => {
-        setCores(result)
-    })
-    Promise.resolve(valueZ).then((result) => {
-        setLandpads(result)
-    })
-    Promise.resolve(valueP).then((result) => {
-        setPayloads(result)
-    })
     useEffect(() => {
+        fetchCores();
+        fetchLandpads();
+        fetchLaunchpads();
+        fetchPayloads();
+        fetchRockets();
         fetch(url)
             .then(res => res.json())
             .then(
@@ -48,7 +35,7 @@ function Launch({ valueLP, valueR, valueC, valueZ, valueP }) {
     }, [url])
 
     function getLaunchpad(launchpadID: any) {
-        const launchpad = launchpads.find(launchpad => launchpad['id'] === launchpadID);
+        const launchpad = launchpadsData.launchpads.find(launchpad => launchpad['id'] === launchpadID);
         return (launchpad['full_name']);
     }
 
@@ -56,7 +43,7 @@ function Launch({ valueLP, valueR, valueC, valueZ, valueP }) {
         if (item1 === null) {
             return ["Unknown", "Unknown", "Unknown"]
         } else {
-            const landpad = landpads.find(landpad => landpad['id'] === item1);
+            const landpad = landpadsData.landpads.find(landpad => landpad['id'] === item1);
             return ([landpad['region'], landpad['full_name'], landpad['type']])
         }
     }
@@ -64,7 +51,7 @@ function Launch({ valueLP, valueR, valueC, valueZ, valueP }) {
         if (coreID === null) {
             return ""
         } else {
-            const core = cores.find(core => core['id'] === coreID);
+            const core = coresData.cores.find(core => core['id'] === coreID);
             let block;
 
             if (core['block'] !== null) {
@@ -78,7 +65,7 @@ function Launch({ valueLP, valueR, valueC, valueZ, valueP }) {
 
     }
     function getRocket(rocketID: any) {
-        const rocket = rockets.find(rocket => rocket['id'] === rocketID);
+        const rocket = rocketsData.rockets.find(rocket => rocket['id'] === rocketID);
 
         return (rocket['name']);
     }
@@ -93,7 +80,7 @@ function Launch({ valueLP, valueR, valueC, valueZ, valueP }) {
     }
 
     function getPayload(data) {
-        const payload = payloads.find(payload => payload['id'] === data);
+        const payload = payloadsData.payloads.find(payload => payload['id'] === data);
         let customers = "";
         let nationalities = "";
         let manufacturers = "";
@@ -117,15 +104,15 @@ function Launch({ valueLP, valueR, valueC, valueZ, valueP }) {
         }
         return ([payload['name'], payload['type'], payload['orbit'], manufacturers, nationalities, customers])
     }
-    if (item.length === 0 || payloads.length === 0 || cores.length === 0 || rockets.length === 0 || launchpads.length === 0 || landpads.length === 0) {
+    if (landpadsData.loading || launchpadsData.loading || coresData.loading || rocketsData.loading || payloadsData.loading || item.length === 0) {
         return (<Skeleton />)
     } else {
         return (
             <Row>
                 <Col style={{ width: "100%" }}>
                     <Title level={3}>{item['name']}</Title>
-                    <Tabs defaultActiveKey="1">
-                        <TabPane tab="Mission Information" key="1">
+                    <Tabs defaultActiveKey="1" key="1">
+                        <TabPane tab="Mission Information" >
                             <Descriptions bordered column={{ xxl: 3, xl: 3, lg: 3, md: 3, sm: 2, xs: 1 }}>
                                 <Descriptions.Item label="Mission Status" span={3}>
                                     {item['upcoming'] ? <Badge status="default" text="Upcoming" /> : item['success'] === null ? <Badge status="default" text="Unknown" /> : item['success'] ? <Badge status="success" text="Success" /> : <Badge status="error" text="Failure" />}
@@ -201,14 +188,30 @@ function Launch({ valueLP, valueR, valueC, valueZ, valueP }) {
 
 
         )
+    } 
+}
+
+const mapStateToProps = state => {
+    return {
+        launchpadsData: state.launchpads,
+        rocketsData: state.rockets,
+        coresData: state.cores,
+        payloadsData: state.payloads,
+        landpadsData: state.landpads
     }
 }
 
-Launch.propTypes = {
-    valueLP: PropTypes.object,
-    valueR: PropTypes.object,
-    valueC: PropTypes.object,
-    valueZ: PropTypes.object,
-    valueP: PropTypes.object,
+const mapDispatchToProps = dispatch => {
+    return {
+        fetchLaunchpads: () => dispatch(fetchLaunchpads()),
+        fetchRockets: () => dispatch(fetchRockets()),
+        fetchCores: () => dispatch(fetchCores()),
+        fetchPayloads: () => dispatch(fetchPayloads()),
+        fetchLandpads: () => dispatch(fetchLandpads())
+    }
 }
-export default Launch
+
+export default connect(
+    mapStateToProps,
+    mapDispatchToProps
+)(Launch)

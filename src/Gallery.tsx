@@ -24,7 +24,7 @@ function Gallery({ pastData, fetchPast }) {
     useEffect(() => {
         fetchPast();
     }, [])
-    
+
     useEffect(() => {
         let array = [] as any
         let value = 0;
@@ -51,7 +51,7 @@ function Gallery({ pastData, fetchPast }) {
             <ResponsiveMasonry
                 columnsCountBreakPoints={{ 350: 1, 700: 2, 1100: 5 }}
             >
-                <Masonry gutter={15}>
+                <Masonry gutter={16}>
                     {images.slice(minValue, maxValue).map((data) => (
                         <Image src={data} style={{ objectFit: "contain" }} key={data} />
 

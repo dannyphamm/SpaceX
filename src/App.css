@@ -63,6 +63,7 @@ margin-top: 1rem;
   top: 0;
   left: 0;
   }
+
 .tweets div {
   height: 100%;
 }
@@ -73,4 +74,12 @@ margin-top: 1rem;
 
 .newline {
   white-space: pre-line;
+}
+
+/* body[data-theme='dark'] .timeline-Widget {
+  background-color: #141414 !important;
+} */
+
+blockquote.twitter-tweet {
+  background-color: teal;
 }
