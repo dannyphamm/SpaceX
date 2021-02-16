@@ -1,21 +1,15 @@
 import React, { useEffect, useState } from 'react'
 import Masonry, { ResponsiveMasonry } from "react-responsive-masonry"
-import PropTypes from 'prop-types'
+import { connect } from 'react-redux'
+import { fetchPast } from './redux'
 import { Image, Pagination } from 'antd';
-function Gallery({ value }) {
+function Gallery({ pastData, fetchPast }) {
     const paginationStyle = { paddingBottom: "24px", textAlign: "center" as const }
-    const [items, setItems] = useState<any>([]);
     const [minValue, setMinValue] = useState<number>(0);
     const [maxValue, setMaxValue] = useState<number>(50);
     const [pageSize, setPageSize] = useState<number>(50)
     const [imageSize, setImageSize] = useState<number>(0);
     const [images, setImages] = useState<any>([]);
-    Promise.resolve(value).then((result) => {
-        setItems(result.sort(comp))
-    })
-    function comp(a: { date_unix: string | number | Date; }, b: { date_unix: string | number | Date; }) {
-        return new Date(b.date_unix).getTime() - new Date(a.date_unix).getTime();
-    }
 
     function handleChange(value, pageSize) {
         setPageSize(pageSize)
@@ -27,19 +21,22 @@ function Gallery({ value }) {
             setMaxValue(value * pageSize)
         }
     }
-
+    useEffect(() => {
+        fetchPast();
+    }, [])
+    
     useEffect(() => {
         let array = [] as any
         let value = 0;
-        for (let i in items) {
-            for (let j in items[i]['links']['flickr']['original']) {
-                array[value] = items[i]['links']['flickr']['original'][j]
+        for (let i in pastData.past) {
+            for (let j in pastData.past[i]['links']['flickr']['original']) {
+                array[value] = pastData.past[i]['links']['flickr']['original'][j]
                 value++;
             }
         }
         setImages(array)
         setImageSize(array.length)
-    }, [items])
+    }, [pastData.loading])
     return (
         <>
             <Pagination
@@ -65,8 +62,19 @@ function Gallery({ value }) {
     )
 }
 
-Gallery.propTypes = {
-    value: PropTypes.object,
-
+const mapStateToProps = state => {
+    return {
+        pastData: state.past
+    }
 }
-export default Gallery
+
+const mapDispatchToProps = dispatch => {
+    return {
+        fetchPast: () => dispatch(fetchPast()),
+    }
+}
+
+export default connect(
+    mapStateToProps,
+    mapDispatchToProps
+)(Gallery)

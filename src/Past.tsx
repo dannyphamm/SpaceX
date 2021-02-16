@@ -3,9 +3,11 @@ import { useState } from 'react'
 import { Skeleton, Row, Col, Card, Pagination, Badge } from 'antd';
 import moment from 'moment';
 import { YoutubeFilled, ReadFilled, RedditCircleFilled } from '@ant-design/icons';
-import PropTypes from 'prop-types'
+import { connect } from 'react-redux'
+import { fetchPast, fetchLaunchpads } from './redux'
 import { Link } from "react-router-dom";
-function Past({ value, valueLP }) {
+import { useEffect } from 'react';
+function Past({ pastData, launchpadsData, fetchPast, fetchLaunchpads }) {
     const style = { height: "100%", margin: "0 auto", display: "flex", flexFlow: "column" };
     const styleBody = { flex: "1 1 auto" };
     const styleCover = { padding: "10px 10px", width: "100%" }
@@ -16,8 +18,7 @@ function Past({ value, valueLP }) {
     const [minValue, setMinValue] = useState<number>(0);
     const [maxValue, setMaxValue] = useState<number>(24);
     const [pageSize, setPageSize] = useState<number>(24)
-    const [items, setItems] = useState<any>([]);
-    const [launchpads, setLaunchPads] = useState<any>([]);
+
     const skeleton = [] as any;
     for (var i = 0; i < 24; i++) {
         skeleton.push(<Col className="gutter-row" xs={{ span: 24 }} lg={{ span: 12 }} xl={{ span: 8 }} xxl={{ span: 6 }} key={i}><Card
@@ -31,19 +32,13 @@ function Past({ value, valueLP }) {
             <Skeleton loading={true} active></Skeleton>
         </Card></Col>)
     }
-    function comp(a: { date_unix: string | number | Date; }, b: { date_unix: string | number | Date; }) {
-        return new Date(b.date_unix).getTime() - new Date(a.date_unix).getTime();
-    }
-
-    Promise.resolve(value).then((result) => {
-        setItems(result.sort(comp))
-    })
-    Promise.resolve(valueLP).then((result) => {
-        setLaunchPads(result)
-    })
+    useEffect(() => {
+        fetchPast();
+        fetchLaunchpads();
+    }, [])
 
     function getLaunchpad(launchpadID: any) {
-        const launchpad = launchpads.find(launchpad => launchpad['id'] === launchpadID);
+        const launchpad = launchpadsData.launchpads.find(launchpad => launchpad['id'] === launchpadID);
         return (launchpad['full_name']);
     }
 
@@ -111,7 +106,7 @@ function Past({ value, valueLP }) {
     }
 
 
-    if (items.length === 0 || launchpads.length === 0) {
+    if (pastData.loading && launchpadsData.loading) {
         return (
             <Row gutter={[{ xs: 8, sm: 16, md: 24, lg: 32 }, { xs: 8, sm: 16, md: 24, lg: 32 }]}>
                 {skeleton}
@@ -125,13 +120,13 @@ function Past({ value, valueLP }) {
                     defaultCurrent={1}
                     onChange={handleChange}
                     pageSize={pageSize}
-                    total={items.length}
+                    total={pastData.past.length}
                     responsive={true}
                     pageSizeOptions={["24", "48", "72", "96"]}
                 />
 
                 <Row gutter={[{ xs: 8, sm: 16, md: 24, lg: 32 }, { xs: 8, sm: 16, md: 24, lg: 32 }]}>
-                    {items.slice(minValue, maxValue).map((item, index) => (
+                    {pastData.past.slice(minValue, maxValue).map((item, index) => (
                         <Col className="gutter-row" xs={{ span: 24 }} lg={{ span: 12 }} xl={{ span: 8 }} xxl={{ span: 6 }} key={item['id'] + index}>
 
                             <Card
@@ -165,8 +160,21 @@ function Past({ value, valueLP }) {
     }
 
 }
-Past.propTypes = {
-    value: PropTypes.object,
-    valueLP: PropTypes.object,
+const mapStateToProps = state => {
+    return {
+        pastData: state.past,
+        launchpadsData: state.launchpads
+    }
 }
-export default Past
+
+const mapDispatchToProps = dispatch => {
+    return {
+        fetchPast: () => dispatch(fetchPast()),
+        fetchLaunchpads: () => dispatch(fetchLaunchpads())
+    }
+}
+
+export default connect(
+    mapStateToProps,
+    mapDispatchToProps
+)(Past)
