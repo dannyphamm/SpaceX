@@ -4,10 +4,13 @@ import { Skeleton, Row, Col, Card } from 'antd';
 import moment from 'moment';
 import Countdown from './Countdown';
 import { YoutubeFilled, ReadFilled, RedditCircleFilled } from '@ant-design/icons';
-import PropTypes from 'prop-types'
 import Title from 'antd/lib/typography/Title';
 import { Link } from "react-router-dom";
-function Upcoming({ value, valueLP }) {
+
+import { connect } from 'react-redux'
+import { fetchUpcoming, fetchLaunchpads } from './redux'
+
+function Upcoming({ upcomingData, launchpadsData, fetchUpcoming, fetchLaunchpads }) {
     const style = { height: "100%", margin: "0 auto", display: "flex", flexFlow: "column" };
     const styleBody = { flex: "1 1 auto" };
     const styleCover = { padding: "10px 10px", width: "100%" }
@@ -15,10 +18,8 @@ function Upcoming({ value, valueLP }) {
     const { Meta } = Card;
     const [launch, setLaunch] = useState<any>([]);
     const [tbd, setTBD] = useState<any>([]);
-    const [items1, setItems1] = useState<any>([]);
-    const [launchpads, setLaunchPads] = useState<any>([]);
-    const skeleton = [] as any;
 
+    const skeleton = [] as any;
     for (var i = 0; i < 24; i++) {
         skeleton.push(<Col className="gutter-row" xs={{ span: 24 }} lg={{ span: 12 }} xl={{ span: 8 }} xxl={{ span: 6 }} key={i}><Card
             style={style}
@@ -35,11 +36,22 @@ function Upcoming({ value, valueLP }) {
         return new Date(a.date_unix).getTime() - new Date(b.date_unix).getTime();
     }
 
-    Promise.resolve(value).then((result) => {
-        setItems1(result.sort(comp));
+    useEffect(() => {
+        fetchUpcoming();
+        fetchLaunchpads();
+        let tbdArray = [] as any;
+        let launchArray = [] as any;
+        for (let i in upcomingData.upcoming) {
+            if (upcomingData.upcoming[i]["date_precision"] !== "hour") {
+                tbdArray[i] = { ...tbdArray[i], ...upcomingData.upcoming[i] }
 
-    })
-
+            } else {
+                launchArray[i] = { ...launchArray[i], ...upcomingData.upcoming[i] }
+            }
+        }
+        setLaunch(Object.keys(launchArray).map((key) => launchArray[key]).sort(comp))
+        setTBD(Object.keys(tbdArray).map((key) => tbdArray[key]).sort(comp))
+    }, [])
     function action(item) {
         let array = [] as any;
         if (item['webcast'] !== null) {
@@ -54,27 +66,8 @@ function Upcoming({ value, valueLP }) {
         return (array)
     }
 
-    useEffect(() => {
-        let tbdArray = [] as any;
-        let launchArray = [] as any;
-        for (let i in items1) {
-            if (items1[i]["date_precision"] !== "hour") {
-                tbdArray[i] = { ...tbdArray[i], ...items1[i] }
-
-            } else {
-                launchArray[i] = { ...launchArray[i], ...items1[i] }
-            }
-        }
-        setLaunch(Object.keys(launchArray).map((key) => launchArray[key]).sort(comp))
-        setTBD(Object.keys(tbdArray).map((key) => tbdArray[key]).sort(comp))
-    }, [items1])
-
-    Promise.resolve(valueLP).then((result) => {
-        setLaunchPads(result)
-    })
-
     function getLaunchpad(launchpadID: any) {
-        const launchpad = launchpads.find(launchpad => launchpad['id'] === launchpadID);
+        const launchpad = launchpadsData.launchpads.find(launchpad => launchpad['id'] === launchpadID);
         return (launchpad['full_name']);
     }
 
@@ -87,15 +80,41 @@ function Upcoming({ value, valueLP }) {
         return "NET " + d.toString();
     }
 
+    function createCard(item) {
+        return (
+            <Card
+                hoverable
+                style={style}
+                bodyStyle={styleBody}
+                cover={<Link to={"launch/" + item['id']}><img alt="example" src={(item['links']['patch']['large'] === null) ? "https://www.spacex.com/static/images/share.jpg" : item['links']['patch']['large']} style={styleCover} /></Link>}
+                actions={action(item['links'])}
+            >
+                <div>
+                    <Link to={"launch/" + item['id']}>
+                        <Meta title={"#" + item['flight_number'] + " " + item['name']} />
+                        <Meta description={getLaunchpad(item['launchpad'])} style={{ fontWeight: 'bold', lineHeight: "1rem", marginBottom: "0.5rem" }} />
+                        {item['date_precision'] !== 'hour' ? <Meta description={getLocalTimeString(item['date_unix'])} style={{ fontWeight: 'bold' }} /> : <Meta description={getLocalTime(item['date_unix'])} style={{ fontWeight: 'bold' }} />}
 
-    if (launch.length === 0 || launchpads.length === 0) {
+                        <Meta description={(item['details'] === null ? "No Information Provided" : item['details'])} />
+                        <br />
+                        <Meta description={<Countdown time={item['date_unix']} />} />
+                    </Link>
+                </div>
+            </Card>
+        )
+    }
+    if (upcomingData.loading && launchpadsData.loading) {
         return (
             <Row gutter={[{ xs: 8, sm: 16, md: 24, lg: 32 }, { xs: 8, sm: 16, md: 24, lg: 32 }]}>
                 {skeleton}
             </Row>
         )
     } else {
+
+
+
         return (
+
             <div>
                 <Row>
                     <Col>
@@ -103,25 +122,8 @@ function Upcoming({ value, valueLP }) {
                         <Row gutter={[{ xs: 8, sm: 16, md: 24, lg: 32 }, { xs: 8, sm: 16, md: 24, lg: 32 }]}>
                             {launch.map((item: { [x: string]: number; }) => (
                                 <Col className="gutter-row" xs={{ span: 24 }} lg={{ span: 12 }} xl={{ span: 8 }} xxl={{ span: 6 }} key={item['id']}>
-                                    <Card
-                                        hoverable
-                                        style={style}
-                                        bodyStyle={styleBody}
-                                        cover={<Link to={"launch/" + item['id']}><img alt="example" src={(item['links']['patch']['large'] === null) ? "https://www.spacex.com/static/images/share.jpg" : item['links']['patch']['large']} style={styleCover} /></Link>}
-                                        actions={action(item['links'])}
-                                    >
-                                        <div>
-                                            <Link to={"launch/" + item['id']}>
-                                                <Meta title={"#" + item['flight_number'] + " " + item['name']} />
-                                                <Meta description={getLaunchpad(item['launchpad'])} style={{ fontWeight: 'bold', lineHeight: "1rem", marginBottom: "0.5rem" }} />
-                                                <Meta description={getLocalTime(item['date_unix'])} style={{ fontWeight: 'bold' }} />
-                                                <Meta description={(item['details'] === null ? "No Information Provided" : item['details'])} />
+                                    {createCard(item)}
 
-                                                <br />
-                                                <Meta description={<Countdown time={item['date_unix']} />} />
-                                            </Link>
-                                        </div>
-                                    </Card>
                                 </Col>
                             )
                             )
@@ -133,25 +135,7 @@ function Upcoming({ value, valueLP }) {
                                 <Row gutter={[{ xs: 8, sm: 16, md: 24, lg: 32 }, { xs: 8, sm: 16, md: 24, lg: 32 }]}>
                                     {tbd.map((item: { [x: string]: number; }, value) => (
                                         <Col className="gutter-row" xs={{ span: 24 }} lg={{ span: 12 }} xl={{ span: 8 }} xxl={{ span: 6 }} key={item['id']}>
-                                            <Card
-                                                key={item['id'] + value}
-                                                hoverable
-                                                style={style}
-                                                bodyStyle={styleBody}
-                                                cover={<Link to={"launch/" + item['id']}><img alt="example" src={(item['links']['patch']['large'] === null) ? "https://www.spacex.com/static/images/share.jpg" : item['links']['patch']['large']} style={styleCover} /></Link>}
-                                                actions={action(item['links'])}
-                                            >
-                                                <div>
-                                                    <Link to={"launch/" + item['id']}>
-                                                        <Meta title={"#" + item['flight_number'] + " " + item['name']} />
-                                                        <Meta description={getLaunchpad(item['launchpad'])} style={{ fontWeight: 'bold', lineHeight: "1rem", marginBottom: "0.5rem" }} />
-
-                                                        <Meta description={(item['details'] === null ? "No Information Provided" : item['details'])} />
-                                                        <Meta description={getLocalTimeString(item['date_unix'])} style={{ fontWeight: 'bold' }} />
-                                                    </Link>
-                                                </div>
-
-                                            </Card>
+                                            {createCard(item)}
                                         </Col>
                                     ))}
                                 </Row >
@@ -166,9 +150,22 @@ function Upcoming({ value, valueLP }) {
         )
     }
 }
-Upcoming.propTypes = {
-    value: PropTypes.object,
-    valueLP: PropTypes.object,
+
+const mapStateToProps = state => {
+    return {
+        upcomingData: state.upcoming,
+        launchpadsData: state.launchpads
+    }
 }
 
-export default Upcoming
+const mapDispatchToProps = dispatch => {
+    return {
+        fetchUpcoming: () => dispatch(fetchUpcoming()),
+        fetchLaunchpads: () => dispatch(fetchLaunchpads())
+    }
+}
+
+export default connect(
+    mapStateToProps,
+    mapDispatchToProps
+)(Upcoming)

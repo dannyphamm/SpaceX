@@ -21,6 +21,7 @@ function Launch({ valueLP, valueR, valueC, valueZ, valueP }) {
     const [cores, setCores] = useState<any>([]);
     const [payloads, setPayloads] = useState<any>([]);
     const url = "https://api.spacexdata.com/v4/launches/" + params['id'];
+    
     Promise.resolve(valueLP).then((result) => {
         setLaunchPads(result)
     })
