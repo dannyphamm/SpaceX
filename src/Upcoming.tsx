@@ -97,7 +97,7 @@ function Upcoming({ upcomingData, launchpadsData, fetchUpcoming, fetchLaunchpads
 
                         <Meta description={(item['details'] === null ? "No Information Provided" : item['details'])} />
                         <br />
-                        <Meta description={<Countdown time={item['date_unix']} />} />
+                        {item['date_precision'] !== 'hour' ? null : <Meta description={<Countdown time={item['date_unix']}/>} />}
                     </Link>
                 </div>
             </Card>
