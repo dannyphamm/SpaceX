@@ -72,8 +72,7 @@ function Home({ upcomingData, launchpadsData, fetchUpcoming, fetchLaunchpads, th
                                             style={style}
                                         >
                                             <FlipCountdown
-                                                theme={theme} // Options (Default: dark): dark, light.
-                                                endAt={launch[0]['date_local']} // Date/Time
+                                                endAt={launch[0]['date_local']}
                                             />
                                         </Card>
                                     </Col>
@@ -116,8 +115,7 @@ function Home({ upcomingData, launchpadsData, fetchUpcoming, fetchLaunchpads, th
                                             style={style}
                                         >
                                             <FlipCountdown
-                                                theme={theme} // Options (Default: dark): dark, light.
-                                                endAt={launch[0]['date_local']} // Date/Time
+                                                endAt={launch[0]['date_local']}
                                             />
                                         </Card>
                                     </Col>

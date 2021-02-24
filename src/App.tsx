@@ -58,7 +58,7 @@ function App() {
           <Header>
             <MediaQuery maxDeviceWidth={576}>
               <div style={{ display: "flex", justifyContent: "space-between" }}>
-                <img src="https://logos-world.net/wp-content/uploads/2020/09/SpaceX-Logo.png" alt="asd" className="logo" style={{ objectFit: "cover", background: "none" }} />
+                <img src="https://spacelaunchnow-prod-east.nyc3.digitaloceanspaces.com/media/logo/spacex_logo_20191121063502.png" alt="SpaceX Logo" className="logo" style={{ objectFit: "contain", background: "none" }} />
                 <div><Switch1 checkedChildren="Dark" unCheckedChildren="Light" checked={isDarkMode} onChange={toggleTheme} /></div>
                 {mobileMenuOpen &&
                   <CloseOutlined onClick={() => {
@@ -105,7 +105,7 @@ function App() {
               </div>
             </MediaQuery>
             <MediaQuery minDeviceWidth={577}>
-              <img src="https://logos-world.net/wp-content/uploads/2020/09/SpaceX-Logo.png" alt="asd" className="logo" style={{ objectFit: "cover", background: "none" }} />
+              <img src="https://spacelaunchnow-prod-east.nyc3.digitaloceanspaces.com/media/logo/spacex_logo_20191121063502.png" alt="SpaceX Logo" className="logo" style={{ objectFit: "contain", background: "none" }} />
               <Menu theme="dark" mode="horizontal" defaultSelectedKeys={selected} >
                 <Menu.Item key="a" onClick={() => setSelected(["a"])}><Link to="/" />Home</Menu.Item>
                 <Menu.Item key="b" onClick={() => setSelected(["b"])}><Link to="/upcoming" />Upcoming</Menu.Item>
