@@ -7,6 +7,7 @@ import {
   const initialState = {
     loading: false,
     landpads: [],
+    lastUpdate: '',
     error: ''
   }
   
@@ -21,6 +22,7 @@ import {
         return {
           loading: false,
           landpads: action.payload,
+          lastUpdated: action.lastUpdate,
           error: ''
         }
       case FETCH_LANDPADS_FAILURE:

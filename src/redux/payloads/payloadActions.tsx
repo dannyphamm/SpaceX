@@ -1,4 +1,6 @@
 import axios from 'axios'
+import firebase from 'firebase';
+import moment from 'moment';
 import {
   FETCH_PAYLOADS_REQUEST,
   FETCH_PAYLOADS_SUCCESS,
@@ -6,19 +8,39 @@ import {
 } from './payloadTypes'
 
 export const fetchPayloads = () => {
+  const database = firebase.firestore();
   return (dispatch) => {
     dispatch(fetchPayloadsRequest())
-    axios
-      .get('https://api.spacexdata.com/v4/payloads')
-      .then(response => {
-        // response.data is the users
-        const payloads = response.data
-        dispatch(fetchPayloadsSuccess(payloads))
-      })
-      .catch(error => {
-        // error.message is the error message
-        dispatch(fetchPayloadsFailure(error.message))
-      })
+
+    var docRef = database.collection("apidata").doc("payloads");
+    docRef.get().then((doc) => {
+      var data = doc.data()
+      if (doc.exists) {
+        const diff = moment().diff(moment(data!['last_updated']), "seconds");
+        // 5 minutes, Get new data if existing data is old
+        if (diff > 300) {
+          axios
+            .get('https://api.spacexdata.com/v4/payloads')
+            .then(response => {
+              const payloads = response.data
+              payloads['last_updated'] = moment().toString();
+              database.collection("apidata").doc("payloads").set(Object.assign({}, payloads));
+            })
+            .catch(error => {
+              dispatch(fetchPayloadsFailure(error.message))
+            })
+        }
+        let data1 = [] as any;
+        for (let i in data) {
+          if (i !== "last_updated") {
+            data1[i] = { ...data1[i], ...data[i] }
+          }
+        }
+        dispatch(fetchPayloadsSuccess(data1, data!['last_updated']))
+      }
+    }).catch((error) => {
+      dispatch(fetchPayloadsFailure(error.message))
+    });
   }
 }
 
@@ -28,10 +50,11 @@ export const fetchPayloadsRequest = () => {
   }
 }
 
-export const fetchPayloadsSuccess = payloads => {
+export const fetchPayloadsSuccess = (payloads, lastUpdate) => {
   return {
     type: FETCH_PAYLOADS_SUCCESS,
-    payloads: payloads
+    payloads: payloads,
+    lastUpdated: lastUpdate
   }
 }
 

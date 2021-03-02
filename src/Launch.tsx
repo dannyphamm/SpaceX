@@ -12,9 +12,10 @@ import Title from 'antd/lib/typography/Title';
 import { connect } from 'react-redux'
 import { fetchLandpads, fetchLaunchpads, fetchPayloads, fetchRockets, fetchCores } from './redux';
 
+
 function Launch({ fetchLandpads, fetchLaunchpads, fetchPayloads, fetchRockets, fetchCores, landpadsData, launchpadsData, payloadsData, rocketsData, coresData }) {
     let params = useParams();
-
+    
     const { TabPane } = Tabs;
     const [item, setItem] = useState<any>([]);
     const url = "https://api.spacexdata.com/v4/launches/" + params['id'];

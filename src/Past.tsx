@@ -17,8 +17,7 @@ function Past({ pastData, launchpadsData, fetchPast, fetchLaunchpads }) {
 
     const [minValue, setMinValue] = useState<number>(0);
     const [maxValue, setMaxValue] = useState<number>(24);
-    const [pageSize, setPageSize] = useState<number>(24)
-
+    const [pageSize, setPageSize] = useState<number>(24);
     const skeleton = [] as any;
     for (var i = 0; i < 24; i++) {
         skeleton.push(<Col className="gutter-row" xs={{ span: 24 }} lg={{ span: 12 }} xl={{ span: 8 }} xxl={{ span: 6 }} key={i}><Card
@@ -33,9 +32,10 @@ function Past({ pastData, launchpadsData, fetchPast, fetchLaunchpads }) {
         </Card></Col>)
     }
     useEffect(() => {
-        fetchPast();
+        fetchPast()
         fetchLaunchpads();
     }, [])
+
 
     function getLaunchpad(launchpadID: any) {
         const launchpad = launchpadsData.launchpads.find(launchpad => launchpad['id'] === launchpadID);
@@ -127,8 +127,8 @@ function Past({ pastData, launchpadsData, fetchPast, fetchLaunchpads }) {
 
                 <Row gutter={[{ xs: 8, sm: 16, md: 24, lg: 32 }, { xs: 8, sm: 16, md: 24, lg: 32 }]}>
                     {pastData.past.slice(minValue, maxValue).map((item, index) => (
-                        <Col className="gutter-row" xs={{ span: 24 }} lg={{ span: 12 }} xl={{ span: 8 }} xxl={{ span: 6 }} key={item['id'] + index}>
 
+                        <Col className="gutter-row" xs={{ span: 24 }} lg={{ span: 12 }} xl={{ span: 8 }} xxl={{ span: 6 }} key={item['id'] + index}>
                             <Card
 
                                 hoverable

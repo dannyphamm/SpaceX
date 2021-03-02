@@ -29,6 +29,7 @@ function Gallery({ pastData, fetchPast }) {
         let array = [] as any
         let value = 0;
         for (let i in pastData.past) {
+            console.log(pastData.past)
             for (let j in pastData.past[i]['links']['flickr']['original']) {
                 array[value] = pastData.past[i]['links']['flickr']['original'][j]
                 value++;

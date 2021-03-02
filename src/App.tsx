@@ -14,6 +14,7 @@ import { Switch as Switch1 } from 'antd';
 import { useThemeSwitcher } from 'react-css-theme-switcher';
 import { Provider } from 'react-redux'
 import store from './redux/store'
+import firebase from 'firebase';
 function App() {
   const { Header, Content, Footer } = Layout;
   const [selected, setSelected] = useState<any>([]);
@@ -26,23 +27,35 @@ function App() {
     switcher({ theme: isChecked ? themes.dark : themes.light });
   };
 
+  const firebaseConfig = {
+    apiKey: "AIzaSyAV1zFEQqRy5_Wl-GSkJrC4UNXTbXiw8EI",
+    authDomain: "spacex-fc0dc.firebaseapp.com",
+    projectId: "spacex-fc0dc",
+    storageBucket: "spacex-fc0dc.appspot.com",
+    messagingSenderId: "920508502712",
+    appId: "1:920508502712:web:7e641c8e9331328e325a4d",
+    measurementId: "G-C77F81TBDC"
+  };
+
+  !firebase.apps.length ? firebase.initializeApp(firebaseConfig) : firebase.app()
+
   function routes() {
     return (
       <Switch>
         <Route path="/gallery">
-          <Gallery/>
+          <Gallery />
         </Route>
         <Route path="/upcoming">
-          <Upcoming/>
+          <Upcoming />
         </Route>
         <Route path="/past">
-          <Past/>
+          <Past />
         </Route>
         <Route path="/launch/:id">
-          <Launch/>
+          <Launch />
         </Route>
         <Route path="/">
-          <Home theme={currentTheme}/>
+          <Home theme={currentTheme} />
         </Route>
       </Switch>
 

@@ -7,6 +7,7 @@ import {
   const initialState = {
     loading: false,
     rockets: [],
+    lastUpdate: '',
     error: ''
   }
   
@@ -21,6 +22,7 @@ import {
         return {
           loading: false,
           rockets: action.payload,
+          lastUpdated: action.lastUpdate,
           error: ''
         }
       case FETCH_ROCKETS_FAILURE:

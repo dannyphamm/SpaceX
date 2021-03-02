@@ -1,4 +1,6 @@
 import axios from 'axios'
+import firebase from 'firebase';
+import moment from 'moment';
 import {
   FETCH_CORES_REQUEST,
   FETCH_CORES_SUCCESS,
@@ -6,19 +8,40 @@ import {
 } from './coreTypes'
 
 export const fetchCores = () => {
+  const database = firebase.firestore();
   return (dispatch) => {
     dispatch(fetchCoresRequest())
-    axios
-      .get('https://api.spacexdata.com/v4/cores')
-      .then(response => {
-        // response.data is the users
-        const cores = response.data
-        dispatch(fetchCoresSuccess(cores))
-      })
-      .catch(error => {
-        // error.message is the error message
-        dispatch(fetchCoresFailure(error.message))
-      })
+
+    var docRef = database.collection("apidata").doc("upcoming");
+    docRef.get().then((doc) => {
+      var data = doc.data()
+      if (doc.exists) {
+        const diff = moment().diff(moment(data!['last_updated']), "seconds");
+        // 5 minutes, Get new data if existing data is old
+        if (diff > 300) {
+          axios
+            .get('https://api.spacexdata.com/v4/cores')
+            .then(response => {
+              const cores = response.data
+              cores['last_updated'] = moment().toString();
+              database.collection("apidata").doc("cores").set(Object.assign({}, cores));
+            })
+            .catch(error => {
+              dispatch(fetchCoresFailure(error.message))
+            })
+        }
+        let data1 = [] as any;
+        for (let i in data) {
+          if (i !== "last_updated") {
+            data1[i] = { ...data1[i], ...data[i] }
+          }
+        }
+        dispatch(fetchCoresSuccess(data1, data!['last_updated']))
+      }
+    }).catch((error) => {
+      dispatch(fetchCoresFailure(error.message))
+    });
+
   }
 }
 
@@ -28,10 +51,11 @@ export const fetchCoresRequest = () => {
   }
 }
 
-export const fetchCoresSuccess = cores => {
+export const fetchCoresSuccess = (cores, lastUpdate) => {
   return {
     type: FETCH_CORES_SUCCESS,
-    payload: cores
+    payload: cores,
+    plastUpdated: lastUpdate
   }
 }
 

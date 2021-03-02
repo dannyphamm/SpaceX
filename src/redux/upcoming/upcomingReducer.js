@@ -7,6 +7,7 @@ import {
   const initialState = {
     loading: false,
     upcoming: [],
+    lastUpdate: '',
     error: ''
   }
   
@@ -21,12 +22,13 @@ import {
         return {
           loading: false,
           upcoming: action.payload,
+          lastUpdated: action.lastUpdate,
           error: ''
         }
       case FETCH_UPCOMING_FAILURE:
         return {
           loading: false,
-          users: [],
+          upcoming: [],
           error: action.payload
         }
       default: return state

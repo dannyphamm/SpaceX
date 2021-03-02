@@ -42,11 +42,10 @@ function Upcoming({ upcomingData, launchpadsData, fetchUpcoming, fetchLaunchpads
         let tbdArray = [] as any;
         let launchArray = [] as any;
         for (let i in upcomingData.upcoming) {
-            if (upcomingData.upcoming[i]["date_precision"] !== "hour") {
-                tbdArray[i] = { ...tbdArray[i], ...upcomingData.upcoming[i] }
-
-            } else {
+            if (upcomingData.upcoming[i]["date_precision"] == "hour") {
                 launchArray[i] = { ...launchArray[i], ...upcomingData.upcoming[i] }
+            } else {
+                tbdArray[i] = { ...tbdArray[i], ...upcomingData.upcoming[i] }
             }
         }
         setLaunch(Object.keys(launchArray).map((key) => launchArray[key]).sort(comp))
@@ -97,7 +96,7 @@ function Upcoming({ upcomingData, launchpadsData, fetchUpcoming, fetchLaunchpads
 
                         <Meta description={(item['details'] === null ? "No Information Provided" : item['details'])} />
                         <br />
-                        {item['date_precision'] !== 'hour' ? null : <Meta description={<Countdown time={item['date_unix']}/>} />}
+                        {item['date_precision'] !== 'hour' ? null : <Meta description={<Countdown time={item['date_unix']} />} />}
                     </Link>
                 </div>
             </Card>

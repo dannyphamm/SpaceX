@@ -1,4 +1,6 @@
 import axios from 'axios'
+import firebase from 'firebase';
+import moment from 'moment';
 import {
   FETCH_UPCOMING_REQUEST,
   FETCH_UPCOMING_SUCCESS,
@@ -6,19 +8,42 @@ import {
 } from './upcomingTypes'
 
 export const fetchUpcoming = () => {
+  const database = firebase.firestore();
+
   return (dispatch) => {
     dispatch(fetchUpcomingRequest())
-    axios
-      .get('https://api.spacexdata.com/v4/launches/upcoming')
-      .then(response => {
-        // response.data is the users
-        const upcoming = response.data
-        dispatch(fetchUpcomingSuccess(upcoming))
-      })
-      .catch(error => {
-        // error.message is the error message
-        dispatch(fetchUpcomingFailure(error.message))
-      })
+
+    var docRef = database.collection("apidata").doc("upcoming");
+    docRef.get().then((doc) => {
+      var data = doc.data()
+      if (doc.exists) {
+        const diff = moment().diff(moment(data!['last_updated']), "seconds");
+        // 5 minutes, Get new data if existing data is old
+        if (diff > 300) {
+          axios
+            .get('https://api.spacexdata.com/v4/launches/upcoming')
+            .then(response => {
+              const upcoming = response.data
+              upcoming['last_updated'] = moment().toString();
+              database.collection("apidata").doc("upcoming").set(Object.assign({}, upcoming));
+            })
+            .catch(error => {
+              dispatch(fetchUpcomingFailure(error.message))
+            })
+        }
+        let data1 = [] as any;
+        for (let i in data) {
+          if (i !== "last_updated") {
+            data1[i] = { ...data1[i], ...data[i] }
+          }
+        }
+        dispatch(fetchUpcomingSuccess(data1, data!['last_updated']))
+      }
+    }).catch((error) => {
+      dispatch(fetchUpcomingFailure(error.message))
+    });
+
+
   }
 }
 
@@ -28,10 +53,11 @@ export const fetchUpcomingRequest = () => {
   }
 }
 
-export const fetchUpcomingSuccess = upcoming => {
+export const fetchUpcomingSuccess = (upcoming, lastUpdate) => {
   return {
     type: FETCH_UPCOMING_SUCCESS,
-    payload: upcoming
+    payload: upcoming,
+    lastUpdated: lastUpdate
   }
 }
 

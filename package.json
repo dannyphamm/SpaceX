@@ -16,6 +16,8 @@
     "antd": "^4.12.3",
     "axios": "^0.21.1",
     "countdown": "^2.6.0",
+    "firebase": "^8.2.9",
+    "firebase-admin": "^9.5.0",
     "moment": "^2.29.1",
     "react": "^17.0.1",
     "react-css-theme-switcher": "^0.2.2",
@@ -36,7 +38,7 @@
   },
   "scripts": {
     "start": "react-scripts start",
-    "build": "react-scripts build",
+    "build": "GENERATE_SOURCEMAP=false react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
   },

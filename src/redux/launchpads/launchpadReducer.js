@@ -7,6 +7,7 @@ import {
   const initialState = {
     loading: false,
     launchpads: [],
+    lastUpdate: '',
     error: ''
   }
   
@@ -21,6 +22,7 @@ import {
         return {
           loading: false,
           launchpads: action.payload,
+          lastUpdated: action.lastUpdate,
           error: ''
         }
       case FETCH_LAUNCHPADS_FAILURE:

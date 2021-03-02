@@ -7,6 +7,7 @@ import {
   const initialState = {
     loading: false,
     cores: [],
+    lastUpdate: '',
     error: ''
   }
   
@@ -21,6 +22,7 @@ import {
         return {
           loading: false,
           cores: action.payload,
+          lastUpdated: action.lastUpdate,
           error: ''
         }
       case FETCH_CORES_FAILURE:

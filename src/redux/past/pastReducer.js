@@ -7,6 +7,7 @@ import {
   const initialState = {
     loading: false,
     past: [],
+    lastUpdate: '',
     error: ''
   }
   
@@ -21,6 +22,7 @@ import {
         return {
           loading: false,
           past: action.payload,
+          lastUpdated: action.lastUpdate,
           error: ''
         }
       case FETCH_PAST_FAILURE:
