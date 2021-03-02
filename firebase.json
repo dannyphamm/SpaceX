@@ -1,7 +1,6 @@
 {
   "hosting": {
-    "site": "spacex-fc0dc",
-    "public": "public",
+    "public": "build",
     "ignore": [
       "firebase.json",
       "**/.*",
