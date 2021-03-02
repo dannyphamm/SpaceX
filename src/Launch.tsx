@@ -54,7 +54,8 @@ function Launch({ fetchLandpads, fetchLaunchpads, fetchPayloads, fetchRockets, f
         } else {
             const core = coresData.cores.find(core => core['id'] === coreID);
             let block;
-
+            console.log(coresData.cores)
+            console.log(coresData.cores['5e9e28a5f3591833b13b2659'])
             if (core['block'] !== null) {
                 block = "B" + core["block"];
                 return (block + " " + core['serial']);

@@ -12,7 +12,7 @@ export const fetchCores = () => {
   return (dispatch) => {
     dispatch(fetchCoresRequest())
 
-    var docRef = database.collection("apidata").doc("upcoming");
+    var docRef = database.collection("apidata").doc("cores");
     docRef.get().then((doc) => {
       var data = doc.data()
       if (doc.exists) {
@@ -55,7 +55,7 @@ export const fetchCoresSuccess = (cores, lastUpdate) => {
   return {
     type: FETCH_CORES_SUCCESS,
     payload: cores,
-    plastUpdated: lastUpdate
+    lastUpdated: lastUpdate
   }
 }
 
