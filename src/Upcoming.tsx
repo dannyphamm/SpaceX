@@ -39,6 +39,10 @@ function Upcoming({ upcomingData, launchpadsData, fetchUpcoming, fetchLaunchpads
     useEffect(() => {
         fetchUpcoming();
         fetchLaunchpads();
+
+    }, [])
+
+    useEffect(() => {
         let tbdArray = [] as any;
         let launchArray = [] as any;
         for (let i in upcomingData.upcoming) {
@@ -50,7 +54,8 @@ function Upcoming({ upcomingData, launchpadsData, fetchUpcoming, fetchLaunchpads
         }
         setLaunch(Object.keys(launchArray).map((key) => launchArray[key]).sort(comp))
         setTBD(Object.keys(tbdArray).map((key) => tbdArray[key]).sort(comp))
-    }, [])
+    }, [upcomingData.loading])
+
     function action(item) {
         let array = [] as any;
         if (item['webcast'] !== null) {
