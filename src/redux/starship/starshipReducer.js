@@ -6,7 +6,8 @@ import {
   
   const initialState = {
     loading: false,
-    starship: [],
+    starship: {
+    },
     lastUpdate: '',
     error: ''
   }
@@ -21,7 +22,10 @@ import {
       case FETCH_STARSHIP_SUCCESS:
         return {
           loading: false,
-          starship: action.payload,
+          starship: {
+            upcoming: action.upcoming,
+            previous: action.previous,
+          },
           lastUpdated: action.lastUpdate,
           error: ''
         }

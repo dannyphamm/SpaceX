@@ -62,9 +62,6 @@ function App() {
     )
   }
 
-  if (status === 'loading') {
-    return null;
-  } else {
     return (
       <Provider store={store}>
         <Router>
@@ -151,6 +148,6 @@ function App() {
     );
   }
 
-}
+
 
 export default App;

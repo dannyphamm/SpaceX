@@ -3,7 +3,7 @@ import { useState } from 'react'
 import { Skeleton, Row, Col, Card } from 'antd';
 import moment from 'moment';
 import Countdown from './Countdown';
-import { YoutubeFilled, ReadFilled, RedditCircleFilled, ConsoleSqlOutlined } from '@ant-design/icons';
+import { YoutubeFilled, ReadFilled, RedditCircleFilled } from '@ant-design/icons';
 import Title from 'antd/lib/typography/Title';
 import { Link } from "react-router-dom";
 
@@ -52,23 +52,23 @@ function Upcoming({ upcomingData, launchpadsData, starshipData, fetchUpcoming, f
                 tbdArray.push(upcomingData.upcoming[i])
             }
         }
-        for (let i in starshipData.starship['upcoming']['launches']) {
+        for (let i in starshipData.starship.upcoming) {
             let data = [] as any
             data[i] = {
                 type: "starship",
-                id: starshipData.starship['upcoming']['launches'][i]['id'],
-                image: starshipData.starship['upcoming']['launches'][i]['image'],
-                name: starshipData.starship['upcoming']['launches'][i]['name'],
-                launchpad: starshipData.starship['upcoming']['launches'][i]['pad']['name'],
-                details: starshipData.starship['upcoming']['launches'][i]['mission']['description'],
-                date_unix: moment(starshipData.starship['upcoming']['launches'][i]['net']).unix(),
+                id: starshipData.starship.upcoming[i]['id'],
+                image: starshipData.starship.upcoming[i]['image'],
+                name: starshipData.starship.upcoming[i]['name'],
+                launchpad: starshipData.starship.upcoming[i]['pad']['name'],
+                details: starshipData.starship.upcoming[i]['mission']['description'],
+                date_unix: moment(starshipData.starship.upcoming[i]['net']).unix(),
                 links: 
                     {
                         reddit: {
                             campaign: null,
                         },
                         webcast: null,
-                        article: starshipData.starship['upcoming']['launches'][i]['program'][0]['wiki_url']
+                        article: starshipData.starship.upcoming[i]['program'][0]['wiki_url']
                     }
                 
             }

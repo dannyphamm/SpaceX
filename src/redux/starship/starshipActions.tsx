@@ -19,7 +19,8 @@ export const fetchStarship = () => {
       if (doc.exists) {
         const diff = moment().diff(moment(data!['last_updated']), "seconds");
         // 5 minutes, Get new data if existing data is old
-        if (diff > 300) {
+        if (diff > 1000) {
+          console.log("FETCHING NEW STARSHIP DATA")
           axios
             .get('https://ll.thespacedevs.com/2.2.0/dashboard/starship/')
             .then(response => {
@@ -28,7 +29,7 @@ export const fetchStarship = () => {
               database.collection("apidata").doc("starship").set(Object.assign({}, starship));
             })
             .catch(error => {
-              dispatch(fetchStarshipFailure(error.message))
+              //dispatch(fetchStarshipFailure(error.message))
             })
         }
         let data1 = [] as any;
@@ -37,7 +38,7 @@ export const fetchStarship = () => {
             data1[i] = { ...data1[i], ...data[i] }
           }
         }
-        dispatch(fetchStarshipSuccess(data1, data!['last_updated']))
+        dispatch(fetchStarshipSuccess(data1['upcoming']['launches'], data1['previous']['launches'], data!['last_updated']))
       } 
     }).catch((error) => {
       dispatch(fetchStarshipFailure(error.message))
@@ -53,10 +54,11 @@ export const fetchStarshipRequest = () => {
   }
 }
 
-export const fetchStarshipSuccess = (starship, lastUpdate) => {
+export const fetchStarshipSuccess = (upcoming, previous, lastUpdate) => {
   return {
     type: FETCH_STARSHIP_SUCCESS,
-    payload: starship,
+    upcoming: upcoming,
+    previous: previous,
     lastUpdated: lastUpdate
   }
 }
