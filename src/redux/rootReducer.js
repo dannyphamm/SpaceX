@@ -7,6 +7,7 @@ import payloadReducer from './payloads/payloadReducer'
 import rocketReducer from './rockets/rocketReducer'
 import coreReducer from './cores/coreReducer'
 import landpadReducer from './landpads/landpadReducer'
+import starshipReducer from './starship/starshipReducer'
 const rootReducer = combineReducers({
   upcoming: upcomingReducer,
   launchpads: launchpadReducer,
@@ -14,7 +15,8 @@ const rootReducer = combineReducers({
   payloads: payloadReducer,
   rockets: rocketReducer,
   cores: coreReducer,
-  landpads: landpadReducer
+  landpads: landpadReducer,
+  starship: starshipReducer
 })
 
 export default rootReducer

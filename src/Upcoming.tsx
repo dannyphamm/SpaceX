@@ -3,14 +3,14 @@ import { useState } from 'react'
 import { Skeleton, Row, Col, Card } from 'antd';
 import moment from 'moment';
 import Countdown from './Countdown';
-import { YoutubeFilled, ReadFilled, RedditCircleFilled } from '@ant-design/icons';
+import { YoutubeFilled, ReadFilled, RedditCircleFilled, ConsoleSqlOutlined } from '@ant-design/icons';
 import Title from 'antd/lib/typography/Title';
 import { Link } from "react-router-dom";
 
 import { connect } from 'react-redux'
-import { fetchUpcoming, fetchLaunchpads } from './redux'
+import { fetchUpcoming, fetchLaunchpads, fetchStarship } from './redux'
 
-function Upcoming({ upcomingData, launchpadsData, fetchUpcoming, fetchLaunchpads }) {
+function Upcoming({ upcomingData, launchpadsData, starshipData, fetchUpcoming, fetchLaunchpads, fetchStarship }) {
     const style = { height: "100%", margin: "0 auto", display: "flex", flexFlow: "column" };
     const styleBody = { flex: "1 1 auto" };
     const styleCover = { padding: "10px 10px", width: "100%" }
@@ -37,9 +37,9 @@ function Upcoming({ upcomingData, launchpadsData, fetchUpcoming, fetchLaunchpads
     }
 
     useEffect(() => {
+        fetchStarship();
         fetchUpcoming();
         fetchLaunchpads();
-
     }, [])
 
     useEffect(() => {
@@ -47,11 +47,35 @@ function Upcoming({ upcomingData, launchpadsData, fetchUpcoming, fetchLaunchpads
         let launchArray = [] as any;
         for (let i in upcomingData.upcoming) {
             if (upcomingData.upcoming[i]["date_precision"] == "hour") {
-                launchArray[i] = { ...launchArray[i], ...upcomingData.upcoming[i] }
+                launchArray.push(upcomingData.upcoming[i])
             } else {
-                tbdArray[i] = { ...tbdArray[i], ...upcomingData.upcoming[i] }
+                tbdArray.push(upcomingData.upcoming[i])
             }
         }
+        for (let i in starshipData.starship['upcoming']['launches']) {
+            let data = [] as any
+            data[i] = {
+                type: "starship",
+                id: starshipData.starship['upcoming']['launches'][i]['id'],
+                image: starshipData.starship['upcoming']['launches'][i]['image'],
+                name: starshipData.starship['upcoming']['launches'][i]['name'],
+                launchpad: starshipData.starship['upcoming']['launches'][i]['pad']['name'],
+                details: starshipData.starship['upcoming']['launches'][i]['mission']['description'],
+                date_unix: moment(starshipData.starship['upcoming']['launches'][i]['net']).unix(),
+                links: 
+                    {
+                        reddit: {
+                            campaign: null,
+                        },
+                        webcast: null,
+                        article: starshipData.starship['upcoming']['launches'][i]['program'][0]['wiki_url']
+                    }
+                
+            }
+            launchArray.push(data[i])
+
+        }
+        
         setLaunch(Object.keys(launchArray).map((key) => launchArray[key]).sort(comp))
         setTBD(Object.keys(tbdArray).map((key) => tbdArray[key]).sort(comp))
     }, [upcomingData.loading])
@@ -85,27 +109,50 @@ function Upcoming({ upcomingData, launchpadsData, fetchUpcoming, fetchLaunchpads
     }
 
     function createCard(item) {
-        return (
-            <Card
-                hoverable
-                style={style}
-                bodyStyle={styleBody}
-                cover={<Link to={"launch/" + item['id']}><img alt="example" src={(item['links']['patch']['large'] === null) ? "https://www.spacex.com/static/images/share.jpg" : item['links']['patch']['large']} style={styleCover} /></Link>}
-                actions={action(item['links'])}
-            >
-                <div>
-                    <Link to={"launch/" + item['id']}>
-                        <Meta title={"#" + item['flight_number'] + " " + item['name']} />
-                        <Meta description={getLaunchpad(item['launchpad'])} style={{ fontWeight: 'bold', lineHeight: "1rem", marginBottom: "0.5rem" }} />
-                        {item['date_precision'] !== 'hour' ? <Meta description={getLocalTimeString(item['date_unix'])} style={{ fontWeight: 'bold' }} /> : <Meta description={getLocalTime(item['date_unix'])} style={{ fontWeight: 'bold' }} />}
+        if (item['type'] === "starship") {
+            return(
+                <Card
+                    hoverable
+                    style={style}
+                    bodyStyle={styleBody}
+                    cover={<Link to={"launch/" + item['id']}><img alt="example" src={(item['image'] === null) ? "https://www.spacex.com/static/images/share.jpg" : item['image']} style={styleCover} /></Link>}
+                    actions={action(item['links'])}
+                >
+                    <div>
+                        <Link to={"launch/" + item['id']}>
+                            <Meta title={item['name']} />
+                            <Meta description={item['launchpad']} style={{ fontWeight: 'bold', lineHeight: "1rem", marginBottom: "0.5rem" }} />
+                            <Meta description={getLocalTime(item['date_unix'])} style={{ fontWeight: 'bold' }} />
+                            <Meta description={(item['details'] === null ? "No Information Provided" : item['details'])} />
+                            <br />
+                            {<Meta description={<Countdown time={item['date_unix']} />} />}
+                        </Link>
+                    </div>
+                </Card>
+            )
+        } else {
+            return (
+                <Card
+                    hoverable
+                    style={style}
+                    bodyStyle={styleBody}
+                    cover={<Link to={"launch/" + item['id']}><img alt="example" src={(item['links']['patch']['large'] === null) ? "https://www.spacex.com/static/images/share.jpg" : item['links']['patch']['large']} style={styleCover} /></Link>}
+                    actions={action(item['links'])}
+                >
+                    <div>
+                        <Link to={"launch/" + item['id']}>
+                            <Meta title={"#" + item['flight_number'] + " " + item['name']} />
+                            <Meta description={getLaunchpad(item['launchpad'])} style={{ fontWeight: 'bold', lineHeight: "1rem", marginBottom: "0.5rem" }} />
+                            {item['date_precision'] !== 'hour' ? <Meta description={getLocalTimeString(item['date_unix'])} style={{ fontWeight: 'bold' }} /> : <Meta description={getLocalTime(item['date_unix'])} style={{ fontWeight: 'bold' }} />}
 
-                        <Meta description={(item['details'] === null ? "No Information Provided" : item['details'])} />
-                        <br />
-                        {item['date_precision'] !== 'hour' ? null : <Meta description={<Countdown time={item['date_unix']} />} />}
-                    </Link>
-                </div>
-            </Card>
-        )
+                            <Meta description={(item['details'] === null ? "No Information Provided" : item['details'])} />
+                            <br />
+                            {item['date_precision'] !== 'hour' ? null : <Meta description={<Countdown time={item['date_unix']} />} />}
+                        </Link>
+                    </div>
+                </Card>
+            )
+        }
     }
     if (upcomingData.loading || launchpadsData.loading) {
         return (
@@ -151,14 +198,16 @@ function Upcoming({ upcomingData, launchpadsData, fetchUpcoming, fetchLaunchpads
 const mapStateToProps = state => {
     return {
         upcomingData: state.upcoming,
-        launchpadsData: state.launchpads
+        launchpadsData: state.launchpads,
+        starshipData: state.starship
     }
 }
 
 const mapDispatchToProps = dispatch => {
     return {
         fetchUpcoming: () => dispatch(fetchUpcoming()),
-        fetchLaunchpads: () => dispatch(fetchLaunchpads())
+        fetchLaunchpads: () => dispatch(fetchLaunchpads()),
+        fetchStarship: () => dispatch(fetchStarship())
     }
 }
 

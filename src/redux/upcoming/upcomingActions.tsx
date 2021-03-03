@@ -42,8 +42,6 @@ export const fetchUpcoming = () => {
     }).catch((error) => {
       dispatch(fetchUpcomingFailure(error.message))
     });
-
-
   }
 }
 
