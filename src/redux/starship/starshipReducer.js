@@ -7,6 +7,9 @@ import {
   const initialState = {
     loading: false,
     starship: {
+      combined: [],
+      upcoming: [],
+      previous: [],
     },
     lastUpdate: '',
     error: ''
@@ -23,6 +26,7 @@ import {
         return {
           loading: false,
           starship: {
+            combined: action.combined,
             upcoming: action.upcoming,
             previous: action.previous,
           },

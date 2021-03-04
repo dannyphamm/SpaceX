@@ -19,17 +19,17 @@ export const fetchStarship = () => {
       if (doc.exists) {
         const diff = moment().diff(moment(data!['last_updated']), "seconds");
         // 5 minutes, Get new data if existing data is old
-        if (diff > 1000) {
+        if (diff > 300) {
           console.log("FETCHING NEW STARSHIP DATA")
           axios
             .get('https://ll.thespacedevs.com/2.2.0/dashboard/starship/')
             .then(response => {
               const starship = response.data
               starship['last_updated'] = moment().toString();
-              database.collection("apidata").doc("starship").set(Object.assign({}, starship));
+              docRef.set(Object.assign({}, starship));
             })
             .catch(error => {
-              //dispatch(fetchStarshipFailure(error.message))
+              dispatch(fetchStarshipFailure(error.message))
             })
         }
         let data1 = [] as any;
@@ -38,8 +38,16 @@ export const fetchStarship = () => {
             data1[i] = { ...data1[i], ...data[i] }
           }
         }
-        dispatch(fetchStarshipSuccess(data1['upcoming']['launches'], data1['previous']['launches'], data!['last_updated']))
-      } 
+
+        let data2 = [] as any;
+        for (let i in data!['upcoming']['launches']) {
+          data2.push(data!['upcoming']['launches'][i])
+        }
+        for (let i in data!['previous']['launches']) {
+          data2.push(data!['previous']['launches'][i])
+        }
+        dispatch(fetchStarshipSuccess(data2, data1['upcoming']['launches'], data1['previous']['launches'], data!['last_updated']))
+      }
     }).catch((error) => {
       dispatch(fetchStarshipFailure(error.message))
     });
@@ -54,9 +62,10 @@ export const fetchStarshipRequest = () => {
   }
 }
 
-export const fetchStarshipSuccess = (upcoming, previous, lastUpdate) => {
+export const fetchStarshipSuccess = (combined, upcoming, previous, lastUpdate) => {
   return {
     type: FETCH_STARSHIP_SUCCESS,
+    combined: combined,
     upcoming: upcoming,
     previous: previous,
     lastUpdated: lastUpdate
