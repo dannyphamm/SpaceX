@@ -10,23 +10,15 @@ import MediaQuery from 'react-responsive'
 import { CloseOutlined, MenuOutlined } from '@ant-design/icons';
 import Sider from 'antd/lib/layout/Sider';
 import Gallery from './Gallery';
-import { Switch as Switch1 } from 'antd';
-import { useThemeSwitcher } from 'react-css-theme-switcher';
-import { Provider } from 'react-redux'
-import store from './redux/store'
+
+
+
 import firebase from 'firebase';
+import Theme from './Theme';
 function App() {
   const { Header, Content, Footer } = Layout;
   const [selected, setSelected] = useState<any>([]);
   const [mobileMenuOpen, setMobileMenuOpen] = useState<boolean>(false);
-  const [isDarkMode, setIsDarkMode] = useState();
-  const { switcher, currentTheme, status, themes } = useThemeSwitcher();
-
-  const toggleTheme = (isChecked) => {
-    setIsDarkMode(isChecked);
-    switcher({ theme: isChecked ? themes.dark : themes.light });
-  };
-
   const firebaseConfig = {
     apiKey: "AIzaSyAV1zFEQqRy5_Wl-GSkJrC4UNXTbXiw8EI",
     authDomain: "spacex-fc0dc.firebaseapp.com",
@@ -55,7 +47,7 @@ function App() {
           <Launch />
         </Route>
         <Route path="/">
-          <Home theme={currentTheme} />
+          <Home />
         </Route>
       </Switch>
 
@@ -63,13 +55,12 @@ function App() {
   }
 
   return (
-    <Provider store={store}>
       <Router>
         <Header>
           <MediaQuery maxDeviceWidth={576}>
             <div style={{ display: "flex", justifyContent: "space-between" }}>
               <img src="https://spacelaunchnow-prod-east.nyc3.digitaloceanspaces.com/media/logo/spacex_logo_20191121063502.png" alt="SpaceX Logo" className="logo" style={{ objectFit: "contain", background: "none" }} />
-              <div><Switch1 checkedChildren="Dark" unCheckedChildren="Light" checked={isDarkMode} onChange={toggleTheme} /></div>
+              <div><Theme/></div>
               {mobileMenuOpen &&
                 <CloseOutlined onClick={() => {
                   setMobileMenuOpen(false)
@@ -122,7 +113,7 @@ function App() {
                 <Menu.Item key="b" onClick={() => setSelected(["b"])}><Link to="/upcoming" />Upcoming</Menu.Item>
                 <Menu.Item key="c" onClick={() => setSelected(["c"])}><Link to="/past" /> Past</Menu.Item>
                 <Menu.Item key="d" onClick={() => { setSelected(["d"]); setMobileMenuOpen(false) }}><Link to="/gallery" /> Gallery</Menu.Item>
-                <Switch1 key="z"checkedChildren="Dark" unCheckedChildren="Light" checked={isDarkMode} onChange={toggleTheme} className="switch" />
+                <Theme/>
               </Menu>
               
 
@@ -147,7 +138,6 @@ function App() {
           <Footer style={{ textAlign: 'center' }}>A SpaceX launch previewer created by Danny <br />We are not affiliated, associated, authorized, endorsed by, or in any way officially connected with Space Exploration Technologies Corp (SpaceX), or any of its subsidiaries or its affiliates. The names SpaceX as well as related names, marks, emblems and images are registered trademarks of their respective owners.</Footer>
         </Layout>
       </Router >
-    </Provider>
   );
 }
 

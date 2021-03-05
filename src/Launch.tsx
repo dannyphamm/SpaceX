@@ -51,8 +51,9 @@ function Launch({ fetchLandpads, fetchLaunchpads, fetchPayloads, fetchRockets, f
     }, [starshipData.loading])
     useEffect(() => {
         if (params['id'].includes('-')) {
-            setReady(true)
+            
             loadStarship()
+            setReady(true)
         }
     }, [starship])
     useEffect(() => {

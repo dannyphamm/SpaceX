@@ -7,9 +7,6 @@ import {
   FETCH_PAST_FAILURE
 } from './pastTypes'
 
-function comp(a: { date_unix: string | number | Date; }, b: { date_unix: string | number | Date; }) {
-  return new Date(b.date_unix).getTime() - new Date(a.date_unix).getTime();
-}
 
 export const fetchPast = () => {
   const database = firebase.firestore();
@@ -25,7 +22,7 @@ export const fetchPast = () => {
           axios
             .get('https://api.spacexdata.com/v4/launches/past')
             .then(response => {
-              const past = response.data.sort(comp)
+              const past = response.data
               past['last_updated'] = moment().toString();
               database.collection("apidata").doc("past").set(Object.assign({}, past));
             })

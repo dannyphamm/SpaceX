@@ -11,9 +11,11 @@ import { connect } from 'react-redux'
 import { fetchUpcoming, fetchLaunchpads } from './redux'
 import PropTypes from 'prop-types'
 import FlipCountdown from '@rumess/react-flip-countdown';
+import { useThemeSwitcher } from 'react-css-theme-switcher';
 function Home({ upcomingData, launchpadsData, fetchUpcoming, fetchLaunchpads, theme }) {
     const style = { height: "100%", margin: "0 auto", display: "flex", flexFlow: "column" };
     const center = { justifyContent: "center" }
+    const { currentTheme } = useThemeSwitcher();
 
     const styleBody = { flex: "1 1 auto" };
     const styleCover = { padding: "10px 10px", width: "100%" }
@@ -33,6 +35,7 @@ function Home({ upcomingData, launchpadsData, fetchUpcoming, fetchLaunchpads, th
         }
         setLaunch(Object.keys(launchArray).map((key) => launchArray[key]).sort(comp))
     }, [upcomingData.loading])
+    
     function comp(a: { date_unix: string | number | Date; }, b: { date_unix: string | number | Date; }) {
         return new Date(a.date_unix).getTime() - new Date(b.date_unix).getTime();
     }
@@ -96,7 +99,7 @@ function Home({ upcomingData, launchpadsData, fetchUpcoming, fetchLaunchpads, th
                                         <TwitterTimelineEmbed
                                             sourceType="profile"
                                             screenName="spacex"
-                                            theme={theme}
+                                            theme={currentTheme}
                                             options={{ height: '100%' }}
                                         />
                                     </Col>
@@ -143,7 +146,7 @@ function Home({ upcomingData, launchpadsData, fetchUpcoming, fetchLaunchpads, th
                                         <TwitterTimelineEmbed
                                             sourceType="profile"
                                             screenName="spacex"
-                                            theme={theme}
+                                            theme={currentTheme}
                                             options={{ height: '100%' }}
                                             className="twitter"
                                         />
