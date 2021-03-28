@@ -12,13 +12,14 @@ const themes = {
 ReactDOM.render(
   <React.StrictMode>
     <Provider store={store}>
-      <ThemeSwitcherProvider themeMap={themes} defaultTheme="light" insertionPoint="styles-insertion-point">
+      <ThemeSwitcherProvider themeMap={themes}>
         <App />
       </ThemeSwitcherProvider>
     </Provider>
   </React.StrictMode>,
   document.getElementById('root')
 );
+
 
 // If you want to start measuring performance in your app, pass a function
 // to log results (for example: reportWebVitals(console.log))

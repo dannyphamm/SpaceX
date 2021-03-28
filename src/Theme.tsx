@@ -1,9 +1,4 @@
 import React, { useEffect, useState } from 'react'
-import Masonry, { ResponsiveMasonry } from "react-responsive-masonry"
-import { connect } from 'react-redux'
-import { fetchPast } from './redux'
-import { Image, Pagination } from 'antd';
-import { ThemeSwitcherProvider } from 'react-css-theme-switcher';
 import { useThemeSwitcher } from 'react-css-theme-switcher';
 import { Switch } from 'antd';
 function Theme() {

@@ -43,6 +43,17 @@
       To create a production bundle, use `npm run build` or `yarn build`.
     -->
 </body>
+
+<link rel="stylesheet/less" type="text/css" href="color.less" />
+<script>
+       window.less = {
+          async: true,
+          env: 'production'
+};
+</script>
+
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/less.js/2.7.2/less.min.js"></script>
+
 <!-- The core Firebase JS SDK is always required and must be listed first -->
 <script src="/__/firebase/8.2.9/firebase-app.js"></script>
 

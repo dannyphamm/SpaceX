@@ -15,6 +15,7 @@ import Gallery from './Gallery';
 
 import firebase from 'firebase';
 import Theme from './Theme';
+import ThemeSelector from './ThemeSelector';
 function App() {
   const { Header, Content, Footer } = Layout;
   const [selected, setSelected] = useState<any>([]);
@@ -60,7 +61,7 @@ function App() {
           <MediaQuery maxDeviceWidth={576}>
             <div style={{ display: "flex", justifyContent: "space-between" }}>
               <img src="https://spacelaunchnow-prod-east.nyc3.digitaloceanspaces.com/media/logo/spacex_logo_20191121063502.png" alt="SpaceX Logo" className="logo" style={{ objectFit: "contain", background: "none" }} />
-              <div><Theme/></div>
+              <div><ThemeSelector /></div>
               {mobileMenuOpen &&
                 <CloseOutlined onClick={() => {
                   setMobileMenuOpen(false)
@@ -113,7 +114,7 @@ function App() {
                 <Menu.Item key="b" onClick={() => setSelected(["b"])}><Link to="/upcoming" />Upcoming</Menu.Item>
                 <Menu.Item key="c" onClick={() => setSelected(["c"])}><Link to="/past" /> Past</Menu.Item>
                 <Menu.Item key="d" onClick={() => { setSelected(["d"]); setMobileMenuOpen(false) }}><Link to="/gallery" /> Gallery</Menu.Item>
-                <Theme/>
+                <ThemeSelector />
               </Menu>
               
 
