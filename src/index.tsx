@@ -9,11 +9,18 @@ const themes = {
   dark: `antd.dark.css`,
   light: `antd.css`,
 };
+
 ReactDOM.render(
+  
   <React.StrictMode>
     <Provider store={store}>
-      <ThemeSwitcherProvider themeMap={themes} defaultTheme="light" insertionPoint="styles-insertion-point">
-        <App />
+      <ThemeSwitcherProvider
+        insertionPoint={document.getElementById('inject-styles-here')}
+        themeMap={themes}
+        defaultTheme={'dark'}
+      >
+        <App/>
+        
       </ThemeSwitcherProvider>
     </Provider>
   </React.StrictMode>,

@@ -70,7 +70,6 @@ function Upcoming({ upcomingData, launchpadsData, starshipData, fetchUpcoming, f
                         webcast: null,
                         article: starshipData.starship.upcoming[i]['program'][0]['wiki_url']
                     }
-                
             }
             launchArray.push(data[i])
 
