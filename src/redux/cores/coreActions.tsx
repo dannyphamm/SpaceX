@@ -25,18 +25,20 @@ export const fetchCores = () => {
               const cores = response.data
               cores['last_updated'] = moment().toString();
               database.collection("apidata").doc("cores").set(Object.assign({}, cores));
+              dispatch(fetchCoresSuccess(cores, cores['last_updated']))
             })
             .catch(error => {
               dispatch(fetchCoresFailure(error.message))
             })
-        }
-        let data1 = [] as any;
-        for (let i in data) {
-          if (i !== "last_updated") {
-            data1[i] = { ...data1[i], ...data[i] }
+        } else {
+          let data1 = [] as any;
+          for (let i in data) {
+            if (i !== "last_updated") {
+              data1[i] = { ...data1[i], ...data[i] }
+            }
           }
+          dispatch(fetchCoresSuccess(data1, data!['last_updated']))
         }
-        dispatch(fetchCoresSuccess(data1, data!['last_updated']))
       }
     }).catch((error) => {
       dispatch(fetchCoresFailure(error.message))

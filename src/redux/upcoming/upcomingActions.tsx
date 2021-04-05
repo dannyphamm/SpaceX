@@ -26,18 +26,20 @@ export const fetchUpcoming = () => {
               const upcoming = response.data
               upcoming['last_updated'] = moment().toString();
               database.collection("apidata").doc("upcoming").set(Object.assign({}, upcoming));
+              dispatch(fetchUpcomingSuccess(upcoming, upcoming['last_updated']));
             })
             .catch(error => {
               dispatch(fetchUpcomingFailure(error.message))
             })
-        }
-        let data1 = [] as any;
-        for (let i in data) {
-          if (i !== "last_updated") {
-            data1[i] = { ...data1[i], ...data[i] }
+        } else {
+          let data1 = [] as any;
+          for (let i in data) {
+            if (i !== "last_updated") {
+              data1[i] = { ...data1[i], ...data[i] }
+            }
           }
+          dispatch(fetchUpcomingSuccess(data1, data!['last_updated']))
         }
-        dispatch(fetchUpcomingSuccess(data1, data!['last_updated']))
       }
     }).catch((error) => {
       dispatch(fetchUpcomingFailure(error.message))

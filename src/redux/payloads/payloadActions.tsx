@@ -25,18 +25,20 @@ export const fetchPayloads = () => {
               const payloads = response.data
               payloads['last_updated'] = moment().toString();
               database.collection("apidata").doc("payloads").set(Object.assign({}, payloads));
+              dispatch(fetchPayloadsSuccess(payloads,  payloads['last_updated']))
             })
             .catch(error => {
               dispatch(fetchPayloadsFailure(error.message))
             })
-        }
-        let data1 = [] as any;
-        for (let i in data) {
-          if (i !== "last_updated") {
-            data1[i] = { ...data1[i], ...data[i] }
+        } else {
+          let data1 = [] as any;
+          for (let i in data) {
+            if (i !== "last_updated") {
+              data1[i] = { ...data1[i], ...data[i] }
+            }
           }
+          dispatch(fetchPayloadsSuccess(data1, data!['last_updated']))
         }
-        dispatch(fetchPayloadsSuccess(data1, data!['last_updated']))
       }
     }).catch((error) => {
       dispatch(fetchPayloadsFailure(error.message))

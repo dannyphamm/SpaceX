@@ -27,26 +27,37 @@ export const fetchStarship = () => {
               const starship = response.data
               starship['last_updated'] = moment().toString();
               docRef.set(Object.assign({}, starship));
+      
+              let data2 = [] as any;
+              for (let i in starship!['upcoming']['launches']) {
+                data2.push(starship!['upcoming']['launches'][i])
+              }
+              for (let i in starship!['previous']['launches']) {
+                data2.push(starship!['previous']['launches'][i])
+              }
+              dispatch(fetchStarshipSuccess(data2, starship['upcoming']['launches'], starship['previous']['launches'], starship['last_updated']));
             })
             .catch(error => {
               dispatch(fetchStarshipFailure(error.message))
             })
-        }
-        let data1 = [] as any;
-        for (let i in data) {
-          if (i !== "last_updated") {
-            data1[i] = { ...data1[i], ...data[i] }
+        } else {
+          let data1 = [] as any;
+          for (let i in data) {
+            if (i !== "last_updated") {
+              data1[i] = { ...data1[i], ...data[i] }
+            }
           }
+  
+          let data2 = [] as any;
+          for (let i in data!['upcoming']['launches']) {
+            data2.push(data!['upcoming']['launches'][i])
+          }
+          for (let i in data!['previous']['launches']) {
+            data2.push(data!['previous']['launches'][i])
+          }
+          dispatch(fetchStarshipSuccess(data2, data1['upcoming']['launches'], data1['previous']['launches'], data!['last_updated']))
         }
 
-        let data2 = [] as any;
-        for (let i in data!['upcoming']['launches']) {
-          data2.push(data!['upcoming']['launches'][i])
-        }
-        for (let i in data!['previous']['launches']) {
-          data2.push(data!['previous']['launches'][i])
-        }
-        dispatch(fetchStarshipSuccess(data2, data1['upcoming']['launches'], data1['previous']['launches'], data!['last_updated']))
       }
     }).catch((error) => {
       dispatch(fetchStarshipFailure(error.message))

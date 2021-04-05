@@ -25,18 +25,20 @@ export const fetchRockets = () => {
               const rockets = response.data
               rockets['last_updated'] = moment().toString();
               database.collection("apidata").doc("rockets").set(Object.assign({}, rockets));
+              dispatch(fetchRocketsSuccess(rockets, rockets['last_updated']))
             })
             .catch(error => {
               dispatch(fetchRocketsFailure(error.message))
             })
-        }
-        let data1 = [] as any;
-        for (let i in data) {
-          if (i !== "last_updated") {
-            data1[i] = { ...data1[i], ...data[i] }
+        } else {
+          let data1 = [] as any;
+          for (let i in data) {
+            if (i !== "last_updated") {
+              data1[i] = { ...data1[i], ...data[i] }
+            }
           }
+          dispatch(fetchRocketsSuccess(data1, data!['last_updated']))
         }
-        dispatch(fetchRocketsSuccess(data1, data!['last_updated']))
       }
     }).catch((error) => {
       dispatch(fetchRocketsFailure(error.message))

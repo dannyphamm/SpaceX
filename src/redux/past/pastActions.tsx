@@ -25,18 +25,20 @@ export const fetchPast = () => {
               const past = response.data
               past['last_updated'] = moment().toString();
               database.collection("apidata").doc("past").set(Object.assign({}, past));
+              dispatch(fetchPastSuccess(past, past['last_updated']))
             })
             .catch(error => {
               dispatch(fetchPastFailure(error.message))
             })
-        }
-        let data1 = [] as any;
-        for (let i in data) {
-          if (i !== "last_updated") {
-            data1[i] = { ...data1[i], ...data[i] }
+        } else {
+          let data1 = [] as any;
+          for (let i in data) {
+            if (i !== "last_updated") {
+              data1[i] = { ...data1[i], ...data[i] }
+            }
           }
+          dispatch(fetchPastSuccess(data1, data!['last_updated']))
         }
-        dispatch(fetchPastSuccess(data1, data!['last_updated']))
       }
     }).catch((error) => {
       dispatch(fetchPastFailure(error.message))
