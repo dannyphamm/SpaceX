@@ -16,7 +16,7 @@
     "antd": "^4.12.3",
     "axios": "^0.21.1",
     "countdown": "^2.6.0",
-    "firebase": "^8.2.9",
+    "firebase": "^8.6.7",
     "firebase-admin": "^9.5.0",
     "moment": "^2.29.1",
     "react": "^17.0.1",
