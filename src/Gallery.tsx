@@ -1,9 +1,10 @@
 import React, { useEffect, useState } from 'react'
 import Masonry, { ResponsiveMasonry } from "react-responsive-masonry"
 import { connect } from 'react-redux'
-import { fetchPast } from './redux'
+import { fetchPast, fetchStarship } from './redux'
 import { Image, Pagination } from 'antd';
-function Gallery({ pastData, fetchPast }) {
+import moment, { Moment } from 'moment';
+function Gallery({ pastData, fetchPast,starshipData, fetchStarship }) {
     const paginationStyle = { paddingBottom: "24px", textAlign: "center" as const }
     const [minValue, setMinValue] = useState<number>(0);
     const [maxValue, setMaxValue] = useState<number>(50);
@@ -23,21 +24,25 @@ function Gallery({ pastData, fetchPast }) {
     }
     useEffect(() => {
         fetchPast();
+        fetchStarship();
     }, [])
 
     useEffect(() => {
-        let array = [] as any
-        let value = 0;
+        let array = [] as Array<any>[]
         for (let i in pastData.past) {
-            console.log(pastData.past)
             for (let j in pastData.past[i]['links']['flickr']['original']) {
-                array[value] = pastData.past[i]['links']['flickr']['original'][j]
-                value++;
+                array.push([pastData.past[i]['links']['flickr']['original'][j],pastData.past[i]["date_utc"]])
             }
+        }       
+        for (let i in starshipData.starship.previous) {
+                array.push([starshipData.starship.previous[i]['image'] , starshipData.starship.previous[i]["net"]])
         }
+        array.sort((a,b) => 
+            moment(b[1]).valueOf() - moment(a[1]).valueOf())
+        console.log(array)
         setImages(array)
         setImageSize(array.length)
-    }, [pastData.loading])
+    }, [pastData.loading, starshipData.loading])
     return (
         <>
             <Pagination
@@ -54,7 +59,7 @@ function Gallery({ pastData, fetchPast }) {
             >
                 <Masonry gutter={16}>
                     {images.slice(minValue, maxValue).map((data) => (
-                        <Image src={data} style={{ objectFit: "contain" }} key={data} />
+                        <Image src={data[0]} style={{ objectFit: "contain" }} key={data} />
 
                     ))}
                 </Masonry>
@@ -65,13 +70,15 @@ function Gallery({ pastData, fetchPast }) {
 
 const mapStateToProps = state => {
     return {
-        pastData: state.past
+        pastData: state.past,
+        starshipData: state.starship
     }
 }
 
 const mapDispatchToProps = dispatch => {
     return {
         fetchPast: () => dispatch(fetchPast()),
+        fetchStarship: () => dispatch(fetchStarship())
     }
 }
 

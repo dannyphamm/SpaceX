@@ -139,6 +139,7 @@ function Launch({ fetchLandpads, fetchLaunchpads, fetchPayloads, fetchRockets, f
         if (Object.keys!(starship).length === 0 || starshipData.loading) {
             return (<Skeleton />)
         } else {
+            
             return (
                 <Row>
                     <Col style={{ width: "100%" }}>
@@ -146,9 +147,9 @@ function Launch({ fetchLandpads, fetchLaunchpads, fetchPayloads, fetchRockets, f
                         <Tabs defaultActiveKey="1" key="1">
                             <TabPane tab="Mission Information" >
                                 <Descriptions bordered column={{ xxl: 3, xl: 3, lg: 3, md: 3, sm: 2, xs: 1 }}>
-                                    <Descriptions.Item span={3}>This Starship information page is currently being worked on. Please be patient1!</Descriptions.Item>
                                     <Descriptions.Item label="Mission Status" span={3}>
-                                        {starship.status.abbrev === 'TBC' ? <Badge status="default" text="Upcoming" /> : starship.status.abbrev === 'Success' ? <Badge status="success" text="Success" /> : starship.status.abbrev === 'Partial Failure' ? <Badge status="warning" text="Partial Failure" /> : <Badge status="error" text="Failure" />}
+                                        
+                                        {starship["status"]["abbrev"] === "TBD" ? <Badge status="default" text="Upcoming" /> : starship.status.abbrev === "Success" ? <Badge status="success" text="Success" /> : starship.status.abbrev === 'Partial Failure' ? <Badge status="warning" text="Partial Failure" /> : <Badge status="error" text="Failure" />}
                                     </Descriptions.Item>
                                     <Descriptions.Item label="Type" span={1}>{starship['mission']['type']}</Descriptions.Item>
                                     <Descriptions.Item label="Name" span={1}>{starship['name']}</Descriptions.Item>
