@@ -108,49 +108,51 @@ function Upcoming({ upcomingData, launchpadsData, starshipData, fetchUpcoming, f
     }
 
     function createCard(item) {
-        if (item['type'] === "starship") {
-            return(
-                <Card
-                    hoverable
-                    style={style}
-                    bodyStyle={styleBody}
-                    cover={<Link to={"launch/" + item['id']}><img alt="example" src={(item['image'] === null) ? "https://www.spacex.com/static/images/share.jpg" : item['image']} style={styleCover} /></Link>}
-                    actions={action(item['links'])}
-                >
-                    <div>
-                        <Link to={"launch/" + item['id']}>
-                            <Meta title={item['name']} />
-                            <Meta description={item['launchpad']} style={{ fontWeight: 'bold', lineHeight: "1rem", marginBottom: "0.5rem" }} />
-                            <Meta description={getLocalTime(item['date_unix'])} style={{ fontWeight: 'bold' }} />
-                            <Meta description={(item['details'] === null ? "No Information Provided" : item['details'])} />
-                            <br />
-                            {<Meta description={<Countdown time={item['date_unix']} />} />}
-                        </Link>
-                    </div>
-                </Card>
-            )
-        } else {
-            return (
-                <Card
-                    hoverable
-                    style={style}
-                    bodyStyle={styleBody}
-                    cover={<Link to={"launch/" + item['id']}><img alt="example" src={(item['links']['patch']['large'] === null) ? "https://www.spacex.com/static/images/share.jpg" : item['links']['patch']['large']} style={styleCover} /></Link>}
-                    actions={action(item['links'])}
-                >
-                    <div>
-                        <Link to={"launch/" + item['id']}>
-                            <Meta title={"#" + item['flight_number'] + " " + item['name']} />
-                            <Meta description={getLaunchpad(item['launchpad'])} style={{ fontWeight: 'bold', lineHeight: "1rem", marginBottom: "0.5rem" }} />
-                            {item['date_precision'] !== 'hour' ? <Meta description={getLocalTimeString(item['date_unix'])} style={{ fontWeight: 'bold' }} /> : <Meta description={getLocalTime(item['date_unix'])} style={{ fontWeight: 'bold' }} />}
-
-                            <Meta description={(item['details'] === null ? "No Information Provided" : item['details'])} />
-                            <br />
-                            {item['date_precision'] !== 'hour' ? null : <Meta description={<Countdown time={item['date_unix']} />} />}
-                        </Link>
-                    </div>
-                </Card>
-            )
+        if(upcomingData.upcoming || starshipData.starship.upcoming) {
+            if (item['type'] === "starship") {
+                return(
+                    <Card
+                        hoverable
+                        style={style}
+                        bodyStyle={styleBody}
+                        cover={<Link to={"launch/" + item['id']}><img alt="example" src={(item['image'] === null) ? "https://www.spacex.com/static/images/share.jpg" : item['image']} style={styleCover} /></Link>}
+                        actions={action(item['links'])}
+                    >
+                        <div>
+                            <Link to={"launch/" + item['id']}>
+                                <Meta title={item['name']} />
+                                <Meta description={item['launchpad']} style={{ fontWeight: 'bold', lineHeight: "1rem", marginBottom: "0.5rem" }} />
+                                <Meta description={getLocalTime(item['date_unix'])} style={{ fontWeight: 'bold' }} />
+                                <Meta description={(item['details'] === null ? "No Information Provided" : item['details'])} />
+                                <br />
+                                {<Meta description={<Countdown time={item['date_unix']} />} />}
+                            </Link>
+                        </div>
+                    </Card>
+                )
+            } else {
+                return (
+                    <Card
+                        hoverable
+                        style={style}
+                        bodyStyle={styleBody}
+                        cover={<Link to={"launch/" + item['id']}><img alt="example" src={(item['links']['patch']['large'] === null) ? "https://www.spacex.com/static/images/share.jpg" : item['links']['patch']['large']} style={styleCover} /></Link>}
+                        actions={action(item['links'])}
+                    >
+                        <div>
+                            <Link to={"launch/" + item['id']}>
+                                <Meta title={"#" + item['flight_number'] + " " + item['name']} />
+                                <Meta description={getLaunchpad(item['launchpad'])} style={{ fontWeight: 'bold', lineHeight: "1rem", marginBottom: "0.5rem" }} />
+                                {item['date_precision'] !== 'hour' ? <Meta description={getLocalTimeString(item['date_unix'])} style={{ fontWeight: 'bold' }} /> : <Meta description={getLocalTime(item['date_unix'])} style={{ fontWeight: 'bold' }} />}
+    
+                                <Meta description={(item['details'] === null ? "No Information Provided" : item['details'])} />
+                                <br />
+                                {item['date_precision'] !== 'hour' ? null : <Meta description={<Countdown time={item['date_unix']} />} />}
+                            </Link>
+                        </div>
+                    </Card>
+                )
+            }
         }
     }
     if (upcomingData.loading || launchpadsData.loading) {

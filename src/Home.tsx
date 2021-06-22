@@ -8,10 +8,9 @@ import { Link } from "react-router-dom";
 import { TwitterTimelineEmbed } from 'react-twitter-embed';
 import { connect } from 'react-redux'
 import { fetchUpcoming, fetchLaunchpads } from './redux'
-import PropTypes from 'prop-types'
 import FlipCountdown from '@rumess/react-flip-countdown';
 import { useThemeSwitcher } from 'react-css-theme-switcher';
-function Home({ upcomingData, launchpadsData, fetchUpcoming, fetchLaunchpads, theme }) {
+function Home({ upcomingData, launchpadsData, fetchUpcoming, fetchLaunchpads }) {
     const style = { height: "100%", margin: "0 auto", display: "flex", flexFlow: "column" };
     const center = { justifyContent: "center" }
     const { currentTheme } = useThemeSwitcher();
@@ -162,9 +161,6 @@ function Home({ upcomingData, launchpadsData, fetchUpcoming, fetchLaunchpads, th
     }
 }
 
-Home.propTypes = {
-    theme: PropTypes.string,
-}
 const mapStateToProps = state => {
     return {
         upcomingData: state.upcoming,

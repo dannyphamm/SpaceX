@@ -20,7 +20,7 @@ function App() {
   const { Header, Content, Footer } = Layout;
   const [selected, setSelected] = useState<any>([]);
   const [mobileMenuOpen, setMobileMenuOpen] = useState<boolean>(false);
-  const { switcher, status, themes } = useThemeSwitcher();
+  const { switcher, themes } = useThemeSwitcher();
 
   const [isDarkMode, setIsDarkMode] = React.useState(true);
   const firebaseConfig = {
@@ -59,11 +59,6 @@ function App() {
       </Switch>
 
     )
-  }
-
-  // Avoid theme change flicker
-  if (status === "loading") {
-    return null;
   }
 
   return (
@@ -118,14 +113,16 @@ function App() {
           </div>
         </MediaQuery>
         <MediaQuery minDeviceWidth={577} className="fade-in">
+          <div>
           <img src="https://spacelaunchnow-prod-east.nyc3.digitaloceanspaces.com/media/logo/spacex_logo_20191121063502.png" alt="SpaceX Logo" className="logo" style={{ objectFit: "contain", background: "none" }} />
           <Menu theme="dark" mode="horizontal" defaultSelectedKeys={selected} >
             <Menu.Item key="a" onClick={() => setSelected(["a"])}><Link to="/" />Home</Menu.Item>
             <Menu.Item key="b" onClick={() => setSelected(["b"])}><Link to="/upcoming" />Upcoming</Menu.Item>
             <Menu.Item key="c" onClick={() => setSelected(["c"])}><Link to="/past" /> Past</Menu.Item>
-            <Menu.Item key="d" onClick={() => { setSelected(["d"]); setMobileMenuOpen(false) }}><Link to="/gallery" /> Gallery</Menu.Item>
-            <SwitchA checked={isDarkMode} onChange={toggleTheme} />
+            <Menu.Item key="d" onClick={() => { setSelected(["d"]); setMobileMenuOpen(false) }}><Link to="/gallery" />Gallery</Menu.Item>
           </Menu>
+          <SwitchA  checked={isDarkMode} onChange={toggleTheme} />
+          </div>
 
 
 
