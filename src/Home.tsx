@@ -23,7 +23,7 @@ function Home({ upcomingData, launchpadsData, fetchUpcoming, fetchLaunchpads, th
     useEffect(() => {
         fetchUpcoming();
         fetchLaunchpads();
-    }, [])
+    }, [fetchUpcoming, fetchLaunchpads])
 
     useEffect(() => {
         let launchArray = [] as any;
@@ -33,7 +33,7 @@ function Home({ upcomingData, launchpadsData, fetchUpcoming, fetchLaunchpads, th
             }
         }
         setLaunch(Object.keys(launchArray).map((key) => launchArray[key]).sort(comp))
-    }, [upcomingData.loading])
+    }, [upcomingData.loading, upcomingData.upcoming])
     
     function comp(a: { date_unix: string | number | Date; }, b: { date_unix: string | number | Date; }) {
         return new Date(a.date_unix).getTime() - new Date(b.date_unix).getTime();
