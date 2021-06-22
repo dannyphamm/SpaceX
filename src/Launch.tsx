@@ -19,9 +19,10 @@ function Launch({ fetchLandpads, fetchLaunchpads, fetchPayloads, fetchRockets, f
     const [item, setItem] = useState<any>([]);
     const [starship, setStarship] = useState<any>({});
     const [ready, setReady] = useState<boolean>(false);
-    const url = "https://api.spacexdata.com/v4/launches/" + params['id']
+    
 
     useEffect(() => {
+        const url = "https://api.spacexdata.com/v4/launches/" + params['id']
         if (params['id'].includes('-')) {
             fetchStarship();
         } else {
@@ -38,7 +39,7 @@ function Launch({ fetchLandpads, fetchLaunchpads, fetchPayloads, fetchRockets, f
             fetchPayloads();
             fetchRockets();
         }
-    }, [])
+    }, [fetchStarship, fetchCores, fetchLandpads, fetchLaunchpads, fetchPayloads,fetchRockets, params])
 
     useEffect(() => {
         if (params['id'].includes('-')) {
@@ -47,20 +48,20 @@ function Launch({ fetchLandpads, fetchLaunchpads, fetchPayloads, fetchRockets, f
             loadStarship();
 
         }
-    }, [starshipData.loading])
+    }, [starshipData.loading, loadStarship, starshipData.starship.combined])
     useEffect(() => {
         if (params['id'].includes('-')) {
             
             loadStarship()
             setReady(true)
         }
-    }, [starship])
+    }, [starship, params, loadStarship])
     useEffect(() => {
         if (!params['id'].includes('-')) {
             loadLaunch();
             setReady(true)
         }
-    }, [item])
+    }, [item, params, loadLaunch])
 
     function getLaunchpad(launchpadID: any) {
         const launchpad = launchpadsData.launchpads.find(launchpad => launchpad['id'] === launchpadID);

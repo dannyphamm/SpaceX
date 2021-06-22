@@ -37,12 +37,12 @@ function Past({ pastData, launchpadsData, fetchPast, fetchLaunchpads, starshipDa
         fetchPast()
         fetchLaunchpads();
         fetchStarship();
-    }, [])
+    }, [fetchPast, fetchLaunchpads, fetchStarship])
     function comp(a: { date_unix: string | number | Date; }, b: { date_unix: string | number | Date; }) {
         return new Date(b.date_unix).getTime() - new Date(a.date_unix).getTime();
     }
     useEffect(() => {
-        if (!starshipData.loading && !pastData.loading) {
+        if (starshipData.starship.previous && pastData.past) {
             let data1 = [] as any;
             for (let i in starshipData.starship.previous) {
                 let data2 = [] as any
@@ -77,7 +77,7 @@ function Past({ pastData, launchpadsData, fetchPast, fetchLaunchpads, starshipDa
             setReady(true)
         }
 
-    }, [starshipData.loading, pastData.loading])
+    }, [starshipData.loading, pastData.loading, pastData.past, starshipData.starship.previous])
 
     function getLaunchpad(launchpadID: any) {
         const launchpad = launchpadsData.launchpads.find(launchpad => launchpad['id'] === launchpadID);

@@ -40,13 +40,13 @@ function Upcoming({ upcomingData, launchpadsData, starshipData, fetchUpcoming, f
         fetchStarship();
         fetchUpcoming();
         fetchLaunchpads();
-    }, [])
+    }, [fetchLaunchpads, fetchUpcoming, fetchStarship])
 
     useEffect(() => {
         let tbdArray = [] as any;
         let launchArray = [] as any;
         for (let i in upcomingData.upcoming) {
-            if (upcomingData.upcoming[i]["date_precision"] == "hour") {
+            if (upcomingData.upcoming[i]["date_precision"] === "hour") {
                 launchArray.push(upcomingData.upcoming[i])
             } else {
                 tbdArray.push(upcomingData.upcoming[i])
@@ -77,7 +77,7 @@ function Upcoming({ upcomingData, launchpadsData, starshipData, fetchUpcoming, f
         
         setLaunch(Object.keys(launchArray).map((key) => launchArray[key]).sort(comp))
         setTBD(Object.keys(tbdArray).map((key) => tbdArray[key]).sort(comp))
-    }, [upcomingData.loading])
+    }, [upcomingData.loading,starshipData.starship.upcoming, upcomingData.upcoming])
 
     function action(item) {
         let array = [] as any;

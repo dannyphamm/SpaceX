@@ -25,7 +25,7 @@ function Gallery({ pastData, fetchPast,starshipData, fetchStarship }) {
     useEffect(() => {
         fetchPast();
         fetchStarship();
-    }, [])
+    }, [fetchPast, fetchStarship])
 
     useEffect(() => {
         if(pastData.past && starshipData.starship.previous) {
@@ -44,7 +44,7 @@ function Gallery({ pastData, fetchPast,starshipData, fetchStarship }) {
             setImages(array)
             setImageSize(array.length)
         }
-    }, [pastData.loading, starshipData.loading])
+    }, [pastData.loading, starshipData.loading, pastData.past, starshipData.starship.previous])
     return (
         <>
             <Pagination
