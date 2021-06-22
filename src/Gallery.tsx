@@ -28,20 +28,22 @@ function Gallery({ pastData, fetchPast,starshipData, fetchStarship }) {
     }, [])
 
     useEffect(() => {
-        let array = [] as Array<any>[]
-        for (let i in pastData.past) {
-            for (let j in pastData.past[i]['links']['flickr']['original']) {
-                array.push([pastData.past[i]['links']['flickr']['original'][j],pastData.past[i]["date_utc"]])
+        if(pastData.past && starshipData.starship.previous) {
+            let array = [] as Array<any>[]
+            for (let i in pastData.past) {
+                for (let j in pastData.past[i]['links']['flickr']['original']) {
+                    array.push([pastData.past[i]['links']['flickr']['original'][j],pastData.past[i]["date_utc"]])
+                }
+            }       
+            for (let i in starshipData.starship.previous) {
+                    array.push([starshipData.starship.previous[i]['image'] , starshipData.starship.previous[i]["net"]])
             }
-        }       
-        for (let i in starshipData.starship.previous) {
-                array.push([starshipData.starship.previous[i]['image'] , starshipData.starship.previous[i]["net"]])
+            array.sort((a,b) => 
+                moment(b[1]).valueOf() - moment(a[1]).valueOf())
+            console.log(array)
+            setImages(array)
+            setImageSize(array.length)
         }
-        array.sort((a,b) => 
-            moment(b[1]).valueOf() - moment(a[1]).valueOf())
-        console.log(array)
-        setImages(array)
-        setImageSize(array.length)
     }, [pastData.loading, starshipData.loading])
     return (
         <>
