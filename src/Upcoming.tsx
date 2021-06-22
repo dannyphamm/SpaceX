@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import { useEffect } from 'react'
 import { useState } from 'react'
 import { Skeleton, Row, Col, Card } from 'antd';
 import moment from 'moment';

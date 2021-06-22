@@ -1,4 +1,3 @@
-import React from 'react'
 import { useState } from 'react'
 import { Skeleton, Row, Col, Card, Pagination, Badge } from 'antd';
 import moment from 'moment';

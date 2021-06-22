@@ -1,9 +1,9 @@
-import React, { useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 import Masonry, { ResponsiveMasonry } from "react-responsive-masonry"
 import { connect } from 'react-redux'
 import { fetchPast, fetchStarship } from './redux'
 import { Image, Pagination } from 'antd';
-import moment, { Moment } from 'moment';
+import moment from 'moment';
 function Gallery({ pastData, fetchPast,starshipData, fetchStarship }) {
     const paginationStyle = { paddingBottom: "24px", textAlign: "center" as const }
     const [minValue, setMinValue] = useState<number>(0);

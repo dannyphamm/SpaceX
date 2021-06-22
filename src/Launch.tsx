@@ -1,9 +1,8 @@
-import React, { useState } from 'react'
+import { useState } from 'react'
 import { useEffect } from 'react'
 import { useParams } from "react-router-dom";
 import { Descriptions, Badge, Col, Row, Image, Divider, Skeleton } from 'antd';
 import Masonry, { ResponsiveMasonry } from "react-responsive-masonry"
-import PropTypes from 'prop-types'
 import moment from 'moment';
 import YouTube from 'react-youtube';
 import Countdown from './Countdown';

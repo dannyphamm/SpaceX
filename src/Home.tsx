@@ -1,5 +1,4 @@
 import { Col, Row, Card, Skeleton } from 'antd'
-import React from 'react'
 import moment from 'moment';
 import { useState } from 'react';
 import Meta from 'antd/lib/card/Meta';

@@ -10,18 +10,17 @@ import MediaQuery from 'react-responsive'
 import { CloseOutlined, MenuOutlined } from '@ant-design/icons';
 import Sider from 'antd/lib/layout/Sider';
 import Gallery from './Gallery';
-
 import { useThemeSwitcher } from 'react-css-theme-switcher';
 import { Switch as SwitchA } from 'antd';
-import firebase from 'firebase';
-import Theme from './Theme';
+import firebase from 'firebase/app';
+
 
 
 function App() {
   const { Header, Content, Footer } = Layout;
   const [selected, setSelected] = useState<any>([]);
   const [mobileMenuOpen, setMobileMenuOpen] = useState<boolean>(false);
-  const { switcher, currentTheme, status, themes } = useThemeSwitcher();
+  const { switcher, status, themes } = useThemeSwitcher();
 
   const [isDarkMode, setIsDarkMode] = React.useState(true);
   const firebaseConfig = {
@@ -127,7 +126,7 @@ function App() {
             <Menu.Item key="d" onClick={() => { setSelected(["d"]); setMobileMenuOpen(false) }}><Link to="/gallery" /> Gallery</Menu.Item>
             <SwitchA checked={isDarkMode} onChange={toggleTheme} />
           </Menu>
-          
+
 
 
         </MediaQuery>
@@ -136,7 +135,7 @@ function App() {
         <MediaQuery maxDeviceWidth={576}>
           <Content>
             <div className="site-layout-content ">
-            
+
               {routes()}
             </div>
           </Content>
