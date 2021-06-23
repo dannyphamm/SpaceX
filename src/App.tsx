@@ -13,6 +13,7 @@ import Gallery from './Gallery';
 import { useThemeSwitcher } from 'react-css-theme-switcher';
 import { Switch as SwitchA } from 'antd';
 import firebase from 'firebase/app';
+import SubMenu from 'antd/lib/menu/SubMenu';
 
 
 
@@ -115,13 +116,16 @@ function App() {
         <MediaQuery minDeviceWidth={577} className="fade-in">
           <div>
           <img src="https://spacelaunchnow-prod-east.nyc3.digitaloceanspaces.com/media/logo/spacex_logo_20191121063502.png" alt="SpaceX Logo" className="logo" style={{ objectFit: "contain", background: "none" }} />
+          <Menu theme="dark" mode="horizontal" defaultSelectedKeys={selected} style={{float: 'right'}}>
+            <div><SwitchA  checked={isDarkMode} onChange={toggleTheme} /></div>
+          </Menu>
           <Menu theme="dark" mode="horizontal" defaultSelectedKeys={selected} >
             <Menu.Item key="a" onClick={() => setSelected(["a"])}><Link to="/" />Home</Menu.Item>
             <Menu.Item key="b" onClick={() => setSelected(["b"])}><Link to="/upcoming" />Upcoming</Menu.Item>
             <Menu.Item key="c" onClick={() => setSelected(["c"])}><Link to="/past" /> Past</Menu.Item>
             <Menu.Item key="d" onClick={() => { setSelected(["d"]); setMobileMenuOpen(false) }}><Link to="/gallery" />Gallery</Menu.Item>
           </Menu>
-          <SwitchA  checked={isDarkMode} onChange={toggleTheme} />
+          
           </div>
 
 
