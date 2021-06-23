@@ -15,7 +15,7 @@ ReactDOM.render(
   <React.StrictMode>
     <Provider store={store}>
       <ThemeSwitcherProvider
-        insertionPoint={document.getElementById('inject-styles-here')}
+        insertionPoint={'inject-styles-here'}
         themeMap={themes}
         defaultTheme={'dark'}
       >

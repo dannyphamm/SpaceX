@@ -13,8 +13,6 @@ import Gallery from './Gallery';
 import { useThemeSwitcher } from 'react-css-theme-switcher';
 import { Switch as SwitchA } from 'antd';
 import firebase from 'firebase/app';
-import SubMenu from 'antd/lib/menu/SubMenu';
-
 
 
 function App() {
@@ -65,7 +63,7 @@ function App() {
   return (
     <Router>
       <Header>
-        <MediaQuery maxDeviceWidth={576} fade-in>
+        <MediaQuery maxDeviceWidth={576} >
           <div style={{ display: "flex", justifyContent: "space-between" }}>
             <img src="https://spacelaunchnow-prod-east.nyc3.digitaloceanspaces.com/media/logo/spacex_logo_20191121063502.png" alt="SpaceX Logo" className="logo" style={{ objectFit: "contain", background: "none" }} />
             <div><SwitchA checked={isDarkMode} onChange={toggleTheme} /></div>
@@ -113,7 +111,7 @@ function App() {
             }
           </div>
         </MediaQuery>
-        <MediaQuery minDeviceWidth={577} className="fade-in">
+        <MediaQuery minDeviceWidth={577}>
           <div>
           <img src="https://spacelaunchnow-prod-east.nyc3.digitaloceanspaces.com/media/logo/spacex_logo_20191121063502.png" alt="SpaceX Logo" className="logo" style={{ objectFit: "contain", background: "none" }} />
           <Menu theme="dark" mode="horizontal" defaultSelectedKeys={selected} style={{float: 'right'}}>
@@ -132,7 +130,7 @@ function App() {
 
         </MediaQuery>
       </Header>
-      <Layout className="layout fade-in">
+      <Layout className="layout">
         <MediaQuery maxDeviceWidth={576}>
           <Content>
             <div className="site-layout-content ">

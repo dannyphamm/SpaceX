@@ -14,7 +14,7 @@ function Home({ upcomingData, launchpadsData, fetchUpcoming, fetchLaunchpads }) 
     const style = { height: "100%", margin: "0 auto", display: "flex", flexFlow: "column" };
     const center = { justifyContent: "center" }
     const { currentTheme } = useThemeSwitcher();
-
+    const [isDark, setDark] = useState(false);
     const styleBody = { flex: "1 1 auto" };
     const styleCover = { padding: "10px 10px", width: "100%" }
 
@@ -33,7 +33,7 @@ function Home({ upcomingData, launchpadsData, fetchUpcoming, fetchLaunchpads }) 
         }
         setLaunch(Object.keys(launchArray).map((key) => launchArray[key]).sort(comp))
     }, [upcomingData.loading, upcomingData.upcoming])
-    
+
     function comp(a: { date_unix: string | number | Date; }, b: { date_unix: string | number | Date; }) {
         return new Date(a.date_unix).getTime() - new Date(b.date_unix).getTime();
     }
@@ -43,7 +43,13 @@ function Home({ upcomingData, launchpadsData, fetchUpcoming, fetchLaunchpads }) 
         const launchpad = launchpadsData.launchpads.find(launchpad => launchpad['id'] === launchpadID);
         return (launchpad['name']);
     }
-
+    useEffect(() => {
+        if(currentTheme === "dark") {
+            setDark(true)
+        } else {
+            setDark(false)
+        }
+    }, [currentTheme])
     function getLocalTime(epoc: number) {
         const d = moment.unix(epoc).local().format("hh:mmA DD/MM/YYYY");
         return d.toString();
@@ -93,13 +99,17 @@ function Home({ upcomingData, launchpadsData, fetchUpcoming, fetchLaunchpads }) 
                                             </Link>
                                         </Card>
                                     </Col>
+
                                     <Col className="gutter-row tweets" xs={{ span: 24 }} lg={{ span: 8 }} xl={{ span: 8 }} xxl={{ span: 4 }}>
                                         <TwitterTimelineEmbed
                                             sourceType="profile"
                                             screenName="spacex"
-                                            theme={currentTheme}
-                                            options={{ height: '100%' }}
+                                            theme={isDark ? "dark":"light"}
+                                            options={{ height: '100%'}}
+                                            key={isDark ? "1":"2"}	
+                                            className="twitter"
                                         />
+
                                     </Col>
                                 </Row >
 
@@ -144,7 +154,8 @@ function Home({ upcomingData, launchpadsData, fetchUpcoming, fetchLaunchpads }) 
                                         <TwitterTimelineEmbed
                                             sourceType="profile"
                                             screenName="spacex"
-                                            theme={currentTheme}
+                                            theme={isDark ? "dark":"light"}
+                                            key={isDark ? "1":"2"}
                                             options={{ height: '100%' }}
                                             className="twitter"
                                         />
