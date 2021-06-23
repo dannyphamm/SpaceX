@@ -9,10 +9,10 @@ import Countdown from './Countdown';
 import { Tabs } from 'antd';
 import Title from 'antd/lib/typography/Title';
 import { connect } from 'react-redux'
-import { fetchLandpads, fetchLaunchpads, fetchPayloads, fetchRockets, fetchCores, fetchStarship } from './redux';
+import { fetchLandpads, fetchLaunchpads, fetchPayloads, fetchRockets, fetchCores, fetchStarship, fetchUpcoming, fetchPast } from './redux';
 
 
-function Launch({ fetchLandpads, fetchLaunchpads, fetchPayloads, fetchRockets, fetchCores, landpadsData, launchpadsData, payloadsData, rocketsData, coresData, fetchStarship, starshipData }) {
+function Launch({ pastData, fetchPast, upcomingData, fetchUpcoming, fetchLandpads, fetchLaunchpads, fetchPayloads, fetchRockets, fetchCores, landpadsData, launchpadsData, payloadsData, rocketsData, coresData, fetchStarship, starshipData }) {
     let params = useParams();
 
     const { TabPane } = Tabs;
@@ -191,7 +191,7 @@ function Launch({ fetchLandpads, fetchLaunchpads, fetchPayloads, fetchRockets, f
             if (Object.keys!(starship).length === 0 || starshipData.loading) {
                 return (<Skeleton />)
             } else {
-    
+
                 return (
                     <Row>
                         <Col style={{ width: "100%" }}>
@@ -200,7 +200,7 @@ function Launch({ fetchLandpads, fetchLaunchpads, fetchPayloads, fetchRockets, f
                                 <TabPane tab="Mission Information" >
                                     <Descriptions bordered column={{ xxl: 3, xl: 3, lg: 3, md: 3, sm: 2, xs: 1 }}>
                                         <Descriptions.Item label="Mission Status" span={3}>
-    
+
                                             {starship["status"]["abbrev"] === "TBD" ? <Badge status="default" text="Upcoming" /> : starship.status.abbrev === "Success" ? <Badge status="success" text="Success" /> : starship.status.abbrev === 'Partial Failure' ? <Badge status="warning" text="Partial Failure" /> : <Badge status="error" text="Failure" />}
                                         </Descriptions.Item>
                                         <Descriptions.Item label="Type" span={1}>{starship['mission']['type']}</Descriptions.Item>
@@ -221,46 +221,39 @@ function Launch({ fetchLandpads, fetchLaunchpads, fetchPayloads, fetchRockets, f
     )
 
     useEffect(() => {
-        const url = "https://api.spacexdata.com/v4/launches/" + params['id']
         if (params['id'].includes('-')) {
             fetchStarship();
         } else {
-            fetch(url)
-                .then(res => res.json())
-                .then(
-                    (result) => {
-                        setItem(result)
-                    },
-                )
             fetchCores();
             fetchLandpads();
             fetchLaunchpads();
             fetchPayloads();
             fetchRockets();
         }
-    }, [fetchStarship, fetchCores, fetchLandpads, fetchLaunchpads, fetchPayloads, fetchRockets, params])
+    }, [fetchStarship, fetchCores, fetchLandpads, fetchLaunchpads, fetchPayloads, fetchRockets, params, fetchUpcoming, fetchPast])
+
 
     useEffect(() => {
-        if (params['id'].includes('-')) {
+        if (!params['id'].includes('-')) {
+            if (upcomingData.upcoming && pastData.past) {
+                // const upcoming = upcomingData.upcoming;
+                const upcoming = Object.values(upcomingData.upcoming).find((upcoming: any) => upcoming['id'] === params['id'])
+                const past = Object.values(pastData.past).find((past: any) => past['id'] === params['id'])
+                if (upcoming) {
+                    setItem(upcoming)
+                } else {
+                    setItem(past)
+                }
+            }
+            loadLaunch();
+        } else {
             const starshipFind = starshipData.starship.combined.find(starship => starship['id'] === params['id'])
             setStarship(starshipFind)
             loadStarship();
 
         }
-    }, [starshipData.loading, loadStarship, starshipData.starship.combined, params])
-    useEffect(() => {
-        if (params['id'].includes('-')) {
-
-            loadStarship()
-            setReady(true)
-        }
-    }, [starship, params, loadStarship])
-    useEffect(() => {
-        if (!params['id'].includes('-')) {
-            loadLaunch();
-            setReady(true)
-        }
-    }, [item, params, loadLaunch])
+        setReady(true)
+    }, [item, params, loadLaunch, upcomingData.loading, pastData.loading, pastData.past, upcomingData.upcoming, starship, loadStarship, starshipData.starship.combined,starshipData.loading])
 
 
 
@@ -273,10 +266,6 @@ function Launch({ fetchLandpads, fetchLaunchpads, fetchPayloads, fetchRockets, f
         const d = moment.unix(epoc).local().format("MMMM YYYY");
         return "NET " + d.toString();
     }
-
-
-
-
 
     return (
         (ready ?
@@ -295,7 +284,9 @@ const mapStateToProps = state => {
         coresData: state.cores,
         payloadsData: state.payloads,
         landpadsData: state.landpads,
-        starshipData: state.starship
+        starshipData: state.starship,
+        upcomingData: state.upcoming,
+        pastData: state.past
     }
 }
 
@@ -306,7 +297,9 @@ const mapDispatchToProps = dispatch => {
         fetchCores: () => dispatch(fetchCores()),
         fetchPayloads: () => dispatch(fetchPayloads()),
         fetchLandpads: () => dispatch(fetchLandpads()),
-        fetchStarship: () => dispatch(fetchStarship())
+        fetchStarship: () => dispatch(fetchStarship()),
+        fetchPast: () => dispatch(fetchPast()),
+        fetchUpcoming: () => dispatch(fetchUpcoming()),
     }
 }
 
