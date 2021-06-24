@@ -18,7 +18,6 @@ function Launch({ pastData, fetchPast, upcomingData, fetchUpcoming, fetchLandpad
     const { TabPane } = Tabs;
     const [item, setItem] = useState<any>([]);
     const [starship, setStarship] = useState<any>({});
-    const [ready, setReady] = useState<boolean>(false);
     const getLaunchpad = useCallback(
         (launchpadID: any) => {
             const launchpad = launchpadsData.launchpads.find(launchpad => launchpad['id'] === launchpadID);
@@ -38,6 +37,7 @@ function Launch({ pastData, fetchPast, upcomingData, fetchUpcoming, fetchLandpad
         },
         [landpadsData.landpads],
     )
+    
     const getRocket = useCallback(
         (rocketID: any) => {
             const rocket = rocketsData.rockets.find(rocket => rocket['id'] === rocketID);
@@ -45,6 +45,7 @@ function Launch({ pastData, fetchPast, upcomingData, fetchUpcoming, fetchLandpad
         },
         [rocketsData.rockets],
     )
+
     const getCore = useCallback(
         (coreID: any) => {
             if (coreID === null) {
@@ -62,6 +63,7 @@ function Launch({ pastData, fetchPast, upcomingData, fetchUpcoming, fetchLandpad
         },
         [coresData.cores],
     )
+
     const getPayload = useCallback(
         (data: any) => {
             const payload = payloadsData.payloads.find(payload => payload['id'] === data);
@@ -118,7 +120,6 @@ function Launch({ pastData, fetchPast, upcomingData, fetchUpcoming, fetchLandpad
                                     </Descriptions>
                                     <Divider />
                                     {item['cores'].map((data, interval) => (
-
                                         <Descriptions title={"Core #" + (interval + 1) + " Information"} bordered column={{ xxl: 3, xl: 3, lg: 3, md: 3, sm: 2, xs: 1 }} key={data['id']}>
                                             <Descriptions.Item label="Booster Landing Status" span={1}>
                                                 {item['upcoming'] ? data['landing_attempt'] === null ? <Badge status="default" text="Unknown" /> :
@@ -136,7 +137,6 @@ function Launch({ pastData, fetchPast, upcomingData, fetchUpcoming, fetchLandpad
                                                 <Descriptions.Item label="Landing Type" span={1}>{!item['upcoming'] ? getLandpad(data['landpad'])[2] : "Pending"}</Descriptions.Item></> : null}
                                         </Descriptions>
                                     ))}
-
                                     <Divider />
                                     {item['payloads'].map((data, interval) => (
                                         <Descriptions title={"Payload #" + (interval + 1) + " Information"} bordered column={{ xxl: 3, xl: 3, lg: 3, md: 3, sm: 2, xs: 1 }} key={data['id']}>
@@ -156,11 +156,8 @@ function Launch({ pastData, fetchPast, upcomingData, fetchUpcoming, fetchLandpad
                                                 <YouTube videoId={item['links']['youtube_id']} containerClassName="livestream" />
                                             </Col>
                                         </Row>
-
-
                                     </TabPane> : null
                                 }
-
                                 {item['links']['flickr']['original'].length !== 0 ?
                                     <TabPane tab="Gallery" key="3">
                                         <ResponsiveMasonry
@@ -183,41 +180,38 @@ function Launch({ pastData, fetchPast, upcomingData, fetchUpcoming, fetchLandpad
         },
         [item, TabPane, coresData.loading, getCore, getLandpad, getLaunchpad, getPayload, getRocket, landpadsData.loading, launchpadsData.loading, payloadsData.loading, rocketsData.loading],
     )
+
     const loadStarship = useCallback(
         () => {
-            if (!starship) {
-                return (<Skeleton />)
-            }
-            if (Object.keys!(starship).length === 0 || starshipData.loading) {
-                return (<Skeleton />)
-            } else {
+            console.log(starship)
+            return (
+                <Row>
+                    <Col style={{ width: "100%" }}>
+                        <Title level={3}>{starship['name']}</Title>
+                        <Tabs defaultActiveKey="1" key="1">
+                            <TabPane tab="Mission Information" >
+                                <Descriptions bordered column={{ xxl: 3, xl: 3, lg: 3, md: 3, sm: 2, xs: 1 }}>
+                                    <Descriptions.Item label="Mission Status" span={3}>
 
-                return (
-                    <Row>
-                        <Col style={{ width: "100%" }}>
-                            <Title level={3}>{starship['name']}</Title>
-                            <Tabs defaultActiveKey="1" key="1">
-                                <TabPane tab="Mission Information" >
-                                    <Descriptions bordered column={{ xxl: 3, xl: 3, lg: 3, md: 3, sm: 2, xs: 1 }}>
-                                        <Descriptions.Item label="Mission Status" span={3}>
+                                        {starship["status"]["abbrev"] === "TBD" ? <Badge status="default" text="Upcoming" /> : starship.status.abbrev === "Success" ? <Badge status="success" text="Success" /> : starship.status.abbrev === 'Partial Failure' ? <Badge status="warning" text="Partial Failure" /> : <Badge status="error" text="Failure" />}
+                                    </Descriptions.Item>
+                                    <Descriptions.Item label="Type" span={1}>{starship['mission']['type']}</Descriptions.Item>
+                                    <Descriptions.Item label="Name" span={1}>{starship['name']}</Descriptions.Item>
+                                    <Descriptions.Item label="Launchpad" span={1}>{starship['pad']['name']}</Descriptions.Item>
+                                    <Descriptions.Item label="Date" span={3}>{getLocalTime(moment(starship['net']).unix())}</Descriptions.Item>
+                                    {<Descriptions.Item label="Countdown" span={3}><Countdown time={moment(starship['net']).unix()} /></Descriptions.Item>}
+                                    <Descriptions.Item label="Description" span={3}>{starship['mission']['description']}</Descriptions.Item>
+                                </Descriptions>
+                            </TabPane>
+                        </Tabs>
+                    </Col>
+                </Row>
+            )
 
-                                            {starship["status"]["abbrev"] === "TBD" ? <Badge status="default" text="Upcoming" /> : starship.status.abbrev === "Success" ? <Badge status="success" text="Success" /> : starship.status.abbrev === 'Partial Failure' ? <Badge status="warning" text="Partial Failure" /> : <Badge status="error" text="Failure" />}
-                                        </Descriptions.Item>
-                                        <Descriptions.Item label="Type" span={1}>{starship['mission']['type']}</Descriptions.Item>
-                                        <Descriptions.Item label="Name" span={1}>{starship['name']}</Descriptions.Item>
-                                        <Descriptions.Item label="Launchpad" span={1}>{starship['pad']['name']}</Descriptions.Item>
-                                        <Descriptions.Item label="Date" span={3}>{getLocalTime(moment(starship['net']).unix())}</Descriptions.Item>
-                                        {<Descriptions.Item label="Countdown" span={3}><Countdown time={moment(starship['net']).unix()} /></Descriptions.Item>}
-                                        <Descriptions.Item label="Description" span={3}>{starship['mission']['description']}</Descriptions.Item>
-                                    </Descriptions>
-                                </TabPane>
-                            </Tabs>
-                        </Col>
-                    </Row>
-                )
-            }
+
+
         },
-        [starshipData.loading, starship, TabPane],
+        [starship, TabPane],
     )
 
     useEffect(() => {
@@ -232,7 +226,6 @@ function Launch({ pastData, fetchPast, upcomingData, fetchUpcoming, fetchLandpad
         }
     }, [fetchStarship, fetchCores, fetchLandpads, fetchLaunchpads, fetchPayloads, fetchRockets, params, fetchUpcoming, fetchPast])
 
-
     useEffect(() => {
         if (!params['id'].includes('-')) {
             if (upcomingData.upcoming && pastData.past) {
@@ -245,17 +238,11 @@ function Launch({ pastData, fetchPast, upcomingData, fetchUpcoming, fetchLandpad
                     setItem(past)
                 }
             }
-            loadLaunch();
         } else {
             const starshipFind = starshipData.starship.combined.find(starship => starship['id'] === params['id'])
             setStarship(starshipFind)
-            loadStarship();
-
         }
-        setReady(true)
-    }, [item, params, loadLaunch, upcomingData.loading, pastData.loading, pastData.past, upcomingData.upcoming, starship, loadStarship, starshipData.starship.combined,starshipData.loading])
-
-
+    }, [item, params, upcomingData.loading, pastData.loading, pastData.past, upcomingData.upcoming, starship, starshipData.starship.combined, starshipData.loading])
 
     function getLocalTime(epoc: number) {
         const d = moment.unix(epoc).format("hh:mmA DD/MM/YYYY");
@@ -268,11 +255,7 @@ function Launch({ pastData, fetchPast, upcomingData, fetchUpcoming, fetchLandpad
     }
 
     return (
-        (ready ?
-            params['id'].includes('-') ?
-                loadStarship() : loadLaunch()
-            : <Skeleton />)
-
+        (params['id'].includes('-') ? loadStarship() : loadLaunch())
     )
 
 }

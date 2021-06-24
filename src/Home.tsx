@@ -44,7 +44,7 @@ function Home({ upcomingData, launchpadsData, fetchUpcoming, fetchLaunchpads }) 
         return (launchpad['name']);
     }
     useEffect(() => {
-        if(currentTheme === "dark") {
+        if (currentTheme === "dark") {
             setDark(true)
         } else {
             setDark(false)
@@ -101,15 +101,20 @@ function Home({ upcomingData, launchpadsData, fetchUpcoming, fetchLaunchpads }) 
                                     </Col>
 
                                     <Col className="gutter-row tweets" xs={{ span: 24 }} lg={{ span: 8 }} xl={{ span: 8 }} xxl={{ span: 4 }}>
-                                        <TwitterTimelineEmbed
-                                            sourceType="profile"
-                                            screenName="spacex"
-                                            theme={isDark ? "dark":"light"}
-                                            options={{ height: '100%'}}
-                                            key={isDark ? "1":"2"}	
-                                            className="twitter"
-                                        />
+                                        <Card
+                                            bodyStyle={{ padding: 0 }}
 
+                                        >
+                                            <TwitterTimelineEmbed
+                                                sourceType="profile"
+                                                screenName="spacex"
+                                                theme={isDark ? "dark" : "light"}
+                                                options={{ height: '100%' }}
+                                                noScrollbar
+                                                key={isDark ? "1" : "2"}
+                                                transparent
+                                            />
+                                        </Card>
                                     </Col>
                                 </Row >
 
@@ -150,15 +155,22 @@ function Home({ upcomingData, launchpadsData, fetchUpcoming, fetchLaunchpads }) 
                                     <Col className="gutter-row" xs={{ span: 24 }} lg={{ span: 8 }} xl={{ span: 8 }} xxl={{ span: 18 }}>
                                         <YouTube videoId={launch[0]['links']['youtube_id']} containerClassName="livestream1" />
                                     </Col>
-                                    <Col className="gutter-row tweets" xs={{ span: 24 }} lg={{ span: 8 }} xl={{ span: 8 }} xxl={{ span: 3 }}>
-                                        <TwitterTimelineEmbed
-                                            sourceType="profile"
-                                            screenName="spacex"
-                                            theme={isDark ? "dark":"light"}
-                                            key={isDark ? "1":"2"}
-                                            options={{ height: '100%' }}
-                                            className="twitter"
-                                        />
+
+                                    <Col className="gutter-row tweets" xs={{ span: 24 }} lg={{ span: 8 }} xl={{ span: 8 }} xxl={{ span: 4 }}>
+                                        <Card
+                                            bodyStyle={{ padding: 0 }}
+
+                                        >
+                                            <TwitterTimelineEmbed
+                                                sourceType="profile"
+                                                screenName="spacex"
+                                                theme={isDark ? "dark" : "light"}
+                                                options={{ height: '100%' }}
+                                                noScrollbar
+                                                key={isDark ? "1" : "2"}
+                                                transparent
+                                            />
+                                        </Card>
                                     </Col>
                                 </Row >
                             </Col>
