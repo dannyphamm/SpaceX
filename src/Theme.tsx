@@ -6,7 +6,6 @@ function Theme() {
 
   const { switcher, themes} = useThemeSwitcher();
   const toggleDarkMode = checked => {
-    console.log(checked);
     switcher({ theme: checked ? themes.dark : themes.light });
     setIsDarkMode(checked);
   };

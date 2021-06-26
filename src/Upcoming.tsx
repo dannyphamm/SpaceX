@@ -110,7 +110,6 @@ function Upcoming({ upcomingData, launchpadsData, starshipData, fetchUpcoming, f
     function createCard(item) {
         if(upcomingData.upcoming || starshipData.starship.upcoming) {
             if (item['type'] === "starship") {
-                console.log("Creating Starship card for " + item['name'])
                 return(
                     <Card
                         hoverable
@@ -132,7 +131,6 @@ function Upcoming({ upcomingData, launchpadsData, starshipData, fetchUpcoming, f
                     </Card>
                 )
             } else {
-                console.log("Creating F9 card for " + item['name'])
                 return (
                     <Card
                         hoverable

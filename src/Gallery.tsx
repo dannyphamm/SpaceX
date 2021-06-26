@@ -4,7 +4,7 @@ import { connect } from 'react-redux'
 import { fetchPast, fetchStarship } from './redux'
 import { Image, Pagination } from 'antd';
 import moment from 'moment';
-function Gallery({ pastData, fetchPast,starshipData, fetchStarship }) {
+function Gallery({ pastData, fetchPast, starshipData, fetchStarship }) {
     const paginationStyle = { paddingBottom: "24px", textAlign: "center" as const }
     const [minValue, setMinValue] = useState<number>(0);
     const [maxValue, setMaxValue] = useState<number>(50);
@@ -28,19 +28,18 @@ function Gallery({ pastData, fetchPast,starshipData, fetchStarship }) {
     }, [fetchPast, fetchStarship])
 
     useEffect(() => {
-        if(pastData.past && starshipData.starship.previous) {
+        if (pastData.past && starshipData.starship.previous) {
             let array = [] as Array<any>[]
             for (let i in pastData.past) {
                 for (let j in pastData.past[i]['links']['flickr']['original']) {
-                    array.push([pastData.past[i]['links']['flickr']['original'][j],pastData.past[i]["date_utc"]])
+                    array.push([pastData.past[i]['links']['flickr']['original'][j], pastData.past[i]["date_utc"]])
                 }
-            }       
-            for (let i in starshipData.starship.previous) {
-                    array.push([starshipData.starship.previous[i]['image'] , starshipData.starship.previous[i]["net"]])
             }
-            array.sort((a,b) => 
+            for (let i in starshipData.starship.previous) {
+                array.push([starshipData.starship.previous[i]['image'], starshipData.starship.previous[i]["net"]])
+            }
+            array.sort((a, b) =>
                 moment(b[1]).valueOf() - moment(a[1]).valueOf())
-            console.log(array)
             setImages(array)
             setImageSize(array.length)
         }
@@ -61,7 +60,10 @@ function Gallery({ pastData, fetchPast,starshipData, fetchStarship }) {
             >
                 <Masonry gutter={16}>
                     {images.slice(minValue, maxValue).map((data) => (
-                        <Image src={data[0]} style={{ objectFit: "contain" }} key={data} />
+                        <Image src={data[0]} 
+                        style={{ objectFit: "contain" }} 
+                        key={data}
+                        />
 
                     ))}
                 </Masonry>
