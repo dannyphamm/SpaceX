@@ -252,7 +252,7 @@ function Home({ upcomingData, starshipData, launchpadsData, fetchUpcoming, fetch
                                             <YouTube videoId={launch[0]['links']['youtube_id']} containerClassName="livestream1" />
                                         </Col>
 
-                                        <Col className="gutter-row tweets" xs={{ span: 24 }} lg={{ span: 8 }} xl={{ span: 8 }} xxl={{ span: 4 }}>
+                                        <Col className="gutter-row tweets" xs={{ span: 24 }} lg={{ span: 8 }} xl={{ span: 8 }} xxl={{ span: 3 }}>
                                             <Card
                                                 bodyStyle={{ padding: 0 }}
 
