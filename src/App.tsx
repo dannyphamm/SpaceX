@@ -3,7 +3,7 @@ import { Layout, Menu } from 'antd';
 import { BrowserRouter as Router, Switch, Route, Link } from "react-router-dom";
 import Upcoming from './Upcoming';
 import Past from './Past';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import Home from './Home';
 import Launch from './Launch';
 import MediaQuery from 'react-responsive'
@@ -13,6 +13,7 @@ import Gallery from './Gallery';
 import { useThemeSwitcher } from 'react-css-theme-switcher';
 import { Switch as SwitchA } from 'antd';
 import firebase from 'firebase/app';
+
 
 
 function App() {
@@ -31,7 +32,18 @@ function App() {
     appId: "1:920508502712:web:7e641c8e9331328e325a4d",
     measurementId: "G-C77F81TBDC"
   };
-
+  useEffect(() => {
+    signIn();
+  }, [])
+  const signIn = async () => {
+    firebase.auth().signInAnonymously().then(() => {
+      console.log('signed in');
+    }).catch((error) => {
+      var errorCode = error.code;
+      var errorMessage = error.message;
+      console.log(errorCode, errorMessage);
+    })
+  };
   !firebase.apps.length ? firebase.initializeApp(firebaseConfig) : firebase.app()
   const toggleTheme = (isChecked) => {
     setIsDarkMode(isChecked);
@@ -113,17 +125,17 @@ function App() {
         </MediaQuery>
         <MediaQuery minDeviceWidth={577}>
           <div>
-          <img src="https://spacelaunchnow-prod-east.nyc3.digitaloceanspaces.com/media/logo/spacex_logo_20191121063502.png" alt="SpaceX Logo" className="logo" style={{ objectFit: "contain", background: "none" }} />
-          <Menu theme="dark" mode="horizontal" defaultSelectedKeys={selected} style={{float: 'right'}}>
-            <div><SwitchA  checked={isDarkMode} onChange={toggleTheme} /></div>
-          </Menu>
-          <Menu theme="dark" mode="horizontal" defaultSelectedKeys={selected} >
-            <Menu.Item key="a" onClick={() => setSelected(["a"])}><Link to="/" />Home</Menu.Item>
-            <Menu.Item key="b" onClick={() => setSelected(["b"])}><Link to="/upcoming" />Upcoming</Menu.Item>
-            <Menu.Item key="c" onClick={() => setSelected(["c"])}><Link to="/past" /> Past</Menu.Item>
-            <Menu.Item key="d" onClick={() => { setSelected(["d"]); setMobileMenuOpen(false) }}><Link to="/gallery" />Gallery</Menu.Item>
-          </Menu>
-          
+            <img src="https://spacelaunchnow-prod-east.nyc3.digitaloceanspaces.com/media/logo/spacex_logo_20191121063502.png" alt="SpaceX Logo" className="logo" style={{ objectFit: "contain", background: "none" }} />
+            <Menu theme="dark" mode="horizontal" defaultSelectedKeys={selected} style={{ float: 'right' }}>
+              <div><SwitchA checked={isDarkMode} onChange={toggleTheme} /></div>
+            </Menu>
+            <Menu theme="dark" mode="horizontal" defaultSelectedKeys={selected} >
+              <Menu.Item key="a" onClick={() => setSelected(["a"])}><Link to="/" />Home</Menu.Item>
+              <Menu.Item key="b" onClick={() => setSelected(["b"])}><Link to="/upcoming" />Upcoming</Menu.Item>
+              <Menu.Item key="c" onClick={() => setSelected(["c"])}><Link to="/past" /> Past</Menu.Item>
+              <Menu.Item key="d" onClick={() => { setSelected(["d"]); setMobileMenuOpen(false) }}><Link to="/gallery" />Gallery</Menu.Item>
+            </Menu>
+
           </div>
 
 
