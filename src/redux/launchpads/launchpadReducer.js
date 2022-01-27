@@ -7,7 +7,7 @@ import {
   const initialState = {
     loading: false,
     launchpads: [],
-    lastUpdate: '',
+    lastUpdated: '',
     error: ''
   }
   

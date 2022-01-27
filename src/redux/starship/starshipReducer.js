@@ -11,7 +11,7 @@ import {
       upcoming: [],
       previous: [],
     },
-    lastUpdate: '',
+    lastUpdated: '',
     error: ''
   }
   

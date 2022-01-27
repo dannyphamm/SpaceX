@@ -16,7 +16,7 @@ const rootReducer = combineReducers({
   rockets: rocketReducer,
   cores: coreReducer,
   landpads: landpadReducer,
-  starship: starshipReducer
+  starship: starshipReducer,
 })
 
 export default rootReducer

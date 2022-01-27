@@ -3,7 +3,7 @@ import { useState } from 'react'
 import { Skeleton, Row, Col, Card } from 'antd';
 import moment from 'moment';
 import Countdown from './Countdown';
-import { YoutubeFilled, ReadFilled, RedditCircleFilled } from '@ant-design/icons';
+import { YoutubeFilled, ReadFilled, RedditCircleFilled, InfoCircleOutlined } from '@ant-design/icons';
 import Title from 'antd/lib/typography/Title';
 import { Link } from "react-router-dom";
 
@@ -166,7 +166,8 @@ function Upcoming({ upcomingData, launchpadsData, starshipData, fetchUpcoming, f
             <div>
                 <Row>
                     <Col>
-                        <Title level={2}>Upcoming Missions</Title>
+                    <Title level={2}>Upcoming Missions</Title>
+                    {/* <Row><Col span={12}><Title level={2}>Upcoming Missions</Title></Col><Col span={12} style={{display: "flex",justifyContent: "flex-end", alignItems: "center"}}><InfoCircleOutlined />{upcomingData.lastUpdated}</Col></Row> */}
                         <Row gutter={[{ xs: 8, sm: 16, md: 24, lg: 32 }, { xs: 8, sm: 16, md: 24, lg: 32 }]}>
                             {launch.map((item: { [x: string]: number; }) => (
                                 <Col className="gutter-row" xs={{ span: 24 }} lg={{ span: 12 }} xl={{ span: 8 }} xxl={{ span: 6 }} key={item['id']}>

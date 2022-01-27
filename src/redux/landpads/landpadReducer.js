@@ -7,7 +7,7 @@ import {
   const initialState = {
     loading: false,
     landpads: [],
-    lastUpdate: '',
+    lastUpdated: '',
     error: ''
   }
   

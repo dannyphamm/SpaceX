@@ -3,7 +3,7 @@ import { Layout, Menu } from 'antd';
 import { BrowserRouter as Router, Routes, Route, Link, Navigate } from "react-router-dom";
 import Upcoming from './Upcoming';
 import Past from './Past';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import Home from './Home';
 import Launch from './Launch';
 import MediaQuery from 'react-responsive'
@@ -12,9 +12,9 @@ import Sider from 'antd/lib/layout/Sider';
 import Gallery from './Gallery';
 import { useThemeSwitcher } from 'react-css-theme-switcher';
 import { Switch as SwitchA } from 'antd';
-import { initializeApp, getApps, getApp } from 'firebase/app';
 
-import { getAuth, signInAnonymously } from 'firebase/auth';
+
+
 
 function App() {
   const { Header, Content, Footer } = Layout;
@@ -22,25 +22,9 @@ function App() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState<boolean>(false);
   const { switcher, themes } = useThemeSwitcher();
 
+
   const [isDarkMode, setIsDarkMode] = React.useState(true);
-  const firebaseConfig = {
-    apiKey: "AIzaSyAV1zFEQqRy5_Wl-GSkJrC4UNXTbXiw8EI",
-    authDomain: "spacex-fc0dc.firebaseapp.com",
-    projectId: "spacex-fc0dc",
-    storageBucket: "spacex-fc0dc.appspot.com",
-    messagingSenderId: "920508502712",
-    appId: "1:920508502712:web:7e641c8e9331328e325a4d",
-    measurementId: "G-C77F81TBDC"
-  };
-  !getApps.length ? initializeApp(firebaseConfig) : getApp()
-  const auth = getAuth(getApp());
-  signInAnonymously(auth)
-    .then(() => {
-      console.log("Logged In")
-    })
-    .catch((error) => {
-      console.log(error.code, error.message)
-    });
+
 
   const toggleTheme = (isChecked) => {
     setIsDarkMode(isChecked);
