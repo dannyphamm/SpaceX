@@ -1,6 +1,6 @@
   
 import { combineReducers } from 'redux'
-import upcomingReducer from './upcoming/upcomingReducer'
+ import upcomingReducer from './upcoming/upcomingReducer'
 import launchpadReducer from './launchpads/launchpadReducer'
 import pastReducer from './past/pastReducer'
 import payloadReducer from './payloads/payloadReducer'

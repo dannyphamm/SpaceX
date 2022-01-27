@@ -1,6 +1,5 @@
 import axios from 'axios'
-import firebase from 'firebase/app';
-import 'firebase/firestore'
+import {getFirestore, getDoc, doc, setDoc} from 'firebase/firestore';
 import moment from 'moment';
 import {
   FETCH_UPCOMING_REQUEST,
@@ -9,25 +8,27 @@ import {
 } from './upcomingTypes'
 
 export const fetchUpcoming = () => {
-  const database = firebase.firestore();
+  const database = getFirestore();
 
-  return (dispatch) => {
+  return async (dispatch) => {
     dispatch(fetchUpcomingRequest())
+    const docRef = doc(database, "apidata", "upcoming");
+    const docSnap = await getDoc(docRef);
 
-    var docRef = database.collection("apidata").doc("upcoming");
-    docRef.get().then((doc) => {
-      var data = doc.data()
-      if (doc.exists) {
+   
+    if(docSnap.exists()) {
+      const data = docSnap.data()
         const diff = moment().diff(moment(data!['last_updated']), "seconds");
         // 5 minutes, Get new data if existing data is old
         if (diff > 300) {
           axios
             .get('https://api.spacexdata.com/v4/launches/upcoming')
-            .then(response => {
+            .then(async response => {
               const upcoming = response.data
               upcoming['last_updated'] = moment().toString();
               const time = moment().toString();
-              database.collection("apidata").doc("upcoming").set(Object.assign({}, upcoming));
+              console.log("SETTING NEW DATA")  
+              await setDoc(docRef, Object.assign({}, upcoming), { merge: true });
               delete upcoming['last_updated']
               dispatch(fetchUpcomingSuccess(upcoming, time));
             })
@@ -40,10 +41,7 @@ export const fetchUpcoming = () => {
           dispatch(fetchUpcomingSuccess(upcomingData, data!['last_updated']))
         }
       }
-    }).catch((error) => {
-      dispatch(fetchUpcomingFailure(error.message))
-    });
-  }
+   }
 }
 
 export const fetchUpcomingRequest = () => {

@@ -1,6 +1,5 @@
 import axios from 'axios'
-import firebase from 'firebase/app';
-import 'firebase/firestore'
+import {getFirestore, getDoc, doc, setDoc} from 'firebase/firestore';
 import moment from 'moment';
 import {
   FETCH_PAYLOADS_REQUEST,
@@ -9,23 +8,23 @@ import {
 } from './payloadTypes'
 
 export const fetchPayloads = () => {
-  const database = firebase.firestore();
-  return (dispatch) => {
+  const database = getFirestore();
+  return async (dispatch) => {
     dispatch(fetchPayloadsRequest())
 
-    var docRef = database.collection("apidata").doc("payloads");
-    docRef.get().then((doc) => {
-      var data = doc.data()
-      if (doc.exists) {
+    const docRef = doc(database, "apidata", "payloads");
+    const docSnap = await getDoc(docRef);
+    if(docSnap.exists()) {
+      const data = docSnap.data()
         const diff = moment().diff(moment(data!['last_updated']), "seconds");
         // 5 minutes, Get new data if existing data is old
         if (diff > 300) {
           axios
             .get('https://api.spacexdata.com/v4/payloads')
-            .then(response => {
+            .then(async response => {
               const payloads = response.data
               payloads['last_updated'] = moment().toString();
-              database.collection("apidata").doc("payloads").set(Object.assign({}, payloads));
+              await setDoc(docRef, Object.assign({}, payloads), { merge: true });
               dispatch(fetchPayloadsSuccess(payloads,  payloads['last_updated']))
             })
             .catch(error => {
@@ -41,9 +40,6 @@ export const fetchPayloads = () => {
           dispatch(fetchPayloadsSuccess(data1, data!['last_updated']))
         }
       }
-    }).catch((error) => {
-      dispatch(fetchPayloadsFailure(error.message))
-    });
   }
 }
 

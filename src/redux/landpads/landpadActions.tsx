@@ -1,6 +1,5 @@
 import axios from 'axios'
-import firebase from 'firebase/app';
-import 'firebase/firestore'
+import {getFirestore, getDoc, doc, setDoc} from 'firebase/firestore';
 import moment from 'moment';
 import {
   FETCH_LANDPADS_REQUEST,
@@ -9,23 +8,24 @@ import {
 } from './landpadTypes'
 
 export const fetchLandpads = () => {
-  const database = firebase.firestore();
-  return (dispatch) => {
+  const database = getFirestore();
+  return async (dispatch) => {
     dispatch(fetchLandpadsRequest())
 
-    var docRef = database.collection("apidata").doc("landpads");
-    docRef.get().then((doc) => {
-      var data = doc.data()
-      if (doc.exists) {
+    const docRef = doc(database, "apidata", "landpads");
+    const docSnap = await getDoc(docRef);
+   
+    if(docSnap.exists()) {
+      const data = docSnap.data()
         const diff = moment().diff(moment(data!['last_updated']), "seconds");
         // 5 minutes, Get new data if existing data is old
         if (diff > 300) {
           axios
             .get('https://api.spacexdata.com/v4/landpads')
-            .then(response => {
+            .then(async response => {
               const landpads = response.data
               landpads['last_updated'] = moment().toString();
-              database.collection("apidata").doc("landpads").set(Object.assign({}, landpads));
+              await setDoc(docRef, Object.assign({}, landpads), { merge: true });
               dispatch(fetchLandpadsSuccess(landpads, landpads['last_updated']))
             })
             .catch(error => {
@@ -41,10 +41,7 @@ export const fetchLandpads = () => {
           dispatch(fetchLandpadsSuccess(data1, data!['last_updated']))
         }
       }
-    }).catch((error) => {
-      dispatch(fetchLandpadsFailure(error.message))
-    });
-  }
+   }
 }
 
 export const fetchLandpadsRequest = () => {

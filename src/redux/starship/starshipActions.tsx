@@ -1,6 +1,5 @@
 import axios from 'axios'
-import firebase from 'firebase/app';
-import 'firebase/firestore'
+import {getFirestore, getDoc, doc, setDoc} from 'firebase/firestore';
 import moment from 'moment';
 import {
   FETCH_STARSHIP_REQUEST,
@@ -9,24 +8,25 @@ import {
 } from './starshipTypes'
 
 export const fetchStarship = () => {
-  const database = firebase.firestore();
+  const database = getFirestore();
 
-  return (dispatch) => {
+  return async (dispatch) => {
     dispatch(fetchStarshipRequest())
 
-    var docRef = database.collection("apidata").doc("starship");
-    docRef.get().then((doc) => {
-      var data = doc.data()
-      if (doc.exists) {
+    const docRef = doc(database, "apidata", "starship");
+    const docSnap = await getDoc(docRef);
+    if(docSnap.exists()) {
+      const data = docSnap.data()
+
         const diff = moment().diff(moment(data!['last_updated']), "seconds");
         // 5 minutes, Get new data if existing data is old
         if (diff > 300) {
           axios
             .get('https://ll.thespacedevs.com/2.2.0/dashboard/starship/')
-            .then(response => {
+            .then(async response => {
               const starship = response.data
               starship['last_updated'] = moment().toString();
-              docRef.set(Object.assign({}, starship));
+              await setDoc(docRef, Object.assign({}, starship), { merge: true });
       
               let data2 = [] as any;
               for (let i in starship!['upcoming']['launches']) {
@@ -59,12 +59,7 @@ export const fetchStarship = () => {
         }
 
       }
-    }).catch((error) => {
-      dispatch(fetchStarshipFailure(error.message))
-    });
-
-
-  }
+   }
 }
 
 export const fetchStarshipRequest = () => {

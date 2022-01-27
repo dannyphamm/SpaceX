@@ -1,6 +1,6 @@
 import axios from 'axios'
-import firebase from 'firebase/app';
-import 'firebase/firestore'
+import {getFirestore, getDoc, doc, setDoc} from 'firebase/firestore';
+
 import moment from 'moment';
 import {
   FETCH_PAST_REQUEST,
@@ -10,23 +10,23 @@ import {
 
 
 export const fetchPast = () => {
-  const database = firebase.firestore();
-  return (dispatch) => {
+  const database = getFirestore();
+  return async (dispatch) => {
     dispatch(fetchPastRequest())
-    var docRef = database.collection("apidata").doc("past");
-    docRef.get().then((doc) => {
-      var data = doc.data()
-      if (doc.exists) {
+    const docRef = doc(database, "apidata", "past");
+    const docSnap = await getDoc(docRef);
+    if(docSnap.exists()) {
+      const data = docSnap.data()
         const diff = moment().diff(moment(data!['last_updated']), "seconds");
         // 5 minutes, Get new data if existing data is old
         if (diff > 300) {
           axios
             .get('https://api.spacexdata.com/v4/launches/past')
-            .then(response => {
+            .then(async response => {
               const past = response.data
               past['last_updated'] = moment().toString();
               const time = moment().toString();
-              database.collection("apidata").doc("past").set(Object.assign({}, past));
+              await setDoc(docRef, Object.assign({}, past), { merge: true });
               delete past['last_updated']
               dispatch(fetchPastSuccess(past, time))
             })
@@ -39,9 +39,6 @@ export const fetchPast = () => {
           dispatch(fetchPastSuccess(pastData, data!['last_updated']))
         }
       }
-    }).catch((error) => {
-      dispatch(fetchPastFailure(error.message))
-    });
   }
 }
 

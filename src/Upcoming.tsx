@@ -94,8 +94,8 @@ function Upcoming({ upcomingData, launchpadsData, starshipData, fetchUpcoming, f
     }
 
     function getLaunchpad(launchpadID: any) {
-        const launchpad = launchpadsData.launchpads.find(launchpad => launchpad['id'] === launchpadID);
-        return (launchpad['full_name']);
+        const launchpad = launchpadsData.launchpads.find(launchpad => launchpad['id'] === launchpadID)
+        return (launchpad !== undefined? launchpad['full_name'] : "Unknown")
     }
 
     function getLocalTime(epoc: number) {
@@ -115,7 +115,7 @@ function Upcoming({ upcomingData, launchpadsData, starshipData, fetchUpcoming, f
                         hoverable
                         style={style}
                         bodyStyle={styleBody}
-                        cover={<Link to={"launch/" + item['id']}><img alt="example" src={(item['image'] === null) ? "https://www.spacex.com/static/images/share.jpg" : item['image']} style={styleCover} /></Link>}
+                        cover={<Link to={"/launch/" + item['id']}><img alt="example" src={(item['image'] === null) ? "https://www.spacex.com/static/images/share.jpg" : item['image']} style={styleCover} /></Link>}
                         actions={action(item['links'])}
                     >
                         <div>
@@ -136,7 +136,7 @@ function Upcoming({ upcomingData, launchpadsData, starshipData, fetchUpcoming, f
                         hoverable
                         style={style}
                         bodyStyle={styleBody}
-                        cover={<Link to={"launch/" + item['id']}><img alt="example" src={(item['links']['patch']['large'] === null) ? "https://www.spacex.com/static/images/share.jpg" : item['links']['patch']['large']} style={styleCover} /></Link>}
+                        cover={<Link to={"/launch/" + item['id']}><img alt="example" src={(item['links']['patch']['large'] === null) ? "https://www.spacex.com/static/images/share.jpg" : item['links']['patch']['large']} style={styleCover} /></Link>}
                         actions={action(item['links'])}
                     >
                         <div>

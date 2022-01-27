@@ -1,9 +1,9 @@
 import './App.css';
 import { Layout, Menu } from 'antd';
-import { BrowserRouter as Router, Switch, Route, Link } from "react-router-dom";
+import { BrowserRouter as Router, Routes, Route, Link, Navigate } from "react-router-dom";
 import Upcoming from './Upcoming';
 import Past from './Past';
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import Home from './Home';
 import Launch from './Launch';
 import MediaQuery from 'react-responsive'
@@ -12,9 +12,9 @@ import Sider from 'antd/lib/layout/Sider';
 import Gallery from './Gallery';
 import { useThemeSwitcher } from 'react-css-theme-switcher';
 import { Switch as SwitchA } from 'antd';
-import firebase from 'firebase/app';
+import { initializeApp, getApps, getApp } from 'firebase/app';
 
-
+import { getAuth, signInAnonymously } from 'firebase/auth';
 
 function App() {
   const { Header, Content, Footer } = Layout;
@@ -32,42 +32,33 @@ function App() {
     appId: "1:920508502712:web:7e641c8e9331328e325a4d",
     measurementId: "G-C77F81TBDC"
   };
-  useEffect(() => {
-    signIn();
-  }, [])
-  const signIn = async () => {
-    firebase.auth().signInAnonymously().then(() => {
-      console.log('signed in');
-    }).catch((error) => {
-      var errorCode = error.code;
-      var errorMessage = error.message;
-      console.log(errorCode, errorMessage);
+  !getApps.length ? initializeApp(firebaseConfig) : getApp()
+  const auth = getAuth(getApp());
+  signInAnonymously(auth)
+    .then(() => {
+      console.log("Logged In")
     })
-  };
-  !firebase.apps.length ? firebase.initializeApp(firebaseConfig) : firebase.app()
+    .catch((error) => {
+      console.log(error.code, error.message)
+    });
+
   const toggleTheme = (isChecked) => {
     setIsDarkMode(isChecked);
     switcher({ theme: isChecked ? themes.dark : themes.light });
   };
   function routes() {
     return (
-      <Switch>
-        <Route path="/gallery">
-          <Gallery />
-        </Route>
-        <Route path="/upcoming">
-          <Upcoming />
-        </Route>
-        <Route path="/past">
-          <Past />
-        </Route>
-        <Route path="/launch/:id">
-          <Launch />
-        </Route>
-        <Route path="/">
-          <Home />
-        </Route>
-      </Switch>
+      <Routes>
+        <Route path="/" element={<Home />} />
+        <Route path="gallery" element={<Gallery />} />
+
+        <Route path="upcoming" element={<Upcoming />} />
+
+        <Route path="past" element={<Past />} />
+
+        <Route path="launch/:id" element={<Launch />} />
+        <Route path="*" element={<Navigate to="/" />} />
+      </Routes>
 
     )
   }

@@ -1,6 +1,5 @@
 import axios from 'axios'
-import firebase from 'firebase/app';
-import 'firebase/firestore'
+import {getFirestore, getDoc, doc, setDoc} from 'firebase/firestore';
 import moment from 'moment';
 import {
   FETCH_LAUNCHPADS_REQUEST,
@@ -9,22 +8,22 @@ import {
 } from './launchpadTypes'
 
 export const fetchLaunchpads = () => {
-  const database = firebase.firestore();
-  return (dispatch) => {
+  const database = getFirestore();
+  return async (dispatch) => {
     dispatch(fetchLaunchpadsRequest())
-    var docRef = database.collection("apidata").doc("launchpads");
-    docRef.get().then((doc) => {
-      var data = doc.data()
-      if (doc.exists) {
+    const docRef = doc(database, "apidata", "launchpads");
+    const docSnap = await getDoc(docRef);
+    if(docSnap.exists()) {
+      const data = docSnap.data()
         const diff = moment().diff(moment(data!['last_updated']), "seconds");
         // 5 minutes, Get new data if existing data is old
         if (diff > 300) {
           axios
             .get('https://api.spacexdata.com/v4/launchpads')
-            .then(response => {
+            .then(async response => {
               const launchpads = response.data
               launchpads['last_updated'] = moment().toString();
-              database.collection("apidata").doc("launchpads").set(Object.assign({}, launchpads));
+              await setDoc(docRef, Object.assign({}, launchpads), { merge: true });
               dispatch(fetchLaunchpadsSuccess(launchpads, launchpads['last_updated']))
             })
             .catch(error => {
@@ -40,10 +39,7 @@ export const fetchLaunchpads = () => {
           dispatch(fetchLaunchpadsSuccess(data1, data!['last_updated']))
         }
       }
-    }).catch((error) => {
-      dispatch(fetchLaunchpadsFailure(error.message))
-    });
-  }
+    }
 }
 
 export const fetchLaunchpadsRequest = () => {

@@ -9,12 +9,11 @@ import Countdown from './Countdown';
 import { Tabs } from 'antd';
 import Title from 'antd/lib/typography/Title';
 import { connect } from 'react-redux'
-import { fetchLandpads, fetchLaunchpads, fetchPayloads, fetchRockets, fetchCores, fetchStarship, fetchUpcoming, fetchPast } from './redux';
+import {  fetchCores, fetchLandpads, fetchLaunchpads, fetchPast, fetchPayloads, fetchRockets, fetchStarship, fetchUpcoming} from './redux';
 
 
 function Launch({ pastData, fetchPast, upcomingData, fetchUpcoming, fetchLandpads, fetchLaunchpads, fetchPayloads, fetchRockets, fetchCores, landpadsData, launchpadsData, payloadsData, rocketsData, coresData, fetchStarship, starshipData }) {
     let params = useParams();
-
     const { TabPane } = Tabs;
     const [item, setItem] = useState<any>([]);
     const [starship, setStarship] = useState<any>([]);
@@ -95,6 +94,7 @@ function Launch({ pastData, fetchPast, upcomingData, fetchUpcoming, fetchLandpad
 
     const loadLaunch = useCallback(
         () => {
+
             if (!item) {
                 return (<Skeleton />)
             }
@@ -227,7 +227,7 @@ function Launch({ pastData, fetchPast, upcomingData, fetchUpcoming, fetchLandpad
     )
 
     useEffect(() => {
-        if (params['id'].includes('-')) {
+        if (params['id']!!.includes('-')) {
             fetchStarship();
         } else {
             fetchCores();
@@ -239,7 +239,7 @@ function Launch({ pastData, fetchPast, upcomingData, fetchUpcoming, fetchLandpad
     }, [fetchStarship, fetchCores, fetchLandpads, fetchLaunchpads, fetchPayloads, fetchRockets, params, fetchUpcoming, fetchPast])
 
     useEffect(() => {
-        if (!params['id'].includes('-')) {
+        if (!params['id']!!.includes('-')) {
             if (upcomingData.upcoming && pastData.past) {
                 // const upcoming = upcomingData.upcoming;
                 const upcoming = Object.values(upcomingData.upcoming).find((upcoming: any) => upcoming['id'] === params['id'])
@@ -269,7 +269,8 @@ function Launch({ pastData, fetchPast, upcomingData, fetchUpcoming, fetchLandpad
     }
 
     return (
-        (params['id'].includes('-') ? loadStarship() : loadLaunch())
+        (params['id']!!.includes('-') ? loadStarship() : loadLaunch())
+      
     )
 
 }

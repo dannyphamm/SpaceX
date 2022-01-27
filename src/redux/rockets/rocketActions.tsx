@@ -1,6 +1,5 @@
 import axios from 'axios'
-import firebase from 'firebase/app';
-import 'firebase/firestore'
+import {getFirestore, getDoc, doc, setDoc} from 'firebase/firestore';
 import moment from 'moment';
 import {
   FETCH_ROCKETS_REQUEST,
@@ -9,23 +8,22 @@ import {
 } from './rocketTypes'
 
 export const fetchRockets = () => {
-  const database = firebase.firestore();
-  return (dispatch) => {
+  const database = getFirestore();
+  return async (dispatch) => {
     dispatch(fetchRocketsRequest())
-
-    var docRef = database.collection("apidata").doc("rockets");
-    docRef.get().then((doc) => {
-      var data = doc.data()
-      if (doc.exists) {
+    const docRef = doc(database, "apidata", "rockets");
+    const docSnap = await getDoc(docRef);
+    if(docSnap.exists()) {
+      const data = docSnap.data()
         const diff = moment().diff(moment(data!['last_updated']), "seconds");
         // 5 minutes, Get new data if existing data is old
         if (diff > 300) {
           axios
             .get('https://api.spacexdata.com/v4/rockets')
-            .then(response => {
+            .then(async response => {
               const rockets = response.data
               rockets['last_updated'] = moment().toString();
-              database.collection("apidata").doc("rockets").set(Object.assign({}, rockets));
+              await setDoc(docRef, Object.assign({}, rockets), { merge: true });
               dispatch(fetchRocketsSuccess(rockets, rockets['last_updated']))
             })
             .catch(error => {
@@ -41,10 +39,7 @@ export const fetchRockets = () => {
           dispatch(fetchRocketsSuccess(data1, data!['last_updated']))
         }
       }
-    }).catch((error) => {
-      dispatch(fetchRocketsFailure(error.message))
-    });
-  }
+    }
 }
 
 export const fetchRocketsRequest = () => {

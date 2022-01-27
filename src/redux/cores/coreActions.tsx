@@ -1,6 +1,5 @@
 import axios from 'axios'
-import firebase from 'firebase/app';
-import 'firebase/firestore'
+import {getFirestore, getDoc, doc, setDoc} from 'firebase/firestore';
 import moment from 'moment';
 import {
   FETCH_CORES_REQUEST,
@@ -9,23 +8,24 @@ import {
 } from './coreTypes'
 
 export const fetchCores = () => {
-  const database = firebase.firestore();
-  return (dispatch) => {
+  const database = getFirestore();
+  return async (dispatch) => {
     dispatch(fetchCoresRequest())
 
-    var docRef = database.collection("apidata").doc("cores");
-    docRef.get().then((doc) => {
-      var data = doc.data()
-      if (doc.exists) {
+    const docRef = doc(database, "apidata", "cores");
+    const docSnap = await getDoc(docRef);
+   
+    if(docSnap.exists()) {
+      const data = docSnap.data()
         const diff = moment().diff(moment(data!['last_updated']), "seconds");
         // 5 minutes, Get new data if existing data is old
         if (diff > 300) {
           axios
             .get('https://api.spacexdata.com/v4/cores')
-            .then(response => {
+            .then(async response => {
               const cores = response.data
               cores['last_updated'] = moment().toString();
-              database.collection("apidata").doc("cores").set(Object.assign({}, cores));
+              await setDoc(docRef, Object.assign({}, cores), { merge: true });
               dispatch(fetchCoresSuccess(cores, cores['last_updated']))
             })
             .catch(error => {
@@ -41,9 +41,6 @@ export const fetchCores = () => {
           dispatch(fetchCoresSuccess(data1, data!['last_updated']))
         }
       }
-    }).catch((error) => {
-      dispatch(fetchCoresFailure(error.message))
-    });
 
   }
 }
