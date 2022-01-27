@@ -33,7 +33,6 @@ export const fetchUpcoming = () => {
               const upcoming = response.data
               upcoming['last_updated'] = moment().toString();
               const time = moment().toString();
-              console.log("SETTING NEW DATA")
               await setDoc(docRef, Object.assign({}, upcoming), { merge: true });
               delete upcoming['last_updated']
               dispatch(fetchUpcomingSuccess(upcoming, time));
