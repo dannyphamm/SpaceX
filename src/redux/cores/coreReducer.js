@@ -22,7 +22,7 @@ import {
         return {
           loading: false,
           cores: action.payload,
-          lastUpdated: action.lastUpdate,
+          lastUpdated: action.lastUpdated,
           error: ''
         }
       case FETCH_CORES_FAILURE:

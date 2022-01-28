@@ -1,11 +1,12 @@
 import { useState } from 'react'
 import { Skeleton, Row, Col, Card, Pagination, Badge } from 'antd';
 import moment from 'moment';
-import { YoutubeFilled, ReadFilled, RedditCircleFilled } from '@ant-design/icons';
+import { YoutubeFilled, ReadFilled, RedditCircleFilled, InfoCircleOutlined } from '@ant-design/icons';
 import { connect } from 'react-redux'
 import { fetchPast, fetchLaunchpads, fetchStarship } from './redux'
 import { Link } from "react-router-dom";
 import { useEffect } from 'react';
+import Title from 'antd/lib/typography/Title';
 function Past({ pastData, launchpadsData, fetchPast, fetchLaunchpads, starshipData, fetchStarship }) {
     const style = { height: "100%", margin: "0 auto", display: "flex", flexFlow: "column" };
     const styleBody = { flex: "1 1 auto" };
@@ -160,11 +161,11 @@ function Past({ pastData, launchpadsData, fetchPast, fetchLaunchpads, starshipDa
                     hoverable
                     style={style}
                     bodyStyle={styleBody}
-                    cover={<Link to={"launch/" + item['id']}><img alt="example" src={(item['image'] === null) ? "https://www.spacex.com/static/images/share.jpg" : item['image']} style={styleCover} /></Link>}
+                    cover={<Link to={"/launch/" + item['id']}><img alt="example" src={(item['image'] === null) ? "https://www.spacex.com/static/images/share.jpg" : item['image']} style={styleCover} /></Link>}
                     actions={action(item['links'])}
                 >
                     <div>
-                        <Link to={"launch/" + item['id']}>
+                        <Link to={"/launch/" + item['id']}>
                             <Meta title={item['name']} />
                             <Meta description={item['launchpad']} style={{ fontWeight: 'bold', lineHeight: "1rem", marginBottom: "0.5rem" }} />
                             <Meta description={getLocalTime(item['date_unix'])} style={{ fontWeight: 'bold' }} />
@@ -181,11 +182,11 @@ function Past({ pastData, launchpadsData, fetchPast, fetchLaunchpads, starshipDa
                     hoverable
                     style={style}
                     bodyStyle={styleBody}
-                    cover={<Link to={"launch/" + item['id']}><img alt="example" src={(item['links']['patch']['large'] === null) ? "https://www.spacex.com/static/images/share.jpg" : item['links']['patch']['large']} style={styleCover} /></Link>}
+                    cover={<Link to={"/launch/" + item['id']}><img alt="example" src={(item['links']['patch']['large'] === null) ? "https://www.spacex.com/static/images/share.jpg" : item['links']['patch']['large']} style={styleCover} /></Link>}
                     actions={action(item['links'])}
                 >
                     <div>
-                        <Link to={"launch/" + item['id']}>
+                        <Link to={"/launch/" + item['id']}>
                             <Meta title={"#" + item['flight_number'] + " " + item['name']} />
                             <Meta description={getLaunchpad(item['launchpad'])} style={{ fontWeight: 'bold', lineHeight: "1rem", marginBottom: "0.5rem" }} />
                             <Meta description={getLocalTime(item['date_unix'])} style={{ fontWeight: 'bold' }} />
@@ -216,12 +217,13 @@ function Past({ pastData, launchpadsData, fetchPast, fetchLaunchpads, starshipDa
         } else {
             return (
                 <div>
+                    <Row><Col span={12}><Title level={2}>Past Missions</Title></Col><Col span={12} style={{ display: "flex", justifyContent: "flex-end", alignItems: "center" }}><InfoCircleOutlined style={{ marginRight: "0.5rem" }} /> {moment(pastData.lastUpdated).fromNow()}</Col></Row> 
                     <Pagination
                         style={paginationStyle}
                         defaultCurrent={1}
                         onChange={handleChange}
                         pageSize={pageSize}
-                        total={pastData.past.length}
+                        total={data.length}
                         responsive={true}
                         pageSizeOptions={["24", "48", "72", "96"]}
                     />

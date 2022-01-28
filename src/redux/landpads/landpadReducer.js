@@ -22,7 +22,7 @@ import {
         return {
           loading: false,
           landpads: action.payload,
-          lastUpdated: action.lastUpdate,
+          lastUpdated: action.lastUpdated,
           error: ''
         }
       case FETCH_LANDPADS_FAILURE:

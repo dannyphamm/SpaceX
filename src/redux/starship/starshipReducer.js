@@ -30,7 +30,7 @@ import {
             upcoming: action.upcoming,
             previous: action.previous,
           },
-          lastUpdated: action.lastUpdate,
+          lastUpdated: action.lastUpdated,
           error: ''
         }
       case FETCH_STARSHIP_FAILURE:

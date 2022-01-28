@@ -22,7 +22,7 @@ import {
         return {
           loading: false,
           upcoming: action.payload,
-          lastUpdated: action.lastUpdate,
+          lastUpdated: action.lastUpdated,
           error: ''
         }
       case FETCH_UPCOMING_FAILURE:

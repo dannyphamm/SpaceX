@@ -22,7 +22,7 @@ import {
         return {
           loading: false,
           launchpads: action.payload,
-          lastUpdated: action.lastUpdate,
+          lastUpdated: action.lastUpdated,
           error: ''
         }
       case FETCH_LAUNCHPADS_FAILURE:

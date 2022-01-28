@@ -1,6 +1,6 @@
 import axios from 'axios'
 import { getApp } from 'firebase/app';
-import { getAuth, signInAnonymously } from 'firebase/auth';
+import { deleteUser, getAuth, signInAnonymously, User } from 'firebase/auth';
 import { getFirestore, getDoc, doc, setDoc } from 'firebase/firestore';
 
 import moment from 'moment';
@@ -13,47 +13,52 @@ import {
 export const fetchCores = () => {
   const database = getFirestore();
   const auth = getAuth(getApp())
- 
-    return async (dispatch) => {
-      dispatch(fetchCoresRequest())
-      signInAnonymously(auth).then(async () => {
-     
 
-      const docRef = doc(database, "apidata", "cores");
-      const docSnap = await getDoc(docRef);
+  return async (dispatch) => {
+    dispatch(fetchCoresRequest())
 
-      if (docSnap.exists()) {
-        const data = docSnap.data()
-        const diff = moment().diff(moment(data!['last_updated']), "seconds");
-        // 5 minutes, Get new data if existing data is old
-        if (diff > 300) {
-          axios
-            .get('https://api.spacexdata.com/v4/cores')
-            .then(async response => {
+
+
+    const docRef = doc(database, "apidata", "cores");
+    const docSnap = await getDoc(docRef);
+
+    if (docSnap.exists()) {
+      const data = docSnap.data()
+      const diff = moment().diff(moment(data!['last_updated']), "seconds");
+      // 5 minutes, Get new data if existing data is old
+      if (diff > 14400) {
+        axios
+          .get('https://api.spacexdata.com/v4/cores')
+          .then(async response => {
+            signInAnonymously(auth).then(async () => {
               const cores = response.data
               cores['last_updated'] = moment().toString();
               await setDoc(docRef, Object.assign({}, cores), { merge: true });
+              
+              
+              const user = auth.currentUser as User
+              deleteUser(user);
               dispatch(fetchCoresSuccess(cores, cores['last_updated']))
             })
-            .catch(error => {
-              dispatch(fetchCoresFailure(error.message))
-            })
-        } else {
-          let data1 = [] as any;
-          for (let i in data) {
-            if (i !== "last_updated") {
-              data1[i] = { ...data1[i], ...data[i] }
-            }
+              .catch((error) => {
+                dispatch(fetchCoresFailure(error.code +" " + error.message))
+              })
+          })
+          .catch(error => {
+            dispatch(fetchCoresFailure(error.message))
+          })
+      } else {
+        let data1 = [] as any;
+        for (let i in data) {
+          if (i !== "last_updated") {
+            data1[i] = { ...data1[i], ...data[i] }
           }
-          dispatch(fetchCoresSuccess(data1, data!['last_updated']))
         }
+        const lastUpdated = data['last_updated']
+        dispatch(fetchCoresSuccess(data1, lastUpdated))
       }
-
-  })
-    .catch((error) => {
-      console.log(error.code, error.message)
-    })}
-
+    }
+  }
 }
 
 export const fetchCoresRequest = () => {

@@ -1,6 +1,6 @@
 import axios from 'axios'
 import { getApp } from 'firebase/app';
-import { getAuth, signInAnonymously } from 'firebase/auth';
+import { deleteUser, getAuth, signInAnonymously, User } from 'firebase/auth';
 import { getFirestore, getDoc, doc, setDoc } from 'firebase/firestore';
 import moment from 'moment';
 import {
@@ -15,20 +15,21 @@ export const fetchStarship = () => {
 
   return async (dispatch) => {
     dispatch(fetchStarshipRequest())
-    signInAnonymously(auth).then(async () => {
-     
 
-      const docRef = doc(database, "apidata", "starship");
-      const docSnap = await getDoc(docRef);
-      if (docSnap.exists()) {
-        const data = docSnap.data()
 
-        const diff = moment().diff(moment(data!['last_updated']), "seconds");
-        // 5 minutes, Get new data if existing data is old
-        if (diff > 300) {
-          axios
-            .get('https://ll.thespacedevs.com/2.2.0/dashboard/starship/')
-            .then(async response => {
+
+    const docRef = doc(database, "apidata", "starship");
+    const docSnap = await getDoc(docRef);
+    if (docSnap.exists()) {
+      const data = docSnap.data()
+
+      const diff = moment().diff(moment(data!['last_updated']), "seconds");
+      // 5 minutes, Get new data if existing data is old
+      if (diff > 14400) {
+        axios
+          .get('https://ll.thespacedevs.com/2.2.0/dashboard/starship/')
+          .then(async response => {
+            signInAnonymously(auth).then(async () => {
               const starship = response.data
               starship['last_updated'] = moment().toString();
               await setDoc(docRef, Object.assign({}, starship), { merge: true });
@@ -40,35 +41,40 @@ export const fetchStarship = () => {
               for (let i in starship!['previous']['launches']) {
                 data2.push(starship!['previous']['launches'][i])
               }
+              const user = auth.currentUser as User
+              deleteUser(user);
               dispatch(fetchStarshipSuccess(data2, starship['upcoming']['launches'], starship['previous']['launches'], starship['last_updated']));
-            })
-            .catch(error => {
-              dispatch(fetchStarshipFailure(error.message))
-            })
-        } else {
-          let data1 = [] as any;
-          for (let i in data) {
-            if (i !== "last_updated") {
-              data1[i] = { ...data1[i], ...data[i] }
-            }
-          }
 
-          let data2 = [] as any;
-          for (let i in data!['upcoming']['launches']) {
-            data2.push(data!['upcoming']['launches'][i])
+            })
+              .catch((error) => {
+                dispatch(fetchStarshipFailure(error.code+" "+ error.message))
+              })
+          })
+          .catch(error => {
+            dispatch(fetchStarshipFailure(error.message))
+          })
+      } else {
+        let data1 = [] as any;
+        for (let i in data) {
+          if (i !== "last_updated") {
+            data1[i] = { ...data1[i], ...data[i] }
           }
-          for (let i in data!['previous']['launches']) {
-            data2.push(data!['previous']['launches'][i])
-          }
-          dispatch(fetchStarshipSuccess(data2, data1['upcoming']['launches'], data1['previous']['launches'], data!['last_updated']))
         }
 
+        let data2 = [] as any;
+        for (let i in data!['upcoming']['launches']) {
+          data2.push(data!['upcoming']['launches'][i])
+        }
+        for (let i in data!['previous']['launches']) {
+          data2.push(data!['previous']['launches'][i])
+        }
+        const lastUpdated = data['last_updated']
+        dispatch(fetchStarshipSuccess(data2, data1['upcoming']['launches'], data1['previous']['launches'], lastUpdated))
       }
 
-    })
-      .catch((error) => {
-        console.log(error.code, error.message)
-      })
+    }
+
+
   }
 }
 

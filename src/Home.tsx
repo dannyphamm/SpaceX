@@ -58,7 +58,6 @@ function Home({ upcomingData, starshipData, launchpadsData, fetchUpcoming, fetch
             launchArray.push(data[i])
 
         }
-        console.log(launchArray)
         setLaunch(Object.keys(launchArray).map((key) => launchArray[key]).sort(comp))
     }, [upcomingData.loading, starshipData.starship.upcoming, upcomingData.upcoming])
 
@@ -95,7 +94,7 @@ function Home({ upcomingData, starshipData, launchpadsData, fetchUpcoming, fetch
             </Row >
         )
     }
-    if (launch.length === 0 || launchpadsData.loading || upcomingData.loading  || starshipData.loading ) {
+    if (launch.length === 0 || launchpadsData.loading || upcomingData.loading || starshipData.loading) {
         return (
             <Row style={center} gutter={[{ xs: 8, sm: 16, md: 24, lg: 32 }, { xs: 8, sm: 16, md: 24, lg: 32 }]}>
                 <Col className="gutter-row" xs={{ span: 24 }} lg={{ span: 12 }} xl={{ span: 12 }} xxl={{ span: 10 }}>
@@ -109,59 +108,60 @@ function Home({ upcomingData, starshipData, launchpadsData, fetchUpcoming, fetch
         )
     } else {
         if (launch && launch[0].type === "starship") {
-            return(
+            return (
                 <>
-                <Row style={center}>
-                    <Col span={24}>
-                        <Row style={center} gutter={[{ xs: 8, sm: 16, md: 24, lg: 24 }, { xs: 8, sm: 16, md: 24, lg: 24 }]}>
-                            <Col className="gutter-row" span={24} style={{ textAlign: "center" }}>
-                                <Card
-                                    style={style}
-                                >
-                                    <FlipCountdown
-                                        endAt={moment(launch[0]['date_net']).format('lll').toString()}
-                                    />
-                                </Card>
-                            </Col>
-                            <Col className="gutter-row" xs={{ span: 24 }} lg={{ span: 12 }} xl={{ span: 12 }} xxl={{ span: 8 }} key={launch[0]['id']}>
-                                <Card
-                                    hoverable
-                                    style={style}
-                                    bodyStyle={styleBody}
-                                    cover={<Link to={"launch/" + launch[0]['id']}><img alt="example" src={(launch[0]['image'] === null) ? "https://www.spacex.com/static/images/share.jpg" : launch[0]['image']} style={styleCover} /></Link>}
-                                >
-                                    <Link to={"launch/" + launch[0]['id']}>
-                                        <div>
-                                            <Meta title={launch[0]['name']} />
-                                            <Meta title={"Launchpad: " + launch[0]['launchpad']} description={getLocalTime(launch[0]['date_unix'])} style={{ fontWeight: 'bold' }} />
-                                            <Meta description={(launch[0]['details'] === null ? "No Information Provided" : launch[0]['details'])} />
-                                        </div>
-                                    </Link>
-                                </Card>
-                            </Col>
+                    <Row style={center}>
+                        <Col span={24}>
+                            <Row style={center} gutter={[{ xs: 8, sm: 16, md: 24, lg: 24 }, { xs: 8, sm: 16, md: 24, lg: 24 }]}>
+                                <Col className="gutter-row" span={24} style={{ textAlign: "center" }}>
+                                    <Card
+                                        style={style}
+                                    >
+                                        <FlipCountdown
+                                            endAtZero
+                                            endAt={moment(launch[0]['date_net']).format('lll').toString()}
+                                        >Launch has either ended or rescheduled</FlipCountdown>
+                                    </Card>
+                                </Col>
+                                <Col className="gutter-row" xs={{ span: 24 }} lg={{ span: 12 }} xl={{ span: 12 }} xxl={{ span: 8 }} key={launch[0]['id']}>
+                                    <Card
+                                        hoverable
+                                        style={style}
+                                        bodyStyle={styleBody}
+                                        cover={<Link to={"launch/" + launch[0]['id']}><img alt="example" src={(launch[0]['image'] === null) ? "https://www.spacex.com/static/images/share.jpg" : launch[0]['image']} style={styleCover} /></Link>}
+                                    >
+                                        <Link to={"launch/" + launch[0]['id']}>
+                                            <div>
+                                                <Meta title={launch[0]['name']} />
+                                                <Meta title={"Launchpad: " + launch[0]['launchpad']} description={getLocalTime(launch[0]['date_unix'])} style={{ fontWeight: 'bold' }} />
+                                                <Meta description={(launch[0]['details'] === null ? "No Information Provided" : launch[0]['details'])} />
+                                            </div>
+                                        </Link>
+                                    </Card>
+                                </Col>
 
-                            <Col className="gutter-row tweets" xs={{ span: 24 }} lg={{ span: 8 }} xl={{ span: 8 }} xxl={{ span: 4 }}>
-                                <Card
-                                    bodyStyle={{ padding: 0 }}
+                                <Col className="gutter-row tweets" xs={{ span: 24 }} lg={{ span: 8 }} xl={{ span: 8 }} xxl={{ span: 4 }}>
+                                    <Card
+                                        bodyStyle={{ padding: 0 }}
 
-                                >
-                                    <TwitterTimelineEmbed
-                                        sourceType="profile"
-                                        screenName="spacex"
-                                        theme={isDark ? "dark" : "light"}
-                                        options={{ height: '100%' }}
-                                        noScrollbar
-                                        key={isDark ? "1" : "2"}
-                                        transparent
-                                    />
-                                </Card>
-                            </Col>
-                        </Row >
+                                    >
+                                        <TwitterTimelineEmbed
+                                            sourceType="profile"
+                                            screenName="spacex"
+                                            theme={isDark ? "dark" : "light"}
+                                            options={{ height: '100%' }}
+                                            noScrollbar
+                                            key={isDark ? "1" : "2"}
+                                            transparent
+                                        />
+                                    </Card>
+                                </Col>
+                            </Row >
 
-                    </Col>
-                </Row>
-            </>
-                )
+                        </Col>
+                    </Row>
+                </>
+            )
         } else {
             return (
                 <>
