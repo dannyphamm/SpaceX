@@ -3,7 +3,7 @@ import { Layout, Menu } from 'antd';
 import { BrowserRouter as Router, Routes, Route, Link, Navigate } from "react-router-dom";
 import Upcoming from './Upcoming';
 import Past from './Past';
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import Home from './Home';
 import Launch from './Launch';
 import MediaQuery from 'react-responsive'
