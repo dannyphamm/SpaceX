@@ -1,6 +1,5 @@
 import axios from 'axios'
-import { getApp } from 'firebase/app';
-import { deleteUser, getAuth, signInAnonymously, User } from 'firebase/auth';
+
 import { getFirestore, getDoc, doc, setDoc } from 'firebase/firestore';
 import moment from 'moment';
 import {
@@ -11,10 +10,10 @@ import {
 
 export const fetchStarship = () => {
   const database = getFirestore();
-  const auth = getAuth(getApp())
 
   return async (dispatch) => {
     dispatch(fetchStarshipRequest())
+
 
 
 
@@ -25,11 +24,10 @@ export const fetchStarship = () => {
 
       const diff = moment().diff(moment(data!['last_updated']), "seconds");
       // 5 minutes, Get new data if existing data is old
-      if (diff > 14400) {
+      if (diff < 14400) {
         axios
           .get('https://ll.thespacedevs.com/2.2.0/dashboard/starship/')
           .then(async response => {
-            signInAnonymously(auth).then(async () => {
               const starship = response.data
               starship['last_updated'] = moment().toString();
               await setDoc(docRef, Object.assign({}, starship), { merge: true });
@@ -41,15 +39,9 @@ export const fetchStarship = () => {
               for (let i in starship!['previous']['launches']) {
                 data2.push(starship!['previous']['launches'][i])
               }
-              const user = auth.currentUser as User
-              deleteUser(user);
               dispatch(fetchStarshipSuccess(data2, starship['upcoming']['launches'], starship['previous']['launches'], starship['last_updated']));
 
             })
-              .catch((error) => {
-                dispatch(fetchStarshipFailure(error.code+" "+ error.message))
-              })
-          })
           .catch(error => {
             dispatch(fetchStarshipFailure(error.message))
           })
@@ -71,10 +63,7 @@ export const fetchStarship = () => {
         const lastUpdated = data['last_updated']
         dispatch(fetchStarshipSuccess(data2, data1['upcoming']['launches'], data1['previous']['launches'], lastUpdated))
       }
-
     }
-
-
   }
 }
 

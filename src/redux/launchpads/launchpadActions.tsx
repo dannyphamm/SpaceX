@@ -1,8 +1,9 @@
+
 import axios from 'axios'
-import { getApp } from 'firebase/app';
-import { deleteUser, getAuth, signInAnonymously, User } from 'firebase/auth';
+
 import { getFirestore, getDoc, doc, setDoc } from 'firebase/firestore';
 import moment from 'moment';
+
 import {
   FETCH_LAUNCHPADS_REQUEST,
   FETCH_LAUNCHPADS_SUCCESS,
@@ -11,12 +12,10 @@ import {
 
 export const fetchLaunchpads = () => {
   const database = getFirestore();
-  const auth = getAuth(getApp())
 
   return async (dispatch) => {
-
     dispatch(fetchLaunchpadsRequest())
-
+   
 
     const docRef = doc(database, "apidata", "launchpads");
     const docSnap = await getDoc(docRef);
@@ -28,19 +27,11 @@ export const fetchLaunchpads = () => {
         axios
           .get('https://api.spacexdata.com/v4/launchpads')
           .then(async response => {
-            signInAnonymously(auth).then(async () => {
               const launchpads = response.data
               launchpads['last_updated'] = moment().toString();
               await setDoc(docRef, Object.assign({}, launchpads), { merge: true });
-              const user = auth.currentUser as User
-              deleteUser(user);
               dispatch(fetchLaunchpadsSuccess(launchpads, launchpads['last_updated']))
-
             })
-              .catch((error) => {
-                dispatch(fetchLaunchpadsFailure(error.code+" "+ error.message))
-              })
-          })
           .catch(error => {
             dispatch(fetchLaunchpadsFailure(error.message))
           })

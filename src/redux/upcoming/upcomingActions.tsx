@@ -1,6 +1,4 @@
 import axios from 'axios'
-import { getApp } from 'firebase/app';
-import { deleteUser, getAuth, signInAnonymously, User } from 'firebase/auth';
 import { getFirestore, getDoc, doc, setDoc } from 'firebase/firestore';
 import moment from 'moment';
 
@@ -12,15 +10,13 @@ import {
 
 export const fetchUpcoming = () => {
   const database = getFirestore();
-  const auth = getAuth(getApp())
-  
   return async (dispatch) => {
     dispatch(fetchUpcomingRequest())
 
 
     const docRef = doc(database, "apidata", "upcoming");
     const docSnap = await getDoc(docRef);
-    
+
 
     if (docSnap.exists()) {
       const data = docSnap.data()
@@ -30,20 +26,13 @@ export const fetchUpcoming = () => {
         axios
           .get('https://api.spacexdata.com/v4/launches/upcoming')
           .then(async response => {
-            signInAnonymously(auth).then(async () => {
-              const upcoming = response.data
-              upcoming['last_updated'] = moment().toString();
-              const time = moment().toString();
-              await setDoc(docRef, Object.assign({}, upcoming), { merge: true });
-              delete upcoming['last_updated']
-              
-              const user = auth.currentUser as User
-              deleteUser(user);
-              dispatch(fetchUpcomingSuccess(upcoming, time));
-            })
-              .catch((error) => {
-                dispatch(fetchUpcomingFailure(error.code+" "+ error.message))
-              })
+            const upcoming = response.data
+            upcoming['last_updated'] = moment().toString();
+            const time = moment().toString();
+            await setDoc(docRef, Object.assign({}, upcoming), { merge: true })
+            delete upcoming['last_updated']
+
+            dispatch(fetchUpcomingSuccess(upcoming, time));
           })
           .catch(error => {
             dispatch(fetchUpcomingFailure(error.message))

@@ -1,6 +1,4 @@
 import axios from 'axios'
-import { getApp } from 'firebase/app';
-import { deleteUser, getAuth, signInAnonymously, User } from 'firebase/auth';
 import { getFirestore, getDoc, doc, setDoc } from 'firebase/firestore';
 
 import moment from 'moment';
@@ -12,11 +10,10 @@ import {
 
 export const fetchCores = () => {
   const database = getFirestore();
-  const auth = getAuth(getApp())
 
   return async (dispatch) => {
     dispatch(fetchCoresRequest())
-
+    
 
 
     const docRef = doc(database, "apidata", "cores");
@@ -26,23 +23,14 @@ export const fetchCores = () => {
       const data = docSnap.data()
       const diff = moment().diff(moment(data!['last_updated']), "seconds");
       // 5 minutes, Get new data if existing data is old
-      if (diff > 14400) {
+      if (diff > 10) {
         axios
           .get('https://api.spacexdata.com/v4/cores')
           .then(async response => {
-            signInAnonymously(auth).then(async () => {
-              const cores = response.data
-              cores['last_updated'] = moment().toString();
-              await setDoc(docRef, Object.assign({}, cores), { merge: true });
-              
-              
-              const user = auth.currentUser as User
-              deleteUser(user);
-              dispatch(fetchCoresSuccess(cores, cores['last_updated']))
-            })
-              .catch((error) => {
-                dispatch(fetchCoresFailure(error.code +" " + error.message))
-              })
+            const cores = response.data
+            cores['last_updated'] = moment().toString();
+            await setDoc(docRef, Object.assign({}, cores), { merge: true });
+            dispatch(fetchCoresSuccess(cores, cores['last_updated']))
           })
           .catch(error => {
             dispatch(fetchCoresFailure(error.message))

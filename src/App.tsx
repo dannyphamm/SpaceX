@@ -12,17 +12,21 @@ import Sider from 'antd/lib/layout/Sider';
 import Gallery from './Gallery';
 import { useThemeSwitcher } from 'react-css-theme-switcher';
 import { Switch as SwitchA } from 'antd';
+import { getAuth, signInAnonymously } from 'firebase/auth';
+import { doc, getFirestore, setDoc } from 'firebase/firestore';
+import moment from 'moment';
+import { exitAuth } from './redux';
+import { connect } from 'react-redux';
 
 
 
-
-function App() {
+function App({ exitAuth }) {
   const { Header, Content, Footer } = Layout;
   const [selected, setSelected] = useState<any>([]);
   const [mobileMenuOpen, setMobileMenuOpen] = useState<boolean>(false);
   const { switcher, themes } = useThemeSwitcher();
-
-
+  const database = getFirestore();
+  const auth = getAuth()
   const [isDarkMode, setIsDarkMode] = React.useState(true);
 
 
@@ -30,9 +34,19 @@ function App() {
     setIsDarkMode(isChecked);
     switcher({ theme: isChecked ? themes.dark : themes.light });
   };
+
+  window.addEventListener('beforeUnload', async () => {
+    await exitAuth();
+  })
+
+  window.addEventListener('unload', async () => {
+    await exitAuth();
+  })
+
   function routes() {
     return (
       <Routes>
+
         <Route path="/" element={<Home />} />
         <Route path="gallery" element={<Gallery />} />
 
@@ -106,9 +120,24 @@ function App() {
             </Menu>
             <Menu theme="dark" mode="horizontal" defaultSelectedKeys={selected} >
               <Menu.Item key="a" onClick={() => setSelected(["a"])}><Link to="/" />Home</Menu.Item>
-              <Menu.Item key="b" onClick={() => setSelected(["b"])}><Link to="/upcoming" />Upcoming</Menu.Item>
-              <Menu.Item key="c" onClick={() => setSelected(["c"])}><Link to="/past" /> Past</Menu.Item>
-              <Menu.Item key="d" onClick={() => { setSelected(["d"]); setMobileMenuOpen(false) }}><Link to="/gallery" />Gallery</Menu.Item>
+              <Menu.Item key="b" onClick={() => setSelected(["b"])}><Link to="/upcoming/" />Upcoming</Menu.Item>
+              <Menu.Item key="c" onClick={() => setSelected(["c"])}><Link to="/past/" /> Past</Menu.Item>
+              <Menu.Item key="d" onClick={() => { setSelected(["d"]); setMobileMenuOpen(false) }}><Link to="/gallery/" />Gallery</Menu.Item>
+              <Menu.Item key="e" onClick={async () => {
+                signInAnonymously(auth).then(async () => {
+                  const time = moment().subtract(50, 'days').toString()
+                  await setDoc(doc(database, "apidata", "upcoming"), { "last_updated": time }, { merge: true })
+                  await setDoc(doc(database, "apidata", "cores"), { "last_updated": time }, { merge: true })
+                  await setDoc(doc(database, "apidata", "landpads"), { "last_updated": time }, { merge: true })
+                  await setDoc(doc(database, "apidata", "launchpads"), { "last_updated": time }, { merge: true })
+                  await setDoc(doc(database, "apidata", "past"), { "last_updated": time }, { merge: true })
+                  await setDoc(doc(database, "apidata", "payloads"), { "last_updated": time }, { merge: true })
+                  await setDoc(doc(database, "apidata", "starship"), { "last_updated": time }, { merge: true })
+                  await setDoc(doc(database, "apidata", "rockets"), { "last_updated": time }, { merge: true })
+
+                })
+              }
+              }>Dev</Menu.Item>
             </Menu>
 
           </div>
@@ -139,6 +168,19 @@ function App() {
   );
 }
 
+const mapStateToProps = state => {
+  return {
 
+  }
+}
 
-export default App;
+const mapDispatchToProps = dispatch => {
+  return {
+    exitAuth: () => dispatch(exitAuth()),
+  }
+}
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(App)

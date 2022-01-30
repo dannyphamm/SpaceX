@@ -20,46 +20,48 @@ function Home({ upcomingData, starshipData, launchpadsData, fetchUpcoming, fetch
 
     const [launch, setLaunch] = useState<any>([]);
     useEffect(() => {
-        fetchStarship();
-        fetchUpcoming();
-        fetchLaunchpads();
+            fetchStarship();
+            fetchUpcoming();
+            fetchLaunchpads()
     }, [fetchLaunchpads, fetchUpcoming, fetchStarship])
 
     useEffect(() => {
-        let tbdArray = [] as any;
-        let launchArray = [] as any;
-        for (let i in upcomingData.upcoming) {
-            if (upcomingData.upcoming[i]["date_precision"] === "hour") {
-                launchArray.push(upcomingData.upcoming[i])
-            } else {
-                tbdArray.push(upcomingData.upcoming[i])
-            }
-        }
-        for (let i in starshipData.starship.upcoming) {
-            let data = [] as any
-            data[i] = {
-                type: "starship",
-                id: starshipData.starship.upcoming[i]['id'],
-                image: starshipData.starship.upcoming[i]['image'],
-                name: starshipData.starship.upcoming[i]['name'],
-                launchpad: starshipData.starship.upcoming[i]['pad']['name'],
-                details: starshipData.starship.upcoming[i]['mission']['description'],
-                date_unix: moment(starshipData.starship.upcoming[i]['net']).unix(),
-                date_net: moment(starshipData.starship.upcoming[i]['window_start']).toString(),
-                links:
-                {
-                    reddit: {
-                        campaign: null,
-                    },
-                    webcast: null,
-                    article: starshipData.starship.upcoming[i]['program'][0]['wiki_url']
+        if (starshipData.starship.upcoming && upcomingData.upcoming) {
+            let tbdArray = [] as any;
+            let launchArray = [] as any;
+            for (let i in upcomingData.upcoming) {
+                if (upcomingData.upcoming[i]["date_precision"] === "hour") {
+                    launchArray.push(upcomingData.upcoming[i])
+                } else {
+                    tbdArray.push(upcomingData.upcoming[i])
                 }
             }
-            launchArray.push(data[i])
+            for (let i in starshipData.starship.upcoming) {
+                let data = [] as any
+                data[i] = {
+                    type: "starship",
+                    id: starshipData.starship.upcoming[i]['id'],
+                    image: starshipData.starship.upcoming[i]['image'],
+                    name: starshipData.starship.upcoming[i]['name'],
+                    launchpad: starshipData.starship.upcoming[i]['pad']['name'],
+                    details: starshipData.starship.upcoming[i]['mission']['description'],
+                    date_unix: moment(starshipData.starship.upcoming[i]['net']).unix(),
+                    date_net: moment(starshipData.starship.upcoming[i]['window_start']).toString(),
+                    links:
+                    {
+                        reddit: {
+                            campaign: null,
+                        },
+                        webcast: null,
+                        article: starshipData.starship.upcoming[i]['program'][0]['wiki_url']
+                    }
+                }
+                launchArray.push(data[i])
 
+            }
+            setLaunch(Object.keys(launchArray).map((key) => launchArray[key]).sort(comp))
         }
-        setLaunch(Object.keys(launchArray).map((key) => launchArray[key]).sort(comp))
-    }, [upcomingData.loading, starshipData.starship.upcoming, upcomingData.upcoming])
+    }, [starshipData.starship.upcoming, upcomingData.upcoming])
 
     function comp(a: { date_unix: string | number | Date; }, b: { date_unix: string | number | Date; }) {
         return new Date(a.date_unix).getTime() - new Date(b.date_unix).getTime();
@@ -294,7 +296,7 @@ const mapDispatchToProps = dispatch => {
     return {
         fetchUpcoming: () => dispatch(fetchUpcoming()),
         fetchLaunchpads: () => dispatch(fetchLaunchpads()),
-        fetchStarship: () => dispatch(fetchStarship())
+        fetchStarship: () => dispatch(fetchStarship()),
     }
 }
 

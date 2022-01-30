@@ -1,6 +1,5 @@
 import axios from 'axios'
-import { getApp } from 'firebase/app';
-import { deleteUser, getAuth, signInAnonymously, User } from 'firebase/auth';
+
 import { getFirestore, getDoc, doc, setDoc } from 'firebase/firestore';
 import moment from 'moment';
 import {
@@ -11,10 +10,10 @@ import {
 
 export const fetchPayloads = () => {
   const database = getFirestore();
-  const auth = getAuth(getApp())
 
   return async (dispatch) => {
     dispatch(fetchPayloadsRequest())
+   
 
 
 
@@ -28,19 +27,11 @@ export const fetchPayloads = () => {
         axios
           .get('https://api.spacexdata.com/v4/payloads')
           .then(async response => {
-            signInAnonymously(auth).then(async () => {
               const payloads = response.data
               payloads['last_updated'] = moment().toString();
               await setDoc(docRef, Object.assign({}, payloads), { merge: true });
-              const user = auth.currentUser as User
-              deleteUser(user);
               dispatch(fetchPayloadsSuccess(payloads, payloads['last_updated']))
-
             })
-              .catch((error) => {
-                dispatch(fetchPayloadsFailure(error.code + " " + error.message))
-              })
-          })
           .catch(error => {
             dispatch(fetchPayloadsFailure(error.message))
           })
