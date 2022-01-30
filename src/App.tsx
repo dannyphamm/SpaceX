@@ -12,7 +12,7 @@ import Sider from 'antd/lib/layout/Sider';
 import Gallery from './Gallery';
 import { useThemeSwitcher } from 'react-css-theme-switcher';
 import { Switch as SwitchA } from 'antd';
-import { getAuth, signInAnonymously } from 'firebase/auth';
+import { getAuth, signInAnonymously, deleteUser } from 'firebase/auth';
 import { doc, getFirestore, setDoc } from 'firebase/firestore';
 import moment from 'moment';
 import { exitAuth } from './redux';
@@ -35,12 +35,18 @@ function App({ exitAuth }) {
     switcher({ theme: isChecked ? themes.dark : themes.light });
   };
 
-  window.addEventListener('beforeUnload', async () => {
-    await exitAuth();
+  window.addEventListener('beforeUnload', () => {
+    const authUser = auth.currentUser;
+      if (authUser) {
+        deleteUser(authUser)
+      }
   })
 
-  window.addEventListener('unload', async () => {
-    await exitAuth();
+  window.addEventListener('unload', () => {
+    const authUser = auth.currentUser;
+      if (authUser) {
+        deleteUser(authUser)
+      }
   })
 
   function routes() {
