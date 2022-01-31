@@ -12,7 +12,7 @@ import Sider from 'antd/lib/layout/Sider';
 import Gallery from './Gallery';
 import { useThemeSwitcher } from 'react-css-theme-switcher';
 import { Switch as SwitchA } from 'antd';
-import { getAuth, signInAnonymously, deleteUser } from 'firebase/auth';
+import { getAuth, signInAnonymously } from 'firebase/auth';
 import { doc, getFirestore, setDoc } from 'firebase/firestore';
 import moment from 'moment';
 import { exitAuth } from './redux';
@@ -125,21 +125,6 @@ function App({ exitAuth }) {
               <Menu.Item key="b" onClick={() => setSelected(["b"])}><Link to="/upcoming/" />Upcoming</Menu.Item>
               <Menu.Item key="c" onClick={() => setSelected(["c"])}><Link to="/past/" /> Past</Menu.Item>
               <Menu.Item key="d" onClick={() => { setSelected(["d"]); setMobileMenuOpen(false) }}><Link to="/gallery/" />Gallery</Menu.Item>
-              <Menu.Item key="e" onClick={async () => {
-                signInAnonymously(auth).then(async () => {
-                  const time = moment().subtract(50, 'days').toString()
-                  await setDoc(doc(database, "apidata", "upcoming"), { "last_updated": time }, { merge: true })
-                  await setDoc(doc(database, "apidata", "cores"), { "last_updated": time }, { merge: true })
-                  await setDoc(doc(database, "apidata", "landpads"), { "last_updated": time }, { merge: true })
-                  await setDoc(doc(database, "apidata", "launchpads"), { "last_updated": time }, { merge: true })
-                  await setDoc(doc(database, "apidata", "past"), { "last_updated": time }, { merge: true })
-                  await setDoc(doc(database, "apidata", "payloads"), { "last_updated": time }, { merge: true })
-                  await setDoc(doc(database, "apidata", "starship"), { "last_updated": time }, { merge: true })
-                  await setDoc(doc(database, "apidata", "rockets"), { "last_updated": time }, { merge: true })
-
-                })
-              }
-              }>Dev</Menu.Item>
             </Menu>
 
           </div>
