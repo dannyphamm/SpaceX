@@ -35,18 +35,14 @@ function App({ exitAuth }) {
     switcher({ theme: isChecked ? themes.dark : themes.light });
   };
 
-  window.addEventListener('beforeUnload', () => {
-    const authUser = auth.currentUser;
-      if (authUser) {
-        deleteUser(authUser)
-      }
+  window.addEventListener('beforeUnload', async () => {
+    exitAuth()
   })
 
-  window.addEventListener('unload', () => {
-    const authUser = auth.currentUser;
-      if (authUser) {
-        deleteUser(authUser)
-      }
+  window.addEventListener('unload', async () => {
+
+      exitAuth()
+  
   })
 
   function routes() {
