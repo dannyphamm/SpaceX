@@ -3,6 +3,7 @@ import Masonry, { ResponsiveMasonry } from "react-responsive-masonry"
 import { connect } from 'react-redux'
 import { fetchPast, fetchStarship } from './redux'
 import { Image, Pagination } from 'antd';
+import 'lazysizes';
 import moment from 'moment';
 function Gallery({ pastData, fetchPast, starshipData, fetchStarship }) {
     const paginationStyle = { paddingBottom: "24px", textAlign: "center" as const }
@@ -62,6 +63,7 @@ function Gallery({ pastData, fetchPast, starshipData, fetchStarship }) {
                     {images.slice(minValue, maxValue).map((data) => (
                         <Image src={data[0]} 
                         style={{ objectFit: "contain" }} 
+                        className="lazyload"
                         key={data}
                         />
 

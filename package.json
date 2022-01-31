@@ -19,6 +19,7 @@
         "countdown": "^2.6.0",
         "firebase": "^9.6.5",
         "firebase-admin": "^10.0.2",
+        "lazysizes": "^5.3.2",
         "moment": "^2.29.1",
         "moment-countdown": "0.0.3",
         "patch-package": "^6.4.7",

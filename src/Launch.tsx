@@ -10,7 +10,7 @@ import { Tabs } from 'antd';
 import Title from 'antd/lib/typography/Title';
 import { connect } from 'react-redux'
 import {  fetchCores, fetchLandpads, fetchLaunchpads, fetchPast, fetchPayloads, fetchRockets, fetchStarship, fetchUpcoming} from './redux';
-
+import 'lazysizes';
 
 function Launch({ pastData, fetchPast, upcomingData, fetchUpcoming, fetchLandpads, fetchLaunchpads, fetchPayloads, fetchRockets, fetchCores, landpadsData, launchpadsData, payloadsData, rocketsData, coresData, fetchStarship, starshipData }) {
     let params = useParams();
@@ -165,7 +165,7 @@ function Launch({ pastData, fetchPast, upcomingData, fetchUpcoming, fetchLandpad
                                         >
                                             <Masonry gutter={15}>
                                                 {item['links']['flickr']['original'].map((data) => (
-                                                    <Image src={data} style={{ objectFit: "contain" }} />
+                                                    <Image className="lazyload" src={data} style={{ objectFit: "contain" }} />
                                                 ))}
                                             </Masonry>
                                         </ResponsiveMasonry>
