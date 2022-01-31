@@ -12,9 +12,6 @@ import Sider from 'antd/lib/layout/Sider';
 import Gallery from './Gallery';
 import { useThemeSwitcher } from 'react-css-theme-switcher';
 import { Switch as SwitchA } from 'antd';
-import { getAuth, signInAnonymously } from 'firebase/auth';
-import { doc, getFirestore, setDoc } from 'firebase/firestore';
-import moment from 'moment';
 import { exitAuth } from './redux';
 import { connect } from 'react-redux';
 
@@ -25,8 +22,6 @@ function App({ exitAuth }) {
   const [selected, setSelected] = useState<any>([]);
   const [mobileMenuOpen, setMobileMenuOpen] = useState<boolean>(false);
   const { switcher, themes } = useThemeSwitcher();
-  const database = getFirestore();
-  const auth = getAuth()
   const [isDarkMode, setIsDarkMode] = React.useState(true);
 
 
