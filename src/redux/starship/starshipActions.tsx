@@ -24,7 +24,7 @@ export const fetchStarship = () => {
 
       const diff = moment().diff(moment(data!['last_updated']), "seconds");
       // 5 minutes, Get new data if existing data is old
-      if (diff < 14400) {
+      if (diff > 14400) {
         axios
           .get('https://ll.thespacedevs.com/2.2.0/dashboard/starship/')
           .then(async response => {

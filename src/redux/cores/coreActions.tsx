@@ -23,7 +23,7 @@ export const fetchCores = () => {
       const data = docSnap.data()
       const diff = moment().diff(moment(data!['last_updated']), "seconds");
       // 5 minutes, Get new data if existing data is old
-      if (diff > 10) {
+      if (diff > 14400) {
         axios
           .get('https://api.spacexdata.com/v4/cores')
           .then(async response => {
