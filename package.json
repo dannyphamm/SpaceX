@@ -4,7 +4,7 @@
     "private": true,
     "dependencies": {
         "@ant-design/icons": "^4.7.0",
-        "@firebase/auth": "^0.19.7",
+        "@firebase/auth": "^0.19.8",
         "@pqina/flip": "^1.7.7",
         "@rumess/react-flip-countdown": "^1.2.3",
         "@testing-library/jest-dom": "^5.16.1",
