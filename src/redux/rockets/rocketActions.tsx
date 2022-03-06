@@ -43,6 +43,18 @@ export const fetchRockets = () => {
         const lastUpdated = data['last_updated']
         dispatch(fetchRocketsSuccess(data1, lastUpdated))
       }
+    } else {
+      axios
+      .get('https://api.spacexdata.com/v4/rockets')
+      .then(async response => {
+          const rockets = response.data
+          rockets['last_updated'] = moment().toString();
+          await setDoc(docRef, Object.assign({}, rockets));
+          dispatch(fetchRocketsSuccess(rockets, rockets['last_updated']))
+        })
+      .catch(error => {
+        dispatch(fetchRocketsFailure(error.message))
+      })
     }
 
 

@@ -45,6 +45,18 @@ export const fetchLaunchpads = () => {
         const lastUpdated = data['last_updated']
         dispatch(fetchLaunchpadsSuccess(data1, lastUpdated))
       }
+    } else {
+      axios
+          .get('https://api.spacexdata.com/v4/launchpads')
+          .then(async response => {
+              const launchpads = response.data
+              launchpads['last_updated'] = moment().toString();
+              await setDoc(docRef, Object.assign({}, launchpads));
+              dispatch(fetchLaunchpadsSuccess(launchpads, launchpads['last_updated']))
+            })
+          .catch(error => {
+            dispatch(fetchLaunchpadsFailure(error.message))
+          })
     }
 
 

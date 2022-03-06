@@ -37,6 +37,7 @@ export const fetchUpcoming = () => {
           .catch(error => {
             dispatch(fetchUpcomingFailure(error.message))
           })
+
       } else {
 
         const upcomingData = data;
@@ -44,6 +45,21 @@ export const fetchUpcoming = () => {
         delete upcomingData!["last_updated"]
         dispatch(fetchUpcomingSuccess(upcomingData, lastUpdated))
       }
+    } else {
+      axios
+        .get('https://api.spacexdata.com/v4/launches/upcoming')
+        .then(async response => {
+          const upcoming = response.data
+          upcoming['last_updated'] = moment().toString();
+          const time = moment().toString();
+          await setDoc(docRef, Object.assign({}, upcoming))
+          delete upcoming['last_updated']
+
+          dispatch(fetchUpcomingSuccess(upcoming, time));
+        })
+        .catch(error => {
+          dispatch(fetchUpcomingFailure(error.message))
+        })
     }
 
 

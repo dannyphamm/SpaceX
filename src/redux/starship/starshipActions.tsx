@@ -63,6 +63,27 @@ export const fetchStarship = () => {
         const lastUpdated = data['last_updated']
         dispatch(fetchStarshipSuccess(data2, data1['upcoming']['launches'], data1['previous']['launches'], lastUpdated))
       }
+    } else {
+      axios
+      .get('https://ll.thespacedevs.com/2.2.0/dashboard/starship/')
+      .then(async response => {
+          const starship = response.data
+          starship['last_updated'] = moment().toString();
+          await setDoc(docRef, Object.assign({}, starship));
+
+          let data2 = [] as any;
+          for (let i in starship!['upcoming']['launches']) {
+            data2.push(starship!['upcoming']['launches'][i])
+          }
+          for (let i in starship!['previous']['launches']) {
+            data2.push(starship!['previous']['launches'][i])
+          }
+          dispatch(fetchStarshipSuccess(data2, starship['upcoming']['launches'], starship['previous']['launches'], starship['last_updated']));
+
+        })
+      .catch(error => {
+        dispatch(fetchStarshipFailure(error.message))
+      })
     }
   }
 }

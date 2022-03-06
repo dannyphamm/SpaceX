@@ -24,6 +24,7 @@ export const fetchLandpads = () => {
       const data = docSnap.data()
       const diff = moment().diff(moment(data!['last_updated']), "seconds");
       // 5 minutes, Get new data if existing data is old
+
       if (diff > 14400) {
         axios
           .get('https://api.spacexdata.com/v4/landpads')
@@ -47,6 +48,19 @@ export const fetchLandpads = () => {
         const lastUpdated = data['last_updated']
         dispatch(fetchLandpadsSuccess(data1, lastUpdated))
       }
+    } else {
+      axios
+      .get('https://api.spacexdata.com/v4/landpads')
+      .then(async response => {
+          const landpads = response.data
+          landpads['last_updated'] = moment().toString();
+          await setDoc(docRef, Object.assign({}, landpads));
+        
+          dispatch(fetchLandpadsSuccess(landpads, landpads['last_updated']))
+        })
+      .catch(error => {
+        dispatch(fetchLandpadsFailure(error.message))
+      })
     }
 
   }

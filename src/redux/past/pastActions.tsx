@@ -45,6 +45,19 @@ export const fetchPast = () => {
         delete pastData!["last_updated"]
         dispatch(fetchPastSuccess(pastData, lastUpdated))
       }
+    } else {
+      axios
+      .get('https://api.spacexdata.com/v4/launches/past')
+      .then(async response => {
+          const past = response.data
+          past['last_updated'] = moment().toString();
+          const time = moment().toString();
+          await setDoc(docRef, Object.assign({}, past));
+          dispatch(fetchPastSuccess(past, time))
+        })
+      .catch(error => {
+        dispatch(fetchPastFailure(error.message))
+      })
     }
 
 

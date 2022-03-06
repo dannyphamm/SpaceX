@@ -45,6 +45,18 @@ export const fetchCores = () => {
         const lastUpdated = data['last_updated']
         dispatch(fetchCoresSuccess(data1, lastUpdated))
       }
+    } else {
+      axios
+          .get('https://api.spacexdata.com/v4/cores')
+          .then(async response => {
+            const cores = response.data
+            cores['last_updated'] = moment().toString();
+            await setDoc(docRef, Object.assign({}, cores));
+            dispatch(fetchCoresSuccess(cores, cores['last_updated']))
+          })
+          .catch(error => {
+            dispatch(fetchCoresFailure(error.message))
+          })
     }
   }
 }

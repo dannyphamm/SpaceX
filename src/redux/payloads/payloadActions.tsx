@@ -45,6 +45,18 @@ export const fetchPayloads = () => {
         const lastUpdated = data['last_updated']
         dispatch(fetchPayloadsSuccess(data1, lastUpdated))
       }
+    } else {
+      axios
+      .get('https://api.spacexdata.com/v4/payloads')
+      .then(async response => {
+          const payloads = response.data
+          payloads['last_updated'] = moment().toString();
+          await setDoc(docRef, Object.assign({}, payloads));
+          dispatch(fetchPayloadsSuccess(payloads, payloads['last_updated']))
+        })
+      .catch(error => {
+        dispatch(fetchPayloadsFailure(error.message))
+      })
     }
   }
 }
