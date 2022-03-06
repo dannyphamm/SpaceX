@@ -27,7 +27,7 @@ export const fetchRockets = () => {
           .then(async response => {
               const rockets = response.data
               rockets['last_updated'] = moment().toString();
-              await setDoc(docRef, Object.assign({}, rockets), { merge: true });
+              await setDoc(docRef, Object.assign({}, rockets));
               dispatch(fetchRocketsSuccess(rockets, rockets['last_updated']))
             })
           .catch(error => {

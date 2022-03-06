@@ -29,7 +29,7 @@ export const fetchCores = () => {
           .then(async response => {
             const cores = response.data
             cores['last_updated'] = moment().toString();
-            await setDoc(docRef, Object.assign({}, cores), { merge: true });
+            await setDoc(docRef, Object.assign({}, cores));
             dispatch(fetchCoresSuccess(cores, cores['last_updated']))
           })
           .catch(error => {

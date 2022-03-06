@@ -29,7 +29,7 @@ export const fetchPayloads = () => {
           .then(async response => {
               const payloads = response.data
               payloads['last_updated'] = moment().toString();
-              await setDoc(docRef, Object.assign({}, payloads), { merge: true });
+              await setDoc(docRef, Object.assign({}, payloads));
               dispatch(fetchPayloadsSuccess(payloads, payloads['last_updated']))
             })
           .catch(error => {

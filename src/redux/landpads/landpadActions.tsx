@@ -30,7 +30,7 @@ export const fetchLandpads = () => {
           .then(async response => {
               const landpads = response.data
               landpads['last_updated'] = moment().toString();
-              await setDoc(docRef, Object.assign({}, landpads), { merge: true });
+              await setDoc(docRef, Object.assign({}, landpads));
             
               dispatch(fetchLandpadsSuccess(landpads, landpads['last_updated']))
             })

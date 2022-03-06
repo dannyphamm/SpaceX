@@ -29,7 +29,7 @@ export const fetchLaunchpads = () => {
           .then(async response => {
               const launchpads = response.data
               launchpads['last_updated'] = moment().toString();
-              await setDoc(docRef, Object.assign({}, launchpads), { merge: true });
+              await setDoc(docRef, Object.assign({}, launchpads));
               dispatch(fetchLaunchpadsSuccess(launchpads, launchpads['last_updated']))
             })
           .catch(error => {

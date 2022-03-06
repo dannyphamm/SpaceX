@@ -33,7 +33,7 @@ export const fetchPast = () => {
               const past = response.data
               past['last_updated'] = moment().toString();
               const time = moment().toString();
-              await setDoc(docRef, Object.assign({}, past), { merge: true });
+              await setDoc(docRef, Object.assign({}, past));
               dispatch(fetchPastSuccess(past, time))
             })
           .catch(error => {

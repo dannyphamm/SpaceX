@@ -30,7 +30,7 @@ export const fetchStarship = () => {
           .then(async response => {
               const starship = response.data
               starship['last_updated'] = moment().toString();
-              await setDoc(docRef, Object.assign({}, starship), { merge: true });
+              await setDoc(docRef, Object.assign({}, starship));
 
               let data2 = [] as any;
               for (let i in starship!['upcoming']['launches']) {
