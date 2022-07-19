@@ -32,7 +32,7 @@
         "react-responsive-masonry": "^2.1.4",
         "react-router-dom": "^6.2.1",
         "react-scripts": "5.0.0",
-        "react-twitter-embed": "^3.0.3",
+        "react-twitter-embed": "^4.0.4",
         "react-youtube": "^7.14.0",
         "redux": "^4.1.2",
         "redux-devtools-extension": "^2.13.8",
